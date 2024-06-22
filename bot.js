@@ -71,7 +71,7 @@ bot.on('command', (user, command) => {
     case "code":
       bot.chat('https://github.com/DataDecay/DecayBot')
       break;
-    case "spam":
+   /* case "spam":
       if(user!="DataDecay"){
         bot.chat("UR NOT AUTHORIZED")
         break;
@@ -79,7 +79,7 @@ bot.on('command', (user, command) => {
       while(true){
         bot.chat("spamming")
       }
-      break;
+      break;*/
     default:
       bot.chat('Unknown Command!')
       break;
