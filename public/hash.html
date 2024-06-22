@@ -1,0 +1,29 @@
+<script src="https://bitwiseshiftleft.github.io/sjcl/sjcl.js">
+</script>
+<script>
+function toHexString(byteArray) {
+  return Array.prototype.map.call(byteArray, function(byte) {
+    return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+  }).join('');
+}
+</script>
+<button type="button" onclick='alert(toHexString(sjcl.hash.sha256.hash(getElementById("toHash").value)));' value="Hash">Hash it</button>
+<input id="toHash"> <p id="out">output</p>
+<script>
+const apiUrl = 'api.hashify.net/hash/sha256/hex?value=hello';
+
+// Make a GET request
+fetch(apiUrl)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log(data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+<script>
