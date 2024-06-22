@@ -63,13 +63,13 @@ bot.on('spawn', (username, message) => {
 bot.on('command', (command) => {
   switch(command){
     case "help":
-      bot.chat('Commands: hello')
+      bot.chat('Commands: hello, code')
       break;
     case "hello":
       bot.chat('Hello World!')
       break;
     case "code":
-      bot.chat('
+      bot.chat('https://github.com/DataDecay/DecayBot')
     default:
       bot.chat('Unknown Command!')
       break;
