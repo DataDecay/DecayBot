@@ -30,7 +30,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
 const mineflayer = require('mineflayer')
 
 const bot = mineflayer.createBot({
-  host: 'kaboom.pw', // minecraft server ip
+  host: 'chipmunk.land', // minecraft server ip
   username: 'DecayBot', // username to join as if auth is `offline`, else a unique identifier for this account. Switch if you want to change accounts
   auth: 'offline' // for offline mode servers, you can set this to 'offline'
   ///port: 35254,              // set if you need a port that isn't 25565
@@ -41,7 +41,7 @@ const bot = mineflayer.createBot({
 io.on('connection', (socket) => {
 bot.on('chat', (username, message) => {
   socket.emit('msg', username + ": " + message); //send button status to client
-  console.log(message)
+  console.log(username + ": " + message)
 })
 })
 
@@ -56,11 +56,11 @@ bot.on('chat', (username, message) => {
 bot.on('spawn', (username, message) => {
   //bot.chat("This is DataDecay's Bot")
   bot.chatAddPattern(
-  /db:(.+)/,
+  /(.+): db:(.+)/,
   "command",
   "Command Sent"
 )
-bot.on('command', (command) => {
+bot.on('command', (user, command) => {
   switch(command){
     case "help":
       bot.chat('Commands: hello, code')
@@ -70,6 +70,16 @@ bot.on('command', (command) => {
       break;
     case "code":
       bot.chat('https://github.com/DataDecay/DecayBot')
+      break;
+    case "spam":
+      if(user!="DataDecay"){
+        bot.chat("UR NOT AUTHORIZED")
+        break;
+      }
+      while(true){
+        bot.chat("spamming")
+      }
+      break;
     default:
       bot.chat('Unknown Command!')
       break;
