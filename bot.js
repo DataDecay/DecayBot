@@ -13,7 +13,7 @@ http.listen(80); //listen to port 8080
 
 function handler(req, res) { //create server
     console.log(req)
-    if(req=="chat"){
+    if(req.url=="chat"){
     fs.readFile(__dirname + '/public/index.html', function(err, data) { //read file index.html in public folder
         if (err) {
             res.writeHead(404, {
