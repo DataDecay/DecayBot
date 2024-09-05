@@ -9,7 +9,7 @@ var http = require('http').createServer(handler); //require http server, and cre
 var fs = require('fs'); //require filesystem module
 var io = require('socket.io')(http) //require socket.io module and pass the http object (server)
 
-http.listen(8888); //listen to port 8080
+http.listen(80); //listen to port 8080
 
 function handler(req, res) { //create server
     if(req=="/chat"){
