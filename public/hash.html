@@ -1,29 +1,39 @@
-<script src="https://bitwiseshiftleft.github.io/sjcl/sjcl.js">
-</script>
-<script>
-function toHexString(byteArray) {
-  return Array.prototype.map.call(byteArray, function(byte) {
-    return ('0' + (byte & 0xFF).toString(16)).slice(-2);
-  }).join('');
-}
-</script>
-<button type="button" onclick='alert(toHexString(sjcl.hash.sha256.hash(getElementById("toHash").value)));' value="Hash">Hash it</button>
-<input id="toHash"> <p id="out">output</p>
-<script>
-const apiUrl = 'api.hashify.net/hash/sha256/hex?value=hello';
 
-// Make a GET request
-fetch(apiUrl)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log(data);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
+<!doctype html>
+<input id="number" autocomplete="off" />
+<form id="ownersend" action="">
+  <button>Owner</button>
+</form>
+<form id="trustedsend" action="">
+  <button>Trusted</button>
+</form>
+<p id="public" >Output</p>
+ <script src="/socket.io/socket.io.js"></script>
 <script>
+  var socket = io();
+
+  var out = document.getElementById('public');
+  var trustedform = document.getElementById('trustedsend');
+  var ownerform = document.getElementById('ownersend');
+  var number = document.getElementById('number');
+
+  trustedform.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (number.value) {
+      socket.emit('trusted', number.value);
+      number.value++;
+    }
+  });
+  ownerform.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (number.value) {
+      socket.emit('owner', number.value);
+      number.value++;
+    }
+  });
+
+  socket.on('gen', function(msg) {
+    console.log(msg);
+    out.innerHTML = msg;
+  });
+</script>
