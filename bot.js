@@ -138,7 +138,7 @@ bot.on('spawn', (username, message) => {
     bot.on('command', (command, arg, arg2) => {
         switch (command) {
             case "help":
-                bot.chat('/tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops, web-chat","color":"green"},{"text":" stop","color":"dark_red"}]')
+                bot.chat('/tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops, web-chat,","color":"green"},{"text":" stop","color":"dark_red"}]')
                 break;
             case "hello":
                 say('Hello World!')
