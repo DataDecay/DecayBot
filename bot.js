@@ -76,9 +76,15 @@ const bot = mineflayer.createBot({
 
 io.on('connection', (socket) => {
     bot.on('message', (message, pos, sender) => {
-        socket.emit(sender + ': ' + message.toString())  //send button status to client
+        socket.emit("msg", sender + ': ' + message.toString())  //send button status to client
         console.log(pos + "; " + sender + ": " + message.toString())
     })
+    socket.on('trusted', (msg) => {
+        io.emit('gen', generateTrusted(msg));
+    });
+    socket.on('owner', (msg) => {
+        io.emit('gen', generateOwner(msg));
+    });
 })
 
 const {
