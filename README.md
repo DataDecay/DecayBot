@@ -1,4 +1,6 @@
 # DecayBot
+*Warning!*
+*I am not actively developing it right now, but it is not discontinued. I am just kind of short on time lately.*
 <!---
 [![Static Badge](https://img.shields.io/badge/server-kaboom-purple?style=flat&link=https%3A%2F%2Fkaboom.pw)](https://kaboom.pw)
 --->
