@@ -151,6 +151,7 @@ bot.on('spawn', (username, message) => {
                 bot.chat('/setblock 6000 6000 6000 command_block')
                 block = bot.blockAt(new Vec3(6000, 6000, 6000))
                 bot.setCommandBlock(block.position, "say test success",{mode: 2, trackOutput: true, conditional: false, alwaysActive: true})
+                break;
             case "code":
                 say('https://github.com/DataDecay/DecayBot')
                 break;
