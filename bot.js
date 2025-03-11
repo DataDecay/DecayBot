@@ -1,4 +1,4 @@
-if (process.argv.length != 5) {
+if (process.argv.length != 6) {
     console.log('Usage : node bot.js <hash-prefix-owner> <hash-prefix-trusted> <host> <port>')
     process.exit(1)
 }
