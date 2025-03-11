@@ -179,7 +179,7 @@ bot.on('spawn', (username, message) => {
                 }
             case "cloop":
             if (validateOwner(arg)) {
-                    loops = setInterval(cloop,500, arg2);
+                    loops = setInterval(cloop,1, arg2);
                     say("Started cloop.")
                     hash_counter++;
                     console.log(hash_counter);
