@@ -133,8 +133,7 @@ bot.on('spawn', (username, message) => {
         bot.chat('/tellraw @a ["DecayBot: ' + what + '"]')
     }
     bot.chat('/gamemode creative');
-                bot.chat('/tp DecayBot 6000 5998 6000')
-                bot.chat('/setblock 6000 6000 6000 command_block')
+                
     var loops;
     function cloop(what){
     	bot.chat("/" + what)
@@ -148,6 +147,8 @@ bot.on('spawn', (username, message) => {
                 say('Hello World!')
                 break;
             case "core":
+                bot.chat('/tp DecayBot 6000 5998 6000');
+                bot.chat('/setblock 6000 6000 6000 command_block');
                 const commandBlock = bot.findBlock({
         matching: bot.registry.blocksByName.command_block.id
       })
