@@ -152,7 +152,6 @@ bot.on('spawn', (username, message) => {
                 break;
             case "core":
                 bot.chat('/tp DecayBot 6000 8 6000');
-                await sleep(500)
 
                 bot.chat('/setblock 6000 10 6000 command_block');
                 const commandBlock = bot.findBlock({
