@@ -151,11 +151,11 @@ bot.on('spawn', (username, message) => {
                 break;
             case "web-chat":
                 if (validateOwner(arg)) {
-                    say("Go to https://decaybot-2dlw.onrender.com/serverchat")
+                    say("Go to https://datadecay.dev:8888/serverchat")
                     hash_counter++;
                     console.log(hash_counter);
                 } else if (validateTrusted(arg)) {
-                    say("Go to https://decaybot-2dlw.onrender.com/serverchat")
+                    say("Go to https://datadecay.dev:8888/serverchat")
                     hash_counter++;
                     console.log(hash_counter);
                 } else {
