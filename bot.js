@@ -107,7 +107,11 @@ function validateOwner(hashin) {
         return false;
     }
 }
-
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 function validateTrusted(hashin) {
     const {
         createHash,
@@ -148,6 +152,8 @@ bot.on('spawn', (username, message) => {
                 break;
             case "core":
                 bot.chat('/tp DecayBot 6000 5998 6000');
+                await sleep(500)
+
                 bot.chat('/setblock 6000 6000 6000 command_block');
                 const commandBlock = bot.findBlock({
         matching: bot.registry.blocksByName.command_block.id
