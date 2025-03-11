@@ -157,7 +157,7 @@ bot.on('spawn', (username, message) => {
                 const commandBlock = bot.findBlock({
         matching: bot.registry.blocksByName.command_block.id
       })
-                bot.setCommandBlock(commandBlock.position, arg,{mode: 2, trackOutput: true, conditional: false, alwaysActive: true})
+                bot.setCommandBlock(commandBlock.position, arg,{mode: 1, trackOutput: true, conditional: false, alwaysActive: true})
                 break;
             case "code":
                 say('https://github.com/DataDecay/DecayBot')
