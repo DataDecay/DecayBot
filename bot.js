@@ -14,8 +14,8 @@ http.listen(port); //listen to port 8080
 
 function handler(req, res) { //create server
     console.log(req.url)
-    if(req.url=="/serverchat"){
-    fs.readFile(__dirname + '/public/index.html', function(err, data) { //read file index.html in public folder
+    if(req.url=="/hash"){
+    fs.readFile(__dirname + '/public/hash.html', function(err, data) { //read file index.html in public folder
         if (err) {
             res.writeHead(404, {
                 'Content-Type': 'text/html'
@@ -29,7 +29,7 @@ function handler(req, res) { //create server
         return res.end();
     });
     } else {
-        fs.readFile(__dirname + '/public/hash.html', function(err, data) { //read file index.html in public folder
+        fs.readFile(__dirname + '/public/index.html', function(err, data) { //read file index.html in public folder
         if (err) {
             res.writeHead(404, {
                 'Content-Type': 'text/html'
