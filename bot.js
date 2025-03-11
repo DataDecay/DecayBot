@@ -131,6 +131,8 @@ bot.on('spawn', (username, message) => {
     function say(what) {
         bot.chat('/tellraw @a ["DecayBot: ' + what + '"]')
     }
+    bot.chat('/tellraw @a DECAYBOT')
+    bot.chat('/tellraw @a Say db:help in chat to receive a list of commands')
     var loops;
     function cloop(what){
     	bot.chat("/" + what)
