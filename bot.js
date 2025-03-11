@@ -1,6 +1,6 @@
 var Vec3 = require('vec3');
-if (process.argv.length != 6) {
-    console.log('Usage : node bot.js <hash-prefix-owner> <hash-prefix-trusted> <host> <port>')
+if (process.argv.length != 7) {
+    console.log('Usage : node bot.js <hash-prefix-owner> <hash-prefix-trusted> <host> <port> <username>')
     process.exit(1)
 }
 process.argv.forEach(function(val, index, array) {
@@ -68,7 +68,7 @@ const mineflayer = require('mineflayer')
 
 const bot = mineflayer.createBot({
     host: process.argv[4], // minecraft server ip
-    username: 'DecayBot', // username to join as if auth is `offline`, else a unique identifier for this account. Switch if you want to change accounts
+    username: process.argv[6], // username to join as if auth is `offline`, else a unique identifier for this account. Switch if you want to change accounts
     auth: 'offline' // for offline mode servers, you can set this to 'offline'
     ///port: 35254,              // set if you need a port that isn't 25565
     // version: false,           // only set if you need a specific version or snapshot (ie: "1.8.9" or "1.16.5"), otherwise it's set automatically
@@ -132,8 +132,9 @@ bot.on('spawn', (username, message) => {
     function say(what) {
         bot.chat('/tellraw @a ["DecayBot: ' + what + '"]')
     }
-    bot.chat('/tellraw @a ["DECAYBOT"]')
-    bot.chat('/tellraw @a ["Say db:help in chat to receive a list of commands"]')
+    bot.chat('/gamemode creative');
+                bot.chat('/tp DecayBot 6000 5998 6000')
+                bot.chat('/setblock 6000 6000 6000 command_block')
     var loops;
     function cloop(what){
     	bot.chat("/" + what)
@@ -146,14 +147,11 @@ bot.on('spawn', (username, message) => {
             case "hello":
                 say('Hello World!')
                 break;
-            case "core-test":
-                bot.chat('/gamemode creative');
-                bot.chat('/tp DecayBot 6000 5998 6000')
-                bot.chat('/setblock 6000 6000 6000 command_block')
+            case "core":
                 const commandBlock = bot.findBlock({
         matching: bot.registry.blocksByName.command_block.id
       })
-                bot.setCommandBlock(commandBlock.position, "say test success",{mode: 2, trackOutput: true, conditional: false, alwaysActive: true})
+                bot.setCommandBlock(commandBlock.position, arg,{mode: 2, trackOutput: true, conditional: false, alwaysActive: true})
                 break;
             case "code":
                 say('https://github.com/DataDecay/DecayBot')
