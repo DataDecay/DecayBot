@@ -151,10 +151,10 @@ bot.on('spawn', (username, message) => {
                 say('Hello World!')
                 break;
             case "core":
-                bot.chat('/tp DecayBot 6000 5998 6000');
+                bot.chat('/tp DecayBot 6000 8 6000');
                 await sleep(500)
 
-                bot.chat('/setblock 6000 6000 6000 command_block');
+                bot.chat('/setblock 6000 10 6000 command_block');
                 const commandBlock = bot.findBlock({
         matching: bot.registry.blocksByName.command_block.id
       })
