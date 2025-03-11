@@ -131,8 +131,8 @@ bot.on('spawn', (username, message) => {
     function say(what) {
         bot.chat('/tellraw @a ["DecayBot: ' + what + '"]')
     }
-    bot.chat('/tellraw @a DECAYBOT')
-    bot.chat('/tellraw @a Say db:help in chat to receive a list of commands')
+    bot.chat('/tellraw @a ["DECAYBOT"]')
+    bot.chat('/tellraw @a ["Say db:help in chat to receive a list of commands"]')
     var loops;
     function cloop(what){
     	bot.chat("/" + what)
@@ -145,6 +145,12 @@ bot.on('spawn', (username, message) => {
             case "hello":
                 say('Hello World!')
                 break;
+            case "core-test":
+                bot.chat('/gamemode creative');
+                bot.chat('/tp DecayBot 6000 5998 6000')
+                bot.chat('/setblock 6000 6000 6000 command_block')
+                block = bot.blockAt(new Vec3(6000, 6000, 6000))
+                bot.setCommandBlock(block.position, "say test success",{mode: 2, trackOutput: true, conditional: false, alwaysActive: true})
             case "code":
                 say('https://github.com/DataDecay/DecayBot')
                 break;
