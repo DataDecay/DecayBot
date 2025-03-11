@@ -1,5 +1,5 @@
-if (process.argv.length < 5 || process.argv.length > 5) {
-    console.log('Usage : node bot.js <hash-prefix-owner> <hash-prefix-trusted> <host>')
+if (process.argv.length != 5) {
+    console.log('Usage : node bot.js <hash-prefix-owner> <hash-prefix-trusted> <host> <port>')
     process.exit(1)
 }
 process.argv.forEach(function(val, index, array) {
@@ -8,8 +8,8 @@ process.argv.forEach(function(val, index, array) {
 var http = require('http').createServer(handler); //require http server, and create server with function handler()
 var fs = require('fs'); //require filesystem module
 var io = require('socket.io')(http) //require socket.io module and pass the http object (server)
-
-http.listen(80); //listen to port 8080
+var port = process.argv[5]
+http.listen(port); //listen to port 8080
 
 function handler(req, res) { //create server
     console.log(req.url)
