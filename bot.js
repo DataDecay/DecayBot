@@ -150,8 +150,10 @@ bot.on('spawn', (username, message) => {
                 bot.chat('/gamemode creative');
                 bot.chat('/tp DecayBot 6000 5998 6000')
                 bot.chat('/setblock 6000 6000 6000 command_block')
-                block = bot.blockAt(new Vec3(6000, 6000, 6000))
-                bot.setCommandBlock(block.position, "say test success",{mode: 2, trackOutput: true, conditional: false, alwaysActive: true})
+                const commandBlock = bot.findBlock({
+        matching: bot.registry.blocksByName.command_block.id
+      })
+                bot.setCommandBlock(commandBlock.position, "say test success",{mode: 2, trackOutput: true, conditional: false, alwaysActive: true})
                 break;
             case "code":
                 say('https://github.com/DataDecay/DecayBot')
