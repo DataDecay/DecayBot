@@ -151,8 +151,6 @@ bot.on('spawn', (username, message) => {
                 say('Hello World!')
                 break;
             case "core":
-                bot.chat('/setblock 6000 11 6000 air');
-
                 bot.chat('/setblock 6000 10 6000 command_block');
                 bot.chat('/setblock 6000 11 6000 redstone_block');
                 const commandBlock = bot.findBlock({
