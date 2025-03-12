@@ -66,7 +66,7 @@ require('node:crypto');
 //   6a2da20943931e9834fc12cfe5bb47bbd9ae43489a30726962b576f4e3993e50
 const mineflayer = require('mineflayer')
 
-const bot = mineflayer.createBot({
+var bot = mineflayer.createBot({
     host: process.argv[4], // minecraft server ip
     username: process.argv[6], // username to join as if auth is `offline`, else a unique identifier for this account. Switch if you want to change accounts
     auth: 'offline' // for offline mode servers, you can set this to 'offline'
@@ -143,6 +143,11 @@ bot.on('spawn', (username, message) => {
         "command",
         "Command Sent"
     )
+    bot.chatAddPattern(
+        /(\S+): \/(kick|ban) DecayBot/,
+        "kick",
+        "Ban Sent"
+    )
 
     function say(what) {
         bot.chat('/tellraw @a ["DecayBot: ' + what + '"]')
@@ -153,6 +158,17 @@ bot.on('spawn', (username, message) => {
     function cloop(what){
     	bot.chat("/" + what)
     	}
+    bot.on('kickban', (kicker) => {
+        bot = mineflayer.createBot({
+    host: process.argv[4], // minecraft server ip
+    username: process.argv[6], // username to join as if auth is `offline`, else a unique identifier for this account. Switch if you want to change accounts
+    auth: 'offline' // for offline mode servers, you can set this to 'offline'
+    ///port: 35254,              // set if you need a port that isn't 25565
+    // version: false,           // only set if you need a specific version or snapshot (ie: "1.8.9" or "1.16.5"), otherwise it's set automatically
+    // password: '12345678'      // set if you want to use password-based auth (may be unreliable). If specified, the `username` must be an email
+})
+        bot.chat("fuck you, " + kicker);
+    }
     bot.on('command', (command, arg, arg2) => {
         switch (command) {
             case "help":
