@@ -4,6 +4,7 @@ if (process.argv.length != 7) {
     process.exit(1)
 }
 const CommandCore = require("./commandcore.js")
+var core = new CommandCore;
 process.argv.forEach(function(val, index, array) {
     console.log(index + ': ' + val);
 });
@@ -172,7 +173,7 @@ bot.on('spawn', (username, message) => {
                 say('Hello World!')
                 break;
             case "core":
-                CommandCore.run(`tellraw @a "Testing core!"`)
+                core.run(`tellraw @a "Testing core!"`)
                 break;
             case "code":
                 say('https://github.com/DataDecay/DecayBot')
