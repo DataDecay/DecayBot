@@ -168,7 +168,7 @@ bot.on('spawn', (username, message) => {
     // password: '12345678'      // set if you want to use password-based auth (may be unreliable). If specified, the `username` must be an email
 })
         bot.chat("fuck you, " + kicker);
-    }
+    })
     bot.on('command', (command, arg, arg2) => {
         switch (command) {
             case "help":
