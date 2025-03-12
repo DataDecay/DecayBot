@@ -107,11 +107,6 @@ function validateOwner(hashin) {
         return false;
     }
 }
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
 function validateTrusted(hashin) {
     const {
         createHash,
@@ -123,6 +118,22 @@ function validateTrusted(hashin) {
     } else {
         return false;
     }
+}
+function generateOwner() {
+    const {
+        createHash,
+    } = require('node:crypto');
+    hash = createHash('sha256');
+    hash.update(process.argv[2] + hash_counter.toString());
+    return hash.digest('hex').substring(0,5);
+}
+function generateTrusted() {
+    const {
+        createHash,
+    } = require('node:crypto');
+    hash = createHash('sha256');
+    hash.update(process.argv[3] + hash_counter.toString());
+    return hash.digest('hex').substring(0,5);
 }
 
 bot.on('spawn', (username, message) => {
