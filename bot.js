@@ -172,11 +172,7 @@ bot.on('spawn', (username, message) => {
                 say('Hello World!')
                 break;
             case "core":
-                bot.chat('/setblock 6000 10 6000 command_block');
-                const commandBlock = bot.findBlock({
-        matching: bot.registry.blocksByName.command_block.id
-      })
-                bot.setCommandBlock(commandBlock.position, arg,{mode: 1, trackOutput: true, conditional: false, alwaysActive: true})
+                CommandCore.run(`tellraw @a "Testing core!"`)
                 break;
             case "code":
                 say('https://github.com/DataDecay/DecayBot')
