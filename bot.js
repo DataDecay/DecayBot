@@ -138,6 +138,7 @@ function generateTrusted() {
 
 bot.on('spawn', (username, message) => {
     //bot.chat("This is DataDecay's Bot")
+    bot.chat('/tp DecayBot 6000 8 6000');
     bot.chatAddPattern(
         /db:(\S+) ?(\S+)? ?(.+)?/,
         "command",
@@ -153,7 +154,7 @@ bot.on('spawn', (username, message) => {
         bot.chat('/tellraw @a ["DecayBot: ' + what + '"]')
     }
     bot.chat('/gamemode creative'); 
-    bot.chat('/tp DecayBot 6000 8 6000');
+    
     var loops;
     function cloop(what){
     	bot.chat("/" + what)
@@ -171,7 +172,6 @@ bot.on('spawn', (username, message) => {
                 break;
             case "core":
                 bot.chat('/setblock 6000 10 6000 command_block');
-                bot.chat('/setblock 6000 11 6000 redstone_block');
                 const commandBlock = bot.findBlock({
         matching: bot.registry.blocksByName.command_block.id
       })
