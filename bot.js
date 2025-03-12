@@ -4,7 +4,7 @@ if (process.argv.length != 7) {
     process.exit(1)
 }
 const CommandCore = require("./commandcore.js")
-var core = new CommandCore;
+
 process.argv.forEach(function(val, index, array) {
     console.log(index + ': ' + val);
 });
@@ -76,7 +76,7 @@ var bot = mineflayer.createBot({
     // version: false,           // only set if you need a specific version or snapshot (ie: "1.8.9" or "1.16.5"), otherwise it's set automatically
     // password: '12345678'      // set if you want to use password-based auth (may be unreliable). If specified, the `username` must be an email
 })
-
+var core = new CommandCore({x: 6000, y: 8, z: 6000},{x:6000, y:8, z:6010}, bot);
 io.on('connection', (socket) => {
     bot.on('message', (message, pos, sender) => {
         socket.emit("msg", sender + ': ' + message.toString())  //send button status to client
