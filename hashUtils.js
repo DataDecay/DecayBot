@@ -6,12 +6,17 @@ class HashUtils {
     static validateOwner(hashin, prefix) {
         let hash = createHash('sha256');
         hash.update(prefix + hash_counter.toString());
+        console.log(hash.digest('hex').substring(0, 5));
+        console.log(hashin);
         return hash.digest('hex').substring(0, 5) === hashin;
+        
     }
 
     static validateTrusted(hashin, prefix) {
         let hash = createHash('sha256');
         hash.update(prefix + hash_counter.toString());
+        console.log(hash.digest('hex').substring(0, 5));
+        console.log(hashin);
         return hash.digest('hex').substring(0, 5) === hashin;
     }
 
