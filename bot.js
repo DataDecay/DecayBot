@@ -169,7 +169,12 @@ bot.on('spawn', (username, message) => {
         bot.chat("fuck you, " + kicker);
     })
     bot.on('command', (command, argsraw)=> {
+        try{
         var args = argsraw.split(" ");
+        } catch {
+console.log("no args");
+        }
+        try {
         switch (command) {
             case "help":
                 core.run('tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops, web-chat,","color":"green"},{"text":" stop","color":"dark_red"}]')
@@ -271,6 +276,9 @@ bot.on('spawn', (username, message) => {
             default:
                 say('Unknown Command!')
                 break;
+        }
+            catch {
+            say("Syntax Error");
         }
     })
 })
