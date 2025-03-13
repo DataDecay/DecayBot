@@ -188,6 +188,7 @@ bot.on('spawn', (username, message) => {
                 break;
 
             case "core":
+                if (validateOwner(args[0])) {
                 switch (args[1]) {
                     case "refill":
                         core.refillCore();
@@ -199,6 +200,10 @@ bot.on('spawn', (username, message) => {
                     default:
                         say("Invalid argument for 'core' command.");
                         break;
+                hash_counter++;
+                }
+                } else {
+                    say("Invalid Hash")
                 }
                 break;
 
