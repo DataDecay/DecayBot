@@ -1,7 +1,7 @@
 const mineflayer = require('mineflayer');
-const CommandCore = require('./commandCore');
-const HashUtils = require('./hashUtils');
-const WebServer = require('./webServer');
+const CommandCore = require('./commandCore.js');
+const HashUtils = require('./hashUtils.js');
+const WebServer = require('./webServer.js');
 
 class Bot {
     constructor() {
