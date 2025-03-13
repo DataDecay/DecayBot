@@ -23,7 +23,7 @@ class Bot {
         var core;
         this.bot.on('spawn', () => {
             this.bot.core = new CommandCore(this.bot.entity.position, { x: this.bot.entity.position.x + 16, y: this.bot.entity.position.y + 1, z: this.bot.entity.position.z + 16 }, this.bot);
-            this.bot.say("DecayBot core initialised");
+            say("DecayBot core initialised");
             this.bot.chatAddPattern(
                 /db:(\S+) ?(.+)?/,
                 "command",
@@ -84,7 +84,7 @@ class Bot {
     }
      handleHello() {
         const core = this.bot.core; // Assuming core is set at the bot level
-        this.bot.say("Hello World!");
+        say("Hello World!");
     }
     handleCore(args) {
         const core = this.bot.core; // Assuming core is set at the bot level
