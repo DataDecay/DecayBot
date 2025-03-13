@@ -23,12 +23,17 @@ class Bot {
         let core;
         this.bot.on('spawn', () => {
             core = new CommandCore(this.bot.entity.position, { x: this.bot.entity.position.x + 16, y: this.bot.entity.position.y + 1, z: this.bot.entity.position.z + 16 }, this.bot);
-        });
+            
+            bot.chatAddPattern(
+        /db:(\S+) ?(.+)?/,
+        "command",
+        "Command Sent"
+    )
 
         const io = new WebServer(process.argv[5], this.bot);
         io.start();
 
-        this.bot.on('command', this.handleCommand.bind(this, core));
+        this.bot.on('command', this.handleCommand();
         this.bot.on('error', console.log);
         this.bot.on('kicked', () => {
             this.bot = mineflayer.createBot({
@@ -39,32 +44,34 @@ class Bot {
         });
     }
 
-    handleCommand(core, command, argsraw) {
+    handleCommand(command, argsraw) {
+            if (argsraw){
         let args = argsraw.split(" ");
+            }
         switch (command) {
             case 'help':
-                this.handleHelp(core);
+                this.handleHelp();
                 break;
             case 'core':
-                this.handleCore(core, args);
+                this.handleCore(args);
                 break;
             case 'cloop':
-                this.handleCloop(core, args);
+                this.handleCloop(args);
                 break;
             case 'stop':
-                this.handleStop(core);
+                this.handleStop();
                 break;
             default:
-                this.handleUnknown(core);
+                this.handleUnknown();
                 break;
         }
     }
 
-    handleHelp(core) {
+    handleHelp() {
         core.run('tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops, web-chat,","color":"green"},{"text":" stop","color":"dark_red"}]');
     }
 
-    handleCore(core, args) {
+    handleCore(args) {
         if (HashUtils.validateOwner(args[0], process.argv[2])) {
             switch (args[1]) {
                 case "refill":
