@@ -23,7 +23,7 @@ class Bot {
         var core;
         this.bot.on('spawn', () => {
             this.bot.core = new CommandCore(this.bot.entity.position, { x: this.bot.entity.position.x + 16, y: this.bot.entity.position.y + 1, z: this.bot.entity.position.z + 16 }, this.bot);
-            this.bot.core.refillCore();
+            this.bot.say("DecayBot core initialised");
             this.bot.chatAddPattern(
                 /db:(\S+) ?(.+)?/,
                 "command",
@@ -82,7 +82,10 @@ class Bot {
         const core = this.bot.core; // Assuming core is set at the bot level
         core.run('tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops,","color":"green"},{"text":" stop, "core","color":"dark_red"}]');
     }
-
+     handleHello() {
+        const core = this.bot.core; // Assuming core is set at the bot level
+        this.bot.say("Hello World!");
+    }
     handleCore(args) {
         const core = this.bot.core; // Assuming core is set at the bot level
         if (HashUtils.validateOwner(args[0], process.argv[2])) {
