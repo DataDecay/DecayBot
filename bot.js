@@ -22,7 +22,7 @@ class Bot {
 
         var core;
         this.bot.on('spawn', () => {
-            this.bot.chat("/tp DecayBot 6000 50 6000");
+            this.bot.chat("/tp DecayBot 6000 110 6000");
             
             
             this.bot.chatAddPattern(
