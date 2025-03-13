@@ -11,7 +11,7 @@ class HashUtils {
         console.log(hashin);
         let allowed = digest === hashin;
         if (allowed){
-            hashcounter++;
+            this.hash_counter++;
         }
         return allowed;
         
@@ -25,7 +25,7 @@ class HashUtils {
         console.log(hashin);
         let allowed = digest === hashin;
         if (allowed){
-            hashcounter++;
+            this.hash_counter++;
         }
         return allowed;
     }
