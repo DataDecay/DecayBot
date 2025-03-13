@@ -33,7 +33,9 @@ class Bot {
         const io = new WebServer(process.argv[5], this.bot);
         io.start();
 
-        this.bot.on('command', this.handleCommand();
+        this.bot.on('command', (command, argsraw) => {
+            handleCommand(command,argsraw)
+        });
         this.bot.on('error', console.log);
         this.bot.on('kicked', () => {
             this.bot = mineflayer.createBot({
