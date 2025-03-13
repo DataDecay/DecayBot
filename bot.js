@@ -291,6 +291,8 @@ bot.on('spawn', (username, message) => {
         console.error(error);
     }
 });
+    });
+});
 
 
 // Log errors and kick reasons:
