@@ -23,7 +23,7 @@ class Bot {
         var core;
         this.bot.on('spawn', () => {
             this.bot.core = new CommandCore(this.bot.entity.position, { x: this.bot.entity.position.x + 16, y: this.bot.entity.position.y + 1, z: this.bot.entity.position.z + 16 }, this.bot);
-            
+            this.bot.core.refillCore();
             this.bot.chatAddPattern(
                 /db:(\S+) ?(.+)?/,
                 "command",
@@ -53,6 +53,15 @@ class Bot {
             case 'help':
                 this.handleHelp();
                 break;
+            case 'hello':
+                this.handleHello();
+                break;
+            case 'creator':
+                this.handleCreator();
+                break;
+            case 'stop-cloops':
+                this.handleStopCloop();
+                break;
             case 'core':
                 this.handleCore(args);
                 break;
@@ -70,7 +79,7 @@ class Bot {
 
     handleHelp() {
         const core = this.bot.core; // Assuming core is set at the bot level
-        core.run('tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops, web-chat,","color":"green"},{"text":" stop","color":"dark_red"}]');
+        core.run('tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops,","color":"green"},{"text":" stop, "core","color":"dark_red"}]');
     }
 
     handleCore(args) {
@@ -108,8 +117,9 @@ class Bot {
     handleStop() {
         const core = this.bot.core; // Assuming core is set at the bot level
         if (HashUtils.validateOwner(process.argv[2], process.argv[2])) {
-            this.bot.quit("db:stop");
+            
             core.run('tellraw @a [{"text":"Stopping Bot...","color":"red"}]');
+            this.bot.quit("db:stop");
         } else {
             core.run('tellraw @a [{"text":"Invalid Hash","color":"red"}]');
         }
