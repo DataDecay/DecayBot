@@ -47,7 +47,9 @@ class Bot {
             });
         });
     }
-
+    say(text, colour="white"){
+        const core = this.bot.core;
+        core.run('tellraw @a [{"text":"' + text + '","color":"' + colour + '"}]');
     handleCommand(command, argsraw) {
         let args = argsraw ? argsraw.split(" ") : [];
         switch (command) {
