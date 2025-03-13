@@ -20,7 +20,7 @@ class Bot {
             auth: 'offline'
         });
 
-        let this.bot.core;
+        var this.bot.core;
         this.bot.on('spawn', () => {
             this.bot.core = new CommandCore(this.bot.entity.position, { x: this.bot.entity.position.x + 16, y: this.bot.entity.position.y + 1, z: this.bot.entity.position.z + 16 }, this.bot);
             
