@@ -44,7 +44,7 @@ class Bot {
                 auth: 'offline'
             });
         });
-    });
+   
 
     handleCommand(command, argsraw) {
             if (argsraw){
