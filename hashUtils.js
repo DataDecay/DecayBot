@@ -9,7 +9,11 @@ class HashUtils {
         let digest = hash.digest('hex').substring(0, 5);
         console.log(digest);
         console.log(hashin);
-        return digest === hashin;
+        let allowed = digest === hashin;
+        if (allowed){
+            hashcounter++;
+        }
+        return allowed;
         
     }
 
@@ -19,7 +23,11 @@ class HashUtils {
         let digest = hash.digest('hex').substring(0, 5);
         console.log(digest);
         console.log(hashin);
-        return digest === hashin;
+        let allowed = digest === hashin;
+        if (allowed){
+            hashcounter++;
+        }
+        return allowed;
     }
 
     static generateOwner(prefix) {
