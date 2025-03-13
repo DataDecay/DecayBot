@@ -83,12 +83,7 @@ class Bot {
 
     handleHelp() {
         const core = this.bot.core; // Assuming core is set at the bot level
-        core.run(`tellraw @a [
-            {"text":"Public ","color":"blue"},{"text":"Trusted ","color":"green"},{"text":"Owner\n","color":"red"},
-            {"text":"hello, code, creator, hash-test, ","color":"blue"},
-            {"text":"cloop, stop-cloops, ","color":"green"},
-            {"text":"stop, core","color":"dark_red"}
-        ]`);
+        core.run('tellraw @a [{"text":"Public ","color":"blue"},{"text":"Trusted ","color":"green"},{"text":"Owner\n","color":"red"},{"text":"hello, code, creator, hash-test, ","color":"blue"},{"text":"cloop, stop-cloops, ","color":"green"},{"text":"stop, core","color":"dark_red"}]');
 
     }
      handleHello() {
