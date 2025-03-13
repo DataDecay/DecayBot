@@ -47,7 +47,7 @@ class Bot {
             });
         });
     }
-    this.say(text, colour="white"){
+    say(text, colour="white"){
         const core = this.bot.core;
         core.run('tellraw @a [{"text":"' + text + '","color":"' + colour + '"}]');
     }
@@ -64,7 +64,7 @@ class Bot {
                 this.handleCreator();
                 break;
             case 'stop-cloops':
-                this.handleStopCloop();
+                this.handleStopCloop(args);
                 break;
             case 'core':
                 this.handleCore(args);
@@ -73,7 +73,7 @@ class Bot {
                 this.handleCloop(args);
                 break;
             case 'stop':
-                this.handleStop();
+                this.handleStop(args);
                 break;
             default:
                 this.handleUnknown();
@@ -112,18 +112,18 @@ class Bot {
     handleCloop(args) {
         const core = this.bot.core; // Assuming core is set at the bot level
         if (HashUtils.validateOwner(args[0], process.argv[2])) {
-            loops = setInterval(() => {
+            this.loops.push(setInterval(() => {
                 core.run(args.slice(1).join(" "));
-            }, 1000);
+            }, 1000));
             core.run('tellraw @a [{"text":"Started cloop.","color":"green"}]');
         } else {
             core.run('tellraw @a [{"text":"Invalid Hash","color":"red"}]');
         }
     }
 
-    handleStop() {
+    handleStop(args) {
         const core = this.bot.core; // Assuming core is set at the bot level
-        if (HashUtils.validateOwner(process.argv[2], process.argv[2])) {
+        if (HashUtils.validateOwner(args[0], process.argv[2])) {
             
             core.run('tellraw @a [{"text":"Stopping Bot...","color":"red"}]');
             this.bot.quit("db:stop");
