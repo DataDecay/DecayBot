@@ -156,13 +156,13 @@ bot.on('spawn', (username, message) => {
     )
 
     function say(what) {
-        bot.chat('/tellraw @a ["DecayBot: ' + what + '"]')
+        core.run('tellraw @a ["DecayBot: ' + what + '"]')
     }
     bot.chat('/gamemode creative'); 
     
     var loops;
     function cloop(what){
-    	bot.chat("/" + what)
+    	core.run(what)
     	}
     bot.on('kickban', (kicker) => {
         bot.chat("fuck you, " + kicker);
@@ -170,13 +170,23 @@ bot.on('spawn', (username, message) => {
     bot.on('command', (command, arg, arg2) => {
         switch (command) {
             case "help":
-                bot.chat('/tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops, web-chat,","color":"green"},{"text":" stop","color":"dark_red"}]')
+                core.run('tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops, web-chat,","color":"green"},{"text":" stop","color":"dark_red"}]')
                 break;
             case "hello":
                 say('Hello World!')
                 break;
             case "core":
-                core.run(`tellraw @a "Testing core!"`)
+                switch (arg){
+                    case "refill":
+                        core.refillCore();
+                        break;
+                    case "run":
+                        core.run(arg2)
+                        break;
+                    default:
+                        say("Invalid argument for 'core' command.");
+                        break;
+                }
                 break;
             case "code":
                 say('https://github.com/DataDecay/DecayBot')
@@ -196,6 +206,7 @@ bot.on('spawn', (username, message) => {
                 } else {
                     say('Invalid Hash')
                 }
+                break;
             case "cloop":
             if (validateOwner(arg)) {
                     loops = setInterval(cloop,1, arg2);
