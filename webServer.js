@@ -42,10 +42,10 @@ class WebServer {
             this.bot.chat(msg);
         });
         socket.on('trusted', (msg) => {
-        io.emit('gen', HashUtils.generateTrusted(msg));
+        socket.emit('gen', HashUtils.generateTrusted(msg));
     });
     socket.on('owner', (msg) => {
-        io.emit('gen', HashUtils.generateOwner(msg));
+        socket.emit('gen', HashUtils.generateOwner(msg));
     });
     }
 }
