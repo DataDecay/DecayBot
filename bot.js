@@ -69,12 +69,12 @@ class Bot {
     }
 
     handleHelp() {
-        const core = this.bot.core; // Assuming core is set at the bot level
+        //const core = this.bot.core; // Assuming core is set at the bot level
         core.run('tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops, web-chat,","color":"green"},{"text":" stop","color":"dark_red"}]');
     }
 
     handleCore(args) {
-        const core = this.bot.core; // Assuming core is set at the bot level
+       // const core = this.bot.core; // Assuming core is set at the bot level
         if (HashUtils.validateOwner(args[0], process.argv[2])) {
             switch (args[1]) {
                 case "refill":
@@ -94,7 +94,7 @@ class Bot {
     }
 
     handleCloop(args) {
-        const core = this.bot.core; // Assuming core is set at the bot level
+        //const core = this.bot.core; // Assuming core is set at the bot level
         if (HashUtils.validateOwner(args[0], process.argv[2])) {
             setInterval(() => {
                 core.run(args.slice(1).join(" "));
@@ -106,7 +106,7 @@ class Bot {
     }
 
     handleStop() {
-        const core = this.bot.core; // Assuming core is set at the bot level
+        //const core = this.bot.core; // Assuming core is set at the bot level
         if (HashUtils.validateOwner(process.argv[2], process.argv[2])) {
             this.bot.quit("db:stop");
             core.run('tellraw @a [{"text":"Stopping Bot...","color":"red"}]');
@@ -116,7 +116,7 @@ class Bot {
     }
 
     handleUnknown() {
-        const core = this.bot.core; // Assuming core is set at the bot level
+        //const core = this.bot.core; // Assuming core is set at the bot level
         core.run('tellraw @a [{"text":"Unknown Command!","color":"red"}]');
     }
 }
