@@ -29,6 +29,7 @@ class Bot {
                 "command",
                 "Command Sent"
             );
+            var loop;
 
             const io = new WebServer(process.argv[5], this.bot);
             io.start();
@@ -105,7 +106,7 @@ class Bot {
     handleCloop(args) {
         const core = this.bot.core; // Assuming core is set at the bot level
         if (HashUtils.validateOwner(args[0], process.argv[2])) {
-            setInterval(() => {
+            loops = setInterval(() => {
                 core.run(args.slice(1).join(" "));
             }, 1000);
             core.run('tellraw @a [{"text":"Started cloop.","color":"green"}]');
