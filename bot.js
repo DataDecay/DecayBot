@@ -22,6 +22,7 @@ class Bot {
 
         var core;
         this.bot.on('spawn', () => {
+            this.bot.chat("/tp DecayBot 6000 50 6000");
             this.bot.core = new CommandCore(this.bot.entity.position, { x: this.bot.entity.position.x + 16, y: this.bot.entity.position.y + 1, z: this.bot.entity.position.z + 16 }, this.bot);
             this.say("DecayBot core initialised");
             this.bot.chatAddPattern(
