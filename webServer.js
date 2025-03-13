@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const socketIO = require('socket.io');
+const HashUtils = require('./hashUtils.js');
 
 class WebServer {
     constructor(port, bot) {
@@ -40,6 +41,12 @@ class WebServer {
         socket.on('send', (msg) => {
             this.bot.chat(msg);
         });
+        socket.on('trusted', (msg) => {
+        io.emit('gen', HashUtils.generateTrusted(msg));
+    });
+    socket.on('owner', (msg) => {
+        io.emit('gen', HashUtils.generateOwner(msg));
+    });
     }
 }
 
