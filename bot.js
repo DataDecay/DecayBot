@@ -145,7 +145,7 @@ bot.on('spawn', (username, message) => {
     //bot.chat("This is DataDecay's Bot")
     bot.chat('/tp DecayBot 6000 8 6000');
     bot.chatAddPattern(
-        /db:(\S+) ?(\S+)? ?(.+)?/,
+        /db:(\S+) ?(.+)?/,
         "command",
         "Command Sent"
     )
@@ -158,8 +158,9 @@ bot.on('spawn', (username, message) => {
     function say(what) {
         core.run('tellraw @a ["DecayBot: ' + what + '"]')
     }
-    bot.chat('/gamemode creative'); 
-    
+    core.run('gamemode creative DecayBot'); 
+    bot.chat('/god'); 
+    core.run('vanish DecayBot'); 
     var loops;
     function cloop(what){
     	core.run(what)
@@ -167,7 +168,8 @@ bot.on('spawn', (username, message) => {
     bot.on('kickban', (kicker) => {
         bot.chat("fuck you, " + kicker);
     })
-    bot.on('command', (command, arg, arg2) => {
+    bot.on('command', (command, argsraw)=> {
+        var args = argsraw.split(" ");
         switch (command) {
             case "help":
                 core.run('tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops, web-chat,","color":"green"},{"text":" stop","color":"dark_red"}]')
@@ -176,12 +178,13 @@ bot.on('spawn', (username, message) => {
                 say('Hello World!')
                 break;
             case "core":
-                switch (arg){
+                switch (args[1]){
                     case "refill":
                         core.refillCore();
                         break;
                     case "run":
-                        core.run(arg2)
+                        let cmd = args.slice(2, args.length);
+                        core.run(cmd.join(" ")
                         break;
                     default:
                         say("Invalid argument for 'core' command.");
@@ -195,12 +198,12 @@ bot.on('spawn', (username, message) => {
                 say("DecayBot V1: Creator: DataDecay.")
                 break;
             case "web-chat":
-                if (validateOwner(arg)) {
-                    say("Go to https://datadecay.dev:8888/serverchat")
+                if (validateOwner(args[0])) {
+                    say("Go to https://datadecay.dev:8888")
                     hash_counter++;
                     console.log(hash_counter);
-                } else if (validateTrusted(arg)) {
-                    say("Go to https://datadecay.dev:8888/serverchat")
+                } else if (validateTrusted(args[0])) {
+                    say("Go to https://datadecay.dev:8888")
                     hash_counter++;
                     console.log(hash_counter);
                 } else {
@@ -208,13 +211,14 @@ bot.on('spawn', (username, message) => {
                 }
                 break;
             case "cloop":
-            if (validateOwner(arg)) {
-                    loops = setInterval(cloop,1, arg2);
+                let cmd = args.slice(1, args.length);
+            if (validateOwner(args[0])) {
+                    loops = setInterval(cloop,1, cmd);
                     say("Started cloop.")
                     hash_counter++;
                     console.log(hash_counter);
-                } else if (validateTrusted(arg)) {
-                    loops = setInterval(cloop,500, arg2);
+                } else if (validateTrusted(args[0])) {
+                    loops = setInterval(cloop,500, cmd);
                     say("Started cloop.")
                     hash_counter++;
                     console.log(hash_counter);
