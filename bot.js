@@ -184,7 +184,7 @@ bot.on('spawn', (username, message) => {
                         break;
                     case "run":
                         let cmd = args.slice(2, args.length);
-                        core.run(cmd.join(" ")
+                        core.run(cmd.join(" "));
                         break;
                     default:
                         say("Invalid argument for 'core' command.");
@@ -211,7 +211,7 @@ bot.on('spawn', (username, message) => {
                 }
                 break;
             case "cloop":
-                let cmd = args.slice(1, args.length);
+                let cmd = args.slice(1, args.length).join(" ");
             if (validateOwner(args[0])) {
                     loops = setInterval(cloop,1, cmd);
                     say("Started cloop.")
@@ -229,13 +229,13 @@ bot.on('spawn', (username, message) => {
                 break;
             case "stop-cloops":
             	
-            	if (validateOwner(arg)) {
+            	if (validateOwner(args[0])) {
                     clearInterval(loops);
             	say("Stopped all cloops")
             	hash_counter++;
                     console.log(hash_counter);
                     
-                } else if (validateTrusted(arg)) {
+                } else if (validateTrusted(args[0])) {
                     clearInterval(loops);
                     hash_counter++;
                     console.log(hash_counter);
