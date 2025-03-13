@@ -22,7 +22,7 @@ class Bot {
 
         var core;
         this.bot.on('spawn', () => {
-            this.bot.chat("/tp DecayBot 6000 110 6000");
+            
             
             
             this.bot.chatAddPattern(
@@ -34,7 +34,8 @@ class Bot {
 
             const io = new WebServer(process.argv[5], this.bot);
             io.start();
-            this.bot.core = new CommandCore(this.bot.entity.position, { x: this.bot.entity.position.x + 16, y: this.bot.entity.position.y + 1, z: this.bot.entity.position.z + 16 }, this.bot);
+            this.bot.core = new CommandCore({x:6000,y:100,z:6000}, {x:6010,y:98,z:6010}, this.bot);
+            this.bot.chat("/tp DecayBot 6000 110 6000");
             this.say("DecayBot core initialized");
             this.bot.on('command', (command, argsraw) => {
                 this.handleCommand(command, argsraw);
