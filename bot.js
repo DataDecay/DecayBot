@@ -292,7 +292,6 @@ bot.on('spawn', (username, message) => {
     }
 });
     });
-});
 
 
 // Log errors and kick reasons:
