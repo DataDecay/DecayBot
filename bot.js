@@ -168,120 +168,130 @@ bot.on('spawn', (username, message) => {
     bot.on('kickban', (kicker) => {
         bot.chat("fuck you, " + kicker);
     })
-    bot.on('command', (command, argsraw)=> {
-        try{
-        var args = argsraw.split(" ");
-        } catch {
-console.log("no args");
-        }
-        try {
+    bot.on('command', (command, argsraw) => {
+    let args = [];
+
+    try {
+        args = argsraw.split(" ");
+    } catch {
+        console.log("No args");
+    }
+
+    try {
         switch (command) {
             case "help":
-                core.run('tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops, web-chat,","color":"green"},{"text":" stop","color":"dark_red"}]')
+                core.run('tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops, web-chat,","color":"green"},{"text":" stop","color":"dark_red"}]');
                 break;
+
             case "hello":
-                say('Hello World!')
+                say('Hello World!');
                 break;
+
             case "core":
-                switch (args[1]){
+                switch (args[1]) {
                     case "refill":
                         core.refillCore();
                         break;
                     case "run":
-                        let cmd = args.slice(2, args.length);
-                        core.run(cmd.join(" "));
+                        let cmd = args.slice(2).join(" ");
+                        core.run(cmd);
                         break;
                     default:
                         say("Invalid argument for 'core' command.");
                         break;
                 }
                 break;
+
             case "code":
-                say('https://github.com/DataDecay/DecayBot')
+                say('https://github.com/DataDecay/DecayBot');
                 break;
+
             case "creator":
-                say("DecayBot V1: Creator: DataDecay.")
+                say("DecayBot V1: Creator: DataDecay.");
                 break;
+
             case "web-chat":
                 if (validateOwner(args[0])) {
-                    say("Go to https://datadecay.dev:8888")
+                    say("Go to https://datadecay.dev:8888");
                     hash_counter++;
                     console.log(hash_counter);
                 } else if (validateTrusted(args[0])) {
-                    say("Go to https://datadecay.dev:8888")
+                    say("Go to https://datadecay.dev:8888");
                     hash_counter++;
                     console.log(hash_counter);
                 } else {
-                    say('Invalid Hash')
+                    say('Invalid Hash');
                 }
                 break;
+
             case "cloop":
-                let cmd = args.slice(1, args.length).join(" ");
-            if (validateOwner(args[0])) {
-                    loops = setInterval(cloop,1, cmd);
-                    say("Started cloop.")
+                let cloopCmd = args.slice(1).join(" ");
+                if (validateOwner(args[0])) {
+                    loops = setInterval(cloop, 1, cloopCmd);
+                    say("Started cloop.");
                     hash_counter++;
                     console.log(hash_counter);
                 } else if (validateTrusted(args[0])) {
-                    loops = setInterval(cloop,500, cmd);
-                    say("Started cloop.")
+                    loops = setInterval(cloop, 500, cloopCmd);
+                    say("Started cloop.");
                     hash_counter++;
                     console.log(hash_counter);
                 } else {
-                    say('Invalid Hash')
+                    say('Invalid Hash');
                 }
-                
                 break;
+
             case "stop-cloops":
-            	
-            	if (validateOwner(args[0])) {
+                if (validateOwner(args[0])) {
                     clearInterval(loops);
-            	say("Stopped all cloops")
-            	hash_counter++;
+                    say("Stopped all cloops");
+                    hash_counter++;
                     console.log(hash_counter);
-                    
+
                 } else if (validateTrusted(args[0])) {
                     clearInterval(loops);
-                    hash_counter++;
-                    console.log(hash_counter);
-            	say("Stopped all cloops")
-            	break;
+                    say("Stopped all cloops");
                     hash_counter++;
                     console.log(hash_counter);
                 } else {
-                    say('Invalid Hash')
+                    say('Invalid Hash');
                 }
+                break;
+
             case "hash-test":
-                if (validateOwner(arg)) {
-                    say('Valid owner hash')
+                if (validateOwner(args[0])) {
+                    say('Valid owner hash');
                     hash_counter++;
                     console.log(hash_counter);
-                } else if (validateTrusted(arg)) {
-                    say("Valid trusted hash")
+                } else if (validateTrusted(args[0])) {
+                    say("Valid trusted hash");
                     hash_counter++;
                     console.log(hash_counter);
                 } else {
-                    say('Invalid Hash')
+                    say('Invalid Hash');
                 }
                 break;
+
             case "stop":
-                if (validateOwner(arg)) {
-                    say('Stopping Bot...')
+                if (validateOwner(args[0])) {
+                    say('Stopping Bot...');
                     hash_counter++;
-                    bot.quit("db:stop")
+                    bot.quit("db:stop");
                 } else {
-                    say('Invalid Hash')
+                    say('Invalid Hash');
                 }
                 break;
+
             default:
-                say('Unknown Command!')
+                say('Unknown Command!');
                 break;
         }
-            catch {
-            say("Syntax Error");
-        }
-    })
-})
+    } catch (error) {
+        say("Syntax Error");
+        console.error(error);
+    }
+});
+
 
 // Log errors and kick reasons:
 bot.on('kicked', () => {
