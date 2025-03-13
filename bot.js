@@ -83,11 +83,25 @@ class Bot {
 
     handleHelp() {
         const core = this.bot.core; // Assuming core is set at the bot level
-        core.run('tellraw @a [{"text":"hello, code, creator, ","color":"blue"},{"text":"cloop, stop-cloops,","color":"green"},{"text":" stop, "core","color":"dark_red"}]');
+        core.run(`tellraw @a [
+            {"text":"Public ","color":"blue"},{"text":"Trusted ","color":"green"},{"text":"Owner\n","color":"red"},
+            {"text":"hello, code, creator, hash-test, ","color":"blue"},
+            {"text":"cloop, stop-cloops, ","color":"green"},
+            {"text":"stop, core","color":"dark_red"}
+        ]`);
+
     }
      handleHello() {
         const core = this.bot.core; // Assuming core is set at the bot level
         this.say("Hello World!");
+    }
+    handleCreator() {
+        const core = this.bot.core; // Assuming core is set at the bot level
+        this.say("Made by DataDecay!");
+    }
+    handleCode() {
+        const core = this.bot.core; // Assuming core is set at the bot level
+        core.run('tellraw @a ["",{"text":"Github Repo","color":"red","bold":true,"underlined":false,"clickEvent":{"action":"open_url","value":"https://github.com/DataDecay/DecayBot"}}]');
     }
     handleCore(args) {
         const core = this.bot.core; // Assuming core is set at the bot level
