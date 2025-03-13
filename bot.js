@@ -3,7 +3,7 @@ if (process.argv.length != 7) {
     console.log('Usage : node bot.js <hash-prefix-owner> <hash-prefix-trusted> <host> <port> <username>')
     process.exit(1)
 }
-const CommandCore = require("./commandcore.js")
+const CmdCore = require("./commandcore.js")
 
 process.argv.forEach(function(val, index, array) {
     console.log(index + ': ' + val);
