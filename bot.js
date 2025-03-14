@@ -1,11 +1,13 @@
 const mineflayer = require('mineflayer');
 const CommandCore = require('./commandCore.js');
-const HashUtils = require('./hashUtils.js');
+const HashUtilsLib = require('./hashUtils.js');
 const WebServer = require('./webServer.js');
 
 class Bot {
+    let HashUtils = null;
     constructor() {
         this.bot = null;
+        this.HashUtils = new HashUtilsLib;
     }
 
     start() {
