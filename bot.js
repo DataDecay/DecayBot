@@ -4,7 +4,7 @@ const HashUtilsLib = require('./hashUtils.js');
 const WebServer = require('./webServer.js');
 
 class Bot {
-    let HashUtils = null;
+    HashUtils = null;
     constructor() {
         this.bot = null;
         this.HashUtils = new HashUtilsLib;
