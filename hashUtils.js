@@ -1,7 +1,7 @@
 const { createHash, randomInt } = require('crypto');
 
 class HashUtils {
-    let hash_counter = 0;
+    hash_counter = 0;
     function HashUtils() {
         hash_counter = randomInt(999);
     }
