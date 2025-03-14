@@ -2,7 +2,7 @@ const { createHash, randomInt } = require('crypto');
 
 class HashUtils {
     hash_counter = 0;
-    function HashUtils() {
+    HashUtils() {
         hash_counter = randomInt(999);
     }
     function validateOwner(hashin, prefix) {
