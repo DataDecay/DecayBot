@@ -1,12 +1,14 @@
 const http = require('http');
 const fs = require('fs');
 const socketIO = require('socket.io');
-const HashUtils = require('./hashUtils.js');
+const HashUtilsLib = require('./hashUtils.js');
 
 class WebServer {
+    
     constructor(port, bot) {
         this.port = port;
         this.bot = bot;
+        this.HashUtils = new HashUtilsLib;
     }
 
     start() {
@@ -42,10 +44,10 @@ class WebServer {
             this.bot.chat(msg);
         });
         socket.on('trusted', (msg) => {
-        socket.emit('gen', HashUtils.generateTrusted(process.argv[1]));
+        socket.emit('gen', this.HashUtils.generateTrusted(process.argv[2]));
     });
     socket.on('owner', (msg) => {
-        socket.emit('gen', HashUtils.generateOwner(process.argv[2]));
+        socket.emit('gen', this.HashUtils.generateOwner(process.argv[1]));
     });
     }
 }
