@@ -105,7 +105,7 @@ class Bot {
     }
     handleCore(args) {
         const core = this.bot.core; // Assuming core is set at the bot level
-        if (HashUtils.validateOwner(args[0], process.argv[2])) {
+        if (this.HashUtils.validateOwner(args[0], process.argv[2])) {
             switch (args[1]) {
                 case "refill":
                     core.refillCore();
@@ -125,7 +125,7 @@ class Bot {
 
     handleCloop(args) {
         const core = this.bot.core; // Assuming core is set at the bot level
-        if (HashUtils.validateOwner(args[0], process.argv[2])) {
+        if (this.HashUtils.validateOwner(args[0], process.argv[2])) {
             this.loops.push(setInterval(() => {
                 core.run(args.slice(1).join(" "));
             }, 1000));
@@ -137,7 +137,7 @@ class Bot {
 
     handleStop(args) {
         const core = this.bot.core; // Assuming core is set at the bot level
-        if (HashUtils.validateOwner(args[0], process.argv[2])) {
+        if (this.this.HashUtils.validateOwner(args[0], process.argv[2])) {
             
             core.run('tellraw @a [{"text":"Stopping Bot...","color":"red"}]');
             this.bot.quit("db:stop");
