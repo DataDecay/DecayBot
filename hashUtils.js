@@ -1,9 +1,11 @@
 const { createHash, randomInt } = require('crypto');
 
-let hash_counter = randomInt(999);
-
 class HashUtils {
-    static validateOwner(hashin, prefix) {
+    let hash_counter = 0;
+    function HashUtils() {
+        hash_counter = randomInt(999);
+    }
+    function validateOwner(hashin, prefix) {
         let hash = createHash('sha256');
         hash.update(prefix + hash_counter.toString());
         let digest = hash.digest('hex').substring(0, 5);
@@ -17,7 +19,7 @@ class HashUtils {
         
     }
 
-    static validateTrusted(hashin, prefix) {
+    function validateTrusted(hashin, prefix) {
         let hash = createHash('sha256');
         hash.update(prefix + hash_counter.toString());
         let digest = hash.digest('hex').substring(0, 5);
@@ -30,13 +32,13 @@ class HashUtils {
         return allowed;
     }
 
-    static generateOwner(prefix) {
+    function generateOwner(prefix) {
         let hash = createHash('sha256');
         hash.update(prefix + hash_counter.toString());
         return hash.digest('hex').substring(0, 5);
     }
 
-    static generateTrusted(prefix) {
+    function generateTrusted(prefix) {
         let hash = createHash('sha256');
         hash.update(prefix + hash_counter.toString());
         return hash.digest('hex').substring(0, 5);
