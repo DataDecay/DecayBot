@@ -37,7 +37,8 @@ class WebServer {
 
     handleSocketConnection(socket) {
         this.bot.on('message', (message, pos, sender) => {
-            socket.emit("msg", sender + ': ' + message.toString());
+            console.log("MESSAGE: [" + pos + "] " + sender + ': ' + message.toString());
+            socket.emit("msg", "[" + pos + "] " + sender + ': ' + message.toString());
         });
 
         socket.on('send', (msg) => {
