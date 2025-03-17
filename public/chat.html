@@ -2,145 +2,142 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <!-- CoreUI CSS -->
-<link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.3.1/dist/css/themes/bootstrap/bootstrap.min.css" rel="stylesheet" integrity="sha384-leftDVIOA1OKkBjlGo3RtR+u4nHJPna0xV0zW3hSS3Os38Y84NF5bYB8/hOnHbfj" crossorigin="anonymous">    <!-- Optional Icons -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/@coreui/icons@3.0.0/css/all.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/css/coreui.min.css" rel="stylesheet" />
+
+    <!-- CoreUI Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/@coreui/icons@3.0.0/css/all.min.css" rel="stylesheet" />
+
+    <!-- Optional Bootstrap icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
     <style>
-      #messages {
-        list-style-type: none;
+      html,
+      body {
+        height: 100%;
         margin: 0;
-        padding: 0;
-        height: 400px;
-        overflow-y: auto;
-        border: 1px solid #dee2e6;
-        border-radius: 0.375rem;
-        background-color: #f8f9fa;
       }
 
-      #messages > li {
+      .chat-box {
+        height: 400px;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        padding: 0;
+      }
+
+      .chat-box li {
+        list-style: none;
         padding: 0.5rem 1rem;
         border-bottom: 1px solid #dee2e6;
       }
 
-      #form {
+      .chat-input {
         display: flex;
         gap: 0.5rem;
         margin-top: 1rem;
-      }
-
-      #input {
-        flex: 1;
       }
     </style>
   </head>
 
   <body class="c-app">
+
     <!-- Sidebar -->
-    <div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
-      <div class="c-sidebar-brand d-md-down-none">Admin Panel</div>
-      <ul class="c-sidebar-nav">
-        <li class="c-sidebar-nav-item">
-          <a class="c-sidebar-nav-link active" href="#">
-            <i class="c-sidebar-nav-icon cil-chat-bubble"></i> Chat
+    <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+      <div class="sidebar-brand d-none d-md-flex">
+        <svg class="sidebar-brand-full" width="118" height="46">
+          <text x="0" y="30" font-size="24" fill="white">Admin</text>
+        </svg>
+      </div>
+
+      <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
+        <li class="nav-item">
+          <a class="nav-link active" href="#">
+            <i class="nav-icon cil-chat-bubble"></i> Chat
           </a>
         </li>
-        <li class="c-sidebar-nav-item">
-          <a class="c-sidebar-nav-link" href="#">
-            <i class="c-sidebar-nav-icon cil-people"></i> Users
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <i class="nav-icon cil-people"></i> Users
           </a>
         </li>
-        <li class="c-sidebar-nav-item">
-          <a class="c-sidebar-nav-link" href="#">
-            <i class="c-sidebar-nav-icon cil-settings"></i> Settings
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <i class="nav-icon cil-settings"></i> Settings
           </a>
         </li>
       </ul>
+      <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
     </div>
 
-    <!-- Main content -->
-    <div class="c-wrapper">
+    <!-- Wrapper for main content -->
+    <div class="wrapper d-flex flex-column min-vh-100 bg-light">
+
       <!-- Header -->
-      <header class="c-header c-header-light c-header-fixed">
-        <button
-          class="c-header-toggler c-class-toggler d-lg-none mfe-auto"
-          type="button"
-          data-target="#sidebar"
-          data-class="c-sidebar-show"
-        >
-          <i class="cil-menu"></i>
-        </button>
-        <a class="c-header-brand d-lg-none" href="#">Admin Panel</a>
-        <ul class="c-header-nav ml-auto mr-4">
-          <li class="c-header-nav-item dropdown">
-            <a
-              class="c-header-nav-link"
-              data-coreui-toggle="dropdown"
-              href="#"
-              role="button"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <div class="c-avatar">
-                <img
-                  class="c-avatar-img"
-                  src="https://via.placeholder.com/40"
-                  alt="admin@admin.com"
-                />
-              </div>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <a class="dropdown-item" href="#">Profile</a>
-              <a class="dropdown-item" href="#">Logout</a>
-            </div>
-          </li>
-        </ul>
+      <header class="header header-sticky mb-4">
+        <div class="container-fluid">
+          <button class="header-toggler px-md-0 me-md-3" type="button" onclick="coreui.Sidebar.getInstance(document.getElementById('sidebar')).toggle()">
+            <i class="bi bi-list"></i>
+          </button>
+          <a class="header-brand d-md-none" href="#">Admin</a>
+          <ul class="header-nav ms-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link py-0" data-coreui-toggle="dropdown" href="#" role="button">
+                <div class="avatar avatar-md">
+                  <img class="avatar-img" src="https://via.placeholder.com/40" alt="user" />
+                </div>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end pt-0">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
       </header>
 
-      <!-- Body content -->
-      <div class="c-body">
-        <main class="c-main">
-          <div class="container-fluid">
-            <div class="fade-in">
+      <!-- Main Content -->
+      <div class="body flex-grow-1 px-3">
+        <div class="container-lg">
+          <div class="row">
+            <div class="col-12">
               <!-- Chat Card -->
               <div class="card">
                 <div class="card-header">Admin Chat Console</div>
                 <div class="card-body">
-                  <ul id="messages"></ul>
-                  <form id="form">
-                    <input
-                      id="input"
-                      class="form-control"
-                      autocomplete="off"
-                      placeholder="Type a message..."
-                    />
+                  <ul id="messages" class="chat-box"></ul>
+                  <form id="form" class="chat-input">
+                    <input id="input" class="form-control" autocomplete="off" placeholder="Type a message..." />
                     <button class="btn btn-primary" type="submit">Send</button>
                   </form>
                 </div>
               </div>
             </div>
           </div>
-        </main>
-
-        <footer class="c-footer">
-          <div><a href="#">Admin Panel</a> © 2025</div>
-        </footer>
+        </div>
       </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div><a href="#">Admin Panel</a> © 2025</div>
+      </footer>
     </div>
 
-    <!-- CoreUI & Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-+BCVVYepeVZB2ejb1RVKb+0hoxtMs9CEjephXP6c6DV482N/m/hwq5FevVLVsETI" crossorigin="anonymous"></script>    <!-- Socket.IO -->
+    <!-- CoreUI Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/js/coreui.bundle.min.js"></script>
+
+    <!-- Socket.IO -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io();
+      const socket = io();
 
-      var messages = document.getElementById('messages');
-      var form = document.getElementById('form');
-      var input = document.getElementById('input');
+      const messages = document.getElementById('messages');
+      const form = document.getElementById('form');
+      const input = document.getElementById('input');
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -151,7 +148,7 @@
       });
 
       socket.on('msg', function (msg) {
-        var item = document.createElement('li');
+        const item = document.createElement('li');
         item.textContent = msg;
         messages.appendChild(item);
         messages.scrollTop = messages.scrollHeight;
