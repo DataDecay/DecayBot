@@ -1,7 +1,119 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DecayBot Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- CoreUI CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/css/coreui.min.css" rel="stylesheet" />
+    <!-- CoreUI Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/@coreui/icons@3.0.0/css/all.min.css" rel="stylesheet" />
+
+    <style>
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      .chat-box {
+        height: 400px;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        padding: 0;
+      }
+
+      .chat-box li {
+        list-style: none;
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid #dee2e6;
+      }
+
+      .chat-input {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .wrapper {
+        margin-left: var(--cui-sidebar-occupy-start, 16rem);
+        transition: margin-left 0.3s;
+      }
+
+      .sidebar.sidebar-unfoldable ~ .wrapper {
+        margin-left: var(--cui-sidebar-occupy-start, 4rem);
+      }
+    </style>
+  </head>
+
   <body>
-    <h1>DecayBot Dashboard</h1>
-    <p>Made by DataDecay :D</p>
+    <!-- Sidebar -->
+    <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+      <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
+        <li class="nav-item">
+          <a class="nav-link active" href="/">
+            <i class="nav-icon cil-applications-home"></i> Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/chat.html">
+            <i class="nav-icon cil-applications-settings"></i> Chat
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/hash.html">
+            <i class="nav-icon cil-settings"></i> Hash
+          </a>
+        </li>
+      </ul>
+
+      <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <div class="wrapper d-flex flex-column min-vh-100 bg-light">
+
+      <!-- Header -->
+      <header class="header header-sticky mb-4">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+          <button class="header-toggler px-md-0 me-md-3" type="button"
+            onclick="coreui.Sidebar.getInstance(document.getElementById('sidebar')).toggle()">
+            <i class="cil-menu"></i>
+          </button>
+          <a class="header-brand d-md-none" href="#">DecayBot</a>
+
+          <div class="d-none d-md-flex align-items-center">
+            <span class="fw-bold">DecayBot Dashboard</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Body Content -->
+      <div class="body flex-grow-1 px-3">
+        <div class="container-lg">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">DecayBot Dashboard</div>
+                <div class="card-body">
+                  <h1>DecayBot Dashboard</h1>
+                  <p>Made by DataDecay :D</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div><a href="#">DecayBot Dashboard</a> © 2025</div>
+      </footer>
+    </div>
+
+    <!-- CoreUI JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/js/coreui.bundle.min.js"></script>
   </body>
 </html>
