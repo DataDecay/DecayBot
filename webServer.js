@@ -82,7 +82,7 @@ class WebServer {
         socket.on('trusted', (msg) => {
             socket.emit('gen', this.HashUtils.generateTrusted(process.argv[2]));
         });
-         socket.on('restart', (msg) => {
+         socket.on('restart', () => {
             process.on("exit", function () {
                 require("child_process").spawn(process.argv.shift(), process.argv, {
                     cwd: process.cwd(),
