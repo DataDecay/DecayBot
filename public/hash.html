@@ -1,39 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard - Owner/Trusted Controls</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<!doctype html>
-<input id="number" autocomplete="off" />
-<form id="ownersend" action="">
-  <button>Owner</button>
-</form>
-<form id="trustedsend" action="">
-  <button>Trusted</button>
-</form>
-<p id="public" >Output</p>
- <script src="/socket.io/socket.io.js"></script>
-<script>
-  var socket = io();
+    <!-- CoreUI CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/css/coreui.min.css" rel="stylesheet" />
+    <!-- CoreUI Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/@coreui/icons@3.0.0/css/all.min.css" rel="stylesheet" />
 
-  var out = document.getElementById('public');
-  var trustedform = document.getElementById('trustedsend');
-  var ownerform = document.getElementById('ownersend');
-  var number = document.getElementById('number');
+    <style>
+      body {
+        margin: 0;
+        height: 100%;
+      }
 
-  trustedform.addEventListener('submit', function(e) {
-    e.preventDefault();
-    if (number.value) {
-      socket.emit('trusted', number.value);
-      number.value++;
-    }
-  });
-  ownerform.addEventListener('submit', function(e) {
-    e.preventDefault();
-    if (number.value) {
-      socket.emit('owner', number.value);
-      number.value++;
-    }
-  });
+      .wrapper {
+        margin-left: var(--cui-sidebar-occupy-start, 16rem);
+        transition: margin-left 0.3s;
+      }
 
-  socket.on('gen', function(msg) {
-    console.log(msg);
-    out.innerHTML = msg;
-  });
-</script>
+      .sidebar.sidebar-unfoldable ~ .wrapper {
+        margin-left: var(--cui-sidebar-occupy-start, 4rem);
+      }
+
+      .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      #public {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.375rem;
+        border: 1px solid #dee2e6;
+        min-height: 3rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+      <div class="sidebar-brand d-none d-md-flex">
+        <svg class="sidebar-brand-full" width="118" height="46">
+          <text x="0" y="30" font-size="24" fill="white">Admin</text>
+        </svg>
+      </div>
+
+      <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
+        <li class="nav-item">
+          <a class="nav-link active" href="/public/chat.html">
+            <i class="nav-icon cil-applications-settings"></i> Chat
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/public/hash.html">
+            <i class="nav-icon cil-settings"></i> Hash
+          </a>
+        </li>
+      </ul>
+
+      <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="wrapper d-flex flex-column min-vh-100 bg-light">
+      <!-- Header (No profile!) -->
+      <header class="header header-sticky mb-4">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+          <button class="header-toggler px-md-0 me-md-3" type="button"
+            onclick="coreui.Sidebar.getInstance(document.getElementById('sidebar')).toggle()">
+            <i class="cil-menu"></i>
+          </button>
+          <div class="d-none d-md-flex align-items-center">
+            <span class="fw-bold">Admin Dashboard</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Body -->
+      <div class="body flex-grow-1 px-3">
+        <div class="container-lg">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">Owner & Trusted Controls</div>
+                <div class="card-body">
+                  <div class="form-section">
+                    <!-- Input Field -->
+                    <input id="number" type="number" class="form-control" placeholder="Enter number" />
+
+                    <!-- Owner Button -->
+                    <form id="ownersend">
+                      <button type="submit" class="btn btn-danger w-100">
+                        Owner Action
+                      </button>
+                    </form>
+
+                    <!-- Trusted Button -->
+                    <form id="trustedsend">
+                      <button type="submit" class="btn btn-warning w-100">
+                        Trusted Action
+                      </button>
+                    </form>
+
+                    <!-- Output Area -->
+                    <div id="public" class="mt-4">Output</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div><a href="#">Admin Panel</a> © 2025</div>
+      </footer>
+    </div>
+
+    <!-- CoreUI JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/js/coreui.bundle.min.js"></script>
+    <!-- Socket.IO -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Socket Logic -->
+    <script>
+      const socket = io();
+
+      const out = document.getElementById('public');
+      const trustedform = document.getElementById('trustedsend');
+      const ownerform = document.getElementById('ownersend');
+      const number = document.getElementById('number');
+
+      trustedform.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (number.value) {
+          socket.emit('trusted', number.value);
+          number.value++;
+        }
+      });
+
+      ownerform.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (number.value) {
+          socket.emit('owner', number.value);
+          number.value++;
+        }
+      });
+
+      socket.on('gen', function (msg) {
+        console.log(msg);
+        out.innerHTML = msg;
+      });
+    </script>
+  </body>
+</html>
