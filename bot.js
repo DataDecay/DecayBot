@@ -105,22 +105,19 @@ class Bot {
     }
     handleCore(args) {
         const core = this.bot.core; // Assuming core is set at the bot level
-        if (this.HashUtils.validateOwner(args[0], process.argv[2])) {
-            switch (args[1]) {
+        
+            switch (args[0]) {
                 case "refill":
                     core.refillCore();
                     break;
                 case "run":
-                    let cmd = args.slice(2).join(" ");
+                    let cmd = args.slice(1).join(" ");
                     core.run(cmd);
                     break;
                 default:
                     core.run('tellraw @a [{"text":"Invalid argument for \'core\' command.","color":"red"}]');
                     break;
             }
-        } else {
-            core.run('tellraw @a [{"text":"Invalid Hash","color":"red"}]');
-        }
     }
 
     handleCloop(args) {
