@@ -7,15 +7,10 @@
 
     <!-- CoreUI CSS -->
     <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/css/coreui.min.css" rel="stylesheet" />
-
     <!-- CoreUI Icons -->
     <link href="https://cdn.jsdelivr.net/npm/@coreui/icons@3.0.0/css/all.min.css" rel="stylesheet" />
 
-    <!-- Optional Bootstrap icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
-
     <style>
-      html,
       body {
         height: 100%;
         margin: 0;
@@ -41,11 +36,20 @@
         gap: 0.5rem;
         margin-top: 1rem;
       }
+
+      /* Sidebar + wrapper spacing */
+      .wrapper {
+        margin-left: var(--cui-sidebar-occupy-start, 16rem);
+        transition: margin-left 0.3s;
+      }
+
+      .sidebar.sidebar-unfoldable ~ .wrapper {
+        margin-left: var(--cui-sidebar-occupy-start, 4rem);
+      }
     </style>
   </head>
 
-  <body class="c-app">
-
+  <body>
     <!-- Sidebar -->
     <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
       <div class="sidebar-brand d-none d-md-flex">
@@ -71,41 +75,34 @@
           </a>
         </li>
       </ul>
+
       <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
     </div>
 
-    <!-- Wrapper for main content -->
+    <!-- Main Content Wrapper -->
     <div class="wrapper d-flex flex-column min-vh-100 bg-light">
 
-      <!-- Header -->
+      <!-- Header (No Profile Stuff!) -->
       <header class="header header-sticky mb-4">
-        <div class="container-fluid">
-          <button class="header-toggler px-md-0 me-md-3" type="button" onclick="coreui.Sidebar.getInstance(document.getElementById('sidebar')).toggle()">
-            <i class="bi bi-list"></i>
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+          <button class="header-toggler px-md-0 me-md-3" type="button"
+            onclick="coreui.Sidebar.getInstance(document.getElementById('sidebar')).toggle()">
+            <i class="cil-menu"></i>
           </button>
           <a class="header-brand d-md-none" href="#">Admin</a>
-          <ul class="header-nav ms-auto">
-            <li class="nav-item dropdown">
-              <a class="nav-link py-0" data-coreui-toggle="dropdown" href="#" role="button">
-                <div class="avatar avatar-md">
-                  <img class="avatar-img" src="https://via.placeholder.com/40" alt="user" />
-                </div>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end pt-0">
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><a class="dropdown-item" href="#">Logout</a></li>
-              </ul>
-            </li>
-          </ul>
+
+          <!-- Removed profile dropdown, left aligned content -->
+          <div class="d-none d-md-flex align-items-center">
+            <span class="fw-bold">Admin Dashboard</span>
+          </div>
         </div>
       </header>
 
-      <!-- Main Content -->
+      <!-- Body Content -->
       <div class="body flex-grow-1 px-3">
         <div class="container-lg">
           <div class="row">
             <div class="col-12">
-              <!-- Chat Card -->
               <div class="card">
                 <div class="card-header">Admin Chat Console</div>
                 <div class="card-body">
@@ -127,11 +124,11 @@
       </footer>
     </div>
 
-    <!-- CoreUI Bundle JS -->
+    <!-- CoreUI JS -->
     <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/js/coreui.bundle.min.js"></script>
-
     <!-- Socket.IO -->
     <script src="/socket.io/socket.io.js"></script>
+
     <script>
       const socket = io();
 
