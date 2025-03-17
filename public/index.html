@@ -98,8 +98,8 @@
               <div class="card">
                 <div class="card-header">DecayBot Dashboard</div>
                 <div class="card-body">
-                  <h1>DecayBot Dashboard</h1>
                   <p>Made by DataDecay :D</p>
+                  <button onclick="restart(); class="btn btn-danger w-100">Restart Server</button>
                 </div>
               </div>
             </div>
@@ -115,5 +115,15 @@
 
     <!-- CoreUI JS -->
     <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/js/coreui.bundle.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Socket Logic -->
+    <script>
+      const socket = io();
+
+      function restart(){
+        socket.emit('restart', number.value);
+      }
+    </script>
   </body>
 </html>
