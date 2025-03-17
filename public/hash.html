@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Admin Dashboard - Owner/Trusted Controls</title>
+    <title>DecayBot Dashboard - Hashes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- CoreUI CSS -->
@@ -44,19 +44,14 @@
   <body>
     <!-- Sidebar -->
     <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
-      <div class="sidebar-brand d-none d-md-flex">
-        <svg class="sidebar-brand-full" width="118" height="46">
-          <text x="0" y="30" font-size="24" fill="white">Admin</text>
-        </svg>
-      </div>
 
       <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
         <li class="nav-item">
-          <a class="nav-link active" href="/public/chat.html">
+          <a class="nav-link" href="/public/chat.html">
             <i class="nav-icon cil-applications-settings"></i> Chat
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item active">
           <a class="nav-link" href="/public/hash.html">
             <i class="nav-icon cil-settings"></i> Hash
           </a>
@@ -76,7 +71,7 @@
             <i class="cil-menu"></i>
           </button>
           <div class="d-none d-md-flex align-items-center">
-            <span class="fw-bold">Admin Dashboard</span>
+            <span class="fw-bold">DecayBot Dashboard</span>
           </div>
         </div>
       </header>
@@ -87,23 +82,21 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <div class="card-header">Owner & Trusted Controls</div>
+                <div class="card-header">Owner & Trusted Hashes</div>
                 <div class="card-body">
                   <div class="form-section">
                     <!-- Input Field -->
-                    <input id="number" type="number" class="form-control" placeholder="Enter number" />
-
                     <!-- Owner Button -->
                     <form id="ownersend">
                       <button type="submit" class="btn btn-danger w-100">
-                        Owner Action
+                        Owner
                       </button>
                     </form>
 
                     <!-- Trusted Button -->
                     <form id="trustedsend">
                       <button type="submit" class="btn btn-warning w-100">
-                        Trusted Action
+                        Trusted
                       </button>
                     </form>
 
@@ -119,7 +112,7 @@
 
       <!-- Footer -->
       <footer class="footer">
-        <div><a href="#">Admin Panel</a> © 2025</div>
+        <div><a href="#">DecayBot Dashboard</a> © 2025</div>
       </footer>
     </div>
 
@@ -135,21 +128,15 @@
       const out = document.getElementById('public');
       const trustedform = document.getElementById('trustedsend');
       const ownerform = document.getElementById('ownersend');
-      const number = document.getElementById('number');
-
       trustedform.addEventListener('submit', function (e) {
         e.preventDefault();
-        if (number.value) {
           socket.emit('trusted', number.value);
-          number.value++;
         }
       });
 
       ownerform.addEventListener('submit', function (e) {
         e.preventDefault();
-        if (number.value) {
           socket.emit('owner', number.value);
-          number.value++;
         }
       });
 
