@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Admin Dashboard - Chat</title>
+    <title>DecayBot Dashboard - Chat</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- CoreUI CSS -->
@@ -52,11 +52,6 @@
   <body>
     <!-- Sidebar -->
     <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
-      <div class="sidebar-brand d-none d-md-flex">
-        <svg class="sidebar-brand-full" width="118" height="46">
-          <text x="0" y="30" font-size="24" fill="white">Admin</text>
-        </svg>
-      </div>
 
       <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
         <li class="nav-item">
@@ -65,7 +60,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/public/index.html">
+          <a class="nav-link" href="/public/hash.html">
             <i class="nav-icon cil-settings"></i> Hash
           </a>
         </li>
@@ -84,11 +79,11 @@
             onclick="coreui.Sidebar.getInstance(document.getElementById('sidebar')).toggle()">
             <i class="cil-menu"></i>
           </button>
-          <a class="header-brand d-md-none" href="#">Admin</a>
+          <a class="header-brand d-md-none" href="#">DecayBot</a>
 
           <!-- Removed profile dropdown, left aligned content -->
           <div class="d-none d-md-flex align-items-center">
-            <span class="fw-bold">Admin Dashboard</span>
+            <span class="fw-bold">DecayBot Dashboard</span>
           </div>
         </div>
       </header>
@@ -99,7 +94,7 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <div class="card-header">Admin Chat Console</div>
+                <div class="card-header">DecayBot Console</div>
                 <div class="card-body">
                   <ul id="messages" class="chat-box"></ul>
                   <form id="form" class="chat-input">
@@ -115,7 +110,7 @@
 
       <!-- Footer -->
       <footer class="footer">
-        <div><a href="#">Admin Panel</a> © 2025</div>
+        <div><a href="#">DecayBot Dashboard</a> © 2025</div>
       </footer>
     </div>
 
