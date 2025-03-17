@@ -23,8 +23,8 @@ class WebServer {
     }
 
     handler(req, res) {
-        const filePath = req.url === "/hash" ? '/public/hash.html' : '/public/index.html';
-        fs.readFile(__dirname + filePath, (err, data) => {
+
+        fs.readFile(__dirname + req.url, (err, data) => {
             if (err) {
                 res.writeHead(404, { 'Content-Type': 'text/html' });
                 return res.end("404 Not Found");
