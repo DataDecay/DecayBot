@@ -82,6 +82,16 @@ class WebServer {
         socket.on('trusted', (msg) => {
             socket.emit('gen', this.HashUtils.generateTrusted(process.argv[2]));
         });
+         socket.on('restart', (msg) => {
+            process.on("exit", function () {
+                require("child_process").spawn(process.argv.shift(), process.argv, {
+                    cwd: process.cwd(),
+                    detached : true,
+                    stdio: "inherit"
+                });
+            });
+            process.exit();
+        });
 
         socket.on('owner', (msg) => {
             socket.emit('gen', this.HashUtils.generateOwner(process.argv[1]));
