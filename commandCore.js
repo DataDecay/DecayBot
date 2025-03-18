@@ -66,7 +66,7 @@ class CommandCore {
     console.log("At location:", this.useBlockxyz);
 
     this.client.write('update_command_block', {
-  location: { x: 100, y: 64, z: 100 }, // pick a placed repeating_command_block
+  location: this.useBlockxyz, // pick a placed repeating_command_block
   command: 'say test',
   mode: 2,   // Auto Mode
   flags: 0x05 // Track Output + Auto
