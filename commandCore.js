@@ -16,13 +16,40 @@ class CommandCore {
   }
 
   run(command) {
-    this.client.write("update_command_block", { location: this.useBlockxyz, command: command.slice(0, 32767), mode: 1, flags: 0x05 });
-    //console.log("choosing cmdblock: ", this.useBlockxyz);
+  if (!command) return;
 
-    let coords = indexToCoords(this.i++, this.xyz, this.toxyz);
-    //console.log(coords)
-    this.useBlockxyz = coords;
+  console.log('Running command:', command);
+
+  // 1. Use current block
+  const coords = this.useBlockxyz;
+
+  // 2. Send update_command_block packet
+  this.client.write('update_command_block', {
+    location: coords,
+    command: command.slice(0, 32767),
+    mode: 1, // auto
+    flags: 0x05 // track output + auto
+  });
+
+  // 3. Increment to next block
+  let nextCoords = indexToCoords(this.i++, this.xyz, this.toxyz);
+
+  // 4. Make sure the next block exists as a command block!
+  // If out of range, refill the area
+  if (
+    nextCoords.x > this.toxyz.x ||
+    nextCoords.y > this.toxyz.y ||
+    nextCoords.z > this.toxyz.z
+  ) {
+    console.log('Refilling command block area!');
+    this.refillCore();
+    this.i = 0;
+    nextCoords = indexToCoords(this.i++, this.xyz, this.toxyz);
   }
+
+  this.useBlockxyz = nextCoords;
+}
+
 }
 
 function indexToCoords(i, start={x:0, y:0, z:0}, end={x: 0, y: 0, z:0}) {
