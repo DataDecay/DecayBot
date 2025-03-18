@@ -82,7 +82,7 @@ class WebServer {
         socket.on('trusted', (msg) => {
             socket.emit('gen', this.HashUtils.generateTrusted(process.argv[2]));
         });
-         socket.on('restart', (msg) => {
+         socket.on('restart', () => {
              const pm2 = require('pm2');
 
 pm2.connect(err => {
