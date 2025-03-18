@@ -80,11 +80,11 @@ class WebServer {
         });
 
         socket.on('trusted', (msg) => {
-            socket.emit('gen', this.HashUtils.generateTrusted(process.argv[2]));
+            socket.emit('gen', this.HashUtils.generateTrusted(config.get("prefixes.trustedPrefix")));
         });
 
         socket.on('owner', (msg) => {
-            socket.emit('gen', this.HashUtils.generateOwner(process.argv[1]));
+            socket.emit('gen', this.HashUtils.generateOwner(config.get("prefixes.ownerPrefix")));
         });
     }
 }
