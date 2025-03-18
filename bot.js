@@ -36,7 +36,7 @@ class Bot {
 
             this.bot.on('command', (command, argsraw) => {
                 console.log(command + ", " + argsraw)
-                if (command === "help") {
+                if (command == "help") {
                     this.showHelp();
                 } else {
                     this.handleCommand(command, argsraw ? argsraw.split(" ") : []);
@@ -87,7 +87,7 @@ class Bot {
                 color: "red"
             });
         }
-
+        console.log("help shown")
         this.bot.core.run(`tellraw @a ${JSON.stringify(messageParts)}`);
     }
 
