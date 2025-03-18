@@ -14,7 +14,7 @@ class Bot {
         const commandconfig = require("./config/commands.json");
         config.util.extendDeep(config, commandconfig);
         this.commandsConfig = config.get('commands');
-        console.log(consoleConfig);
+        console.log(commandsConfig);
     }
 
     start() {
