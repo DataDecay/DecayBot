@@ -12,6 +12,17 @@
       ]
     },
     {
+      "name": "envy",
+      "description": "drinkable",
+      "roles": ["owner"],
+      "actions": [
+        {
+          "type": "chat",
+          "message": "slurrp"
+        }
+      ]
+    },
+    {
       "name": "creator",
       "description": "Shows the creator of the bot.",
       "roles": ["public"],
