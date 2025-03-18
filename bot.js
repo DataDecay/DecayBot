@@ -30,7 +30,7 @@ class Bot {
             const io = new WebServer(config.get("webServer.port"), this.bot, this.HashUtils);
             io.start();
             this.bot.chat("/tp DecayBot 6000 110 6000");
-            setTimeout(function() => {
+            setTimeout(function() {
             this.bot.core = new CommandCore({ x: 6000, y: -50, z: 6000 }, { x: 6010, y: -52, z: 6010 }, this.bot);
             this.bot.core.refillCore({ x: 6000, y: -50, z: 6000 }, { x: 6010, y: -52, z: 6010 }, this.bot);
             this.say("DecayBot core initialized");
