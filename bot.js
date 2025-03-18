@@ -12,7 +12,7 @@ class Bot {
 
         // Grab commands directly from config
         const commandconfig = require("./config/commands.json");
-        config.extendDeep(config, commandconfig);
+        config.util.extendDeep(config, commandconfig);
         this.commandsConfig = config.get('commands');
     }
 
