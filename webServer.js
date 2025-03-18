@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const socketIO = require('socket.io');
 const HashUtilsLib = require('./hashUtils.js');
+const config = require('config');
 
 class WebServer {
 
