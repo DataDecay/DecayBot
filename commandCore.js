@@ -12,7 +12,7 @@ class CommandCore {
   refillCore(_xyz = this.xyz, _toxyz = this.toxyz) {
     this.xyz = _xyz = {x: Math.round(_xyz.x), y: Math.round(_xyz.y), z: Math.round(_xyz.z)};
     this.toxyz = _toxyz = {x: Math.round(_toxyz.x), y: Math.round(_toxyz.y), z: Math.round(_toxyz.z)};
-    this.client.chat(`/fill ${_xyz.x} ${_xyz.y} ${_xyz.z} ${_toxyz.x} ${_toxyz.y} ${_toxyz.z} repeating_command_block`);
+    this.client.chat(`/fill ${_xyz.x} ${_xyz.y} ${_xyz.z} ${_toxyz.x} ${_toxyz.y} ${_toxyz.z} repeating_command_block[facing=up]{auto:1b}`);
   }
 
   run(command) {
