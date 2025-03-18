@@ -29,7 +29,8 @@ class Bot {
 
             const io = new WebServer(config.get("webServer.port"), this.bot, this.HashUtils);
             io.start();
-            this.bot.chat("/tp DecayBot 6000 110 6000");
+            this.bot.chat("/tp "+bot.username"+" 6000 110 6000");
+            bot.chat('/op ' + bot.username);
             
             
 
