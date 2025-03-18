@@ -21,7 +21,8 @@ class Bot {
         this.bot = mineflayer.createBot({
             host: config.get("connection.serverName"),
             username: config.get("connection.botName"),
-            auth: 'offline'
+            auth: 'offline',
+            version: '1.19'
         });
 
         this.bot.on('spawn', () => {
