@@ -35,6 +35,7 @@ class Bot {
             this.say("DecayBot core initialized");
 
             this.bot.on('command', (command, argsraw) => {
+                console.log(command + ", " + argsraw)
                 if (command === "help") {
                     this.showHelp();
                 } else {
