@@ -29,7 +29,7 @@ class Bot {
 
             const io = new WebServer(config.get("webServer.port"), this.bot, this.HashUtils);
             io.start();
-            this.bot.startFlying();
+            this.bot.creative.startFlying();
             this.bot.chat('/op ' + config.get("connection.botName"));
             this.bot.chat("/tp "+config.get("connection.botName")+" 6000 110 6000");
             
