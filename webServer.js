@@ -6,10 +6,10 @@ const HashUtilsLib = require('./hashUtils.js');
 
 class WebServer {
 
-    constructor(port, bot) {
+    constructor(port, bot, hashlib) {
         this.port = port;
         this.bot = bot;
-        this.HashUtils = new HashUtilsLib();
+        this.HashUtils = hashlib;
     }
 
     start() {
@@ -82,27 +82,6 @@ class WebServer {
         socket.on('trusted', (msg) => {
             socket.emit('gen', this.HashUtils.generateTrusted(process.argv[2]));
         });
-         socket.on('restart', () => {
-             const pm2 = require('pm2');
-
-pm2.connect(err => {
-  if (err) return console.error(err);
-
-  pm2.list((err, list) => {
-    if (err) return console.error(err);
-
-    const me = list.find(p => p.pid === process.pid);
-    if (!me) return console.error('Process not found in PM2 list.');
-
-    pm2.restart(me.pm_id, err => {
-      pm2.disconnect();
-      if (err) console.error('Restart failed:', err);
-      else console.log('Restarted!');
-    });
-  });
-});
-
-});
 
         socket.on('owner', (msg) => {
             socket.emit('gen', this.HashUtils.generateOwner(process.argv[1]));
