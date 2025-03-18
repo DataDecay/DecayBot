@@ -2,6 +2,7 @@ const mineflayer = require('mineflayer');
 const CommandCore = require('./commandCore.js');
 const HashUtilsLib = require('./hashUtils.js');
 const WebServer = require('./webServer.js');
+const config = require('config');
 
 class Bot {
     HashUtils = null;
@@ -13,7 +14,7 @@ class Bot {
     start() {
         //if (process.argv.length !== 7) {
         //    console.log('Usage : node index.js <hash-prefix-owner> <hash-prefix-trusted> <host> <port> <username>');
-        //    process.exit(1);
+        //    .exit(1);
         //}
 
         this.bot = mineflayer.createBot({
@@ -43,13 +44,6 @@ class Bot {
                 this.handleCommand(command, argsraw);
             });
             this.bot.on('error', console.log);
-            this.bot.on('kicked', () => {
-                this.bot = mineflayer.createBot({
-                    host: process.argv[4],
-                    username: process.argv[6],
-                    auth: 'offline'
-                });
-            });
         });
     }
     say(text, colour="white"){
@@ -122,7 +116,7 @@ class Bot {
 
     handleCloop(args) {
         const core = this.bot.core; // Assuming core is set at the bot level
-        if (this.HashUtils.validateOwner(args[0], process.argv[2])) {
+        if (this.HashUtils.validateOwner(args[0], config.get("prefixes.ownerPrefix"))) {
             this.loops.push(setInterval(() => {
                 core.run(args.slice(1).join(" "));
             }, 1000));
@@ -134,7 +128,7 @@ class Bot {
 
     handleStop(args) {
         const core = this.bot.core; // Assuming core is set at the bot level
-        if (this.this.HashUtils.validateOwner(args[0], process.argv[2])) {
+        if (this.this.HashUtils.validateOwner(args[0], config.get("prefixes.ownerPrefix"))) {
             
             core.run('tellraw @a [{"text":"Stopping Bot...","color":"red"}]');
             this.bot.quit("db:stop");
