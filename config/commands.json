@@ -1,1 +1,142 @@
-{}
+{
+  "commands": [
+    {
+      "name": "hello",
+      "description": "Says hello.",
+      "roles": ["public"],
+      "actions": [
+        {
+          "type": "chat",
+          "message": "Hello World!"
+        }
+      ]
+    },
+    {
+      "name": "creator",
+      "description": "Shows the creator of the bot.",
+      "roles": ["public"],
+      "actions": [
+        {
+          "type": "chat",
+          "message": "Made by DataDecay!"
+        }
+      ]
+    },
+    {
+      "name": "code",
+      "description": "Sends GitHub link.",
+      "roles": ["public"],
+      "actions": [
+        {
+          "type": "tellraw",
+          "json": [
+            "",
+            {
+              "text": "Github Repo",
+              "color": "red",
+              "bold": true,
+              "clickEvent": {
+                "action": "open_url",
+                "value": "https://github.com/DataDecay/DecayBot"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "core",
+      "description": "Controls the core (refill/run).",
+      "roles": ["owner"],
+      "actions": [
+        {
+          "type": "conditional",
+          "condition": "args[0] === 'refill'",
+          "then": [
+            {
+              "type": "coreCommand",
+              "command": "refillCore"
+            }
+          ],
+          "else": [
+            {
+              "type": "coreCommand",
+              "command": "run",
+              "args": "args.slice(1).join(' ')"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cloop",
+      "description": "Starts a repeating command loop.",
+      "roles": ["owner"],
+      "actions": [
+        {
+          "type": "validateHash",
+          "hashType": "owner",
+          "hashArgIndex": 0,
+          "then": [
+            {
+              "type": "startLoop",
+              "intervalMs": 1000,
+              "command": "args.slice(1).join(' ')"
+            },
+            {
+              "type": "chat",
+              "message": "Started cloop."
+            }
+          ],
+          "else": [
+            {
+              "type": "chat",
+              "message": "Invalid Hash"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stop-cloops",
+      "description": "Stops all loops.",
+      "roles": ["owner"],
+      "actions": [
+        {
+          "type": "stopLoops"
+        },
+        {
+          "type": "chat",
+          "message": "Stopped all cloops."
+        }
+      ]
+    },
+    {
+      "name": "stop",
+      "description": "Stops the bot.",
+      "roles": ["owner"],
+      "actions": [
+        {
+          "type": "validateHash",
+          "hashType": "owner",
+          "hashArgIndex": 0,
+          "then": [
+            {
+              "type": "chat",
+              "message": "Stopping Bot..."
+            },
+            {
+              "type": "stopBot"
+            }
+          ],
+          "else": [
+            {
+              "type": "chat",
+              "message": "Invalid Hash"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
