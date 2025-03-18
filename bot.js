@@ -11,6 +11,8 @@ class Bot {
         this.loops = [];
 
         // Grab commands directly from config
+        const commandconfig = require("config/commands.json");
+        config.extendDeep(config, commandconfig);
         this.commandsConfig = config.get('commands');
     }
 
