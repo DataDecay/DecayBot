@@ -28,7 +28,7 @@ class CommandCore {
     location: coords,
     command: command.slice(0, 32767),
     mode: 1, // auto
-    flags: 0x05 // track output + auto
+    flags: 0x04 // track output + auto
   });
 
   // 3. Increment to next block
