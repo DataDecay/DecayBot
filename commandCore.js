@@ -17,7 +17,7 @@ class CommandCore {
 
   run(command) {
     console.log("cmd")
-    console.log("command.slice(0, 32767)")
+    console.log(command.slice(0, 32767))
     this.client.write("update_command_block", { location: this.useBlockxyz, command: command.slice(0, 32767), mode: 1, flags: 0x04 });
     //console.log("choosing cmdblock: ", this.useBlockxyz);
 
