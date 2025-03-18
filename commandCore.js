@@ -1,8 +1,6 @@
 // commandcore.js
 class CommandCore {
   constructor(xyz, toxyz, bot) {
-    this.xyz = bot.entity.position;//
-    this.toxyz = {x: bot.entity.position.x+16, y: this.xyz.y+1, z: bot.entity.position.z+16};
     this.useBlockxyz = {x: xyz.x, y: xyz.y, z: xyz.z};
     this.client = bot._client;
     this.i = 1;
