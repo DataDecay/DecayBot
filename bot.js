@@ -5,141 +5,170 @@ const WebServer = require('./webServer.js');
 const config = require('config');
 
 class Bot {
-    HashUtils = null;
     constructor() {
         this.bot = null;
-        this.HashUtils = new HashUtilsLib;
+        this.HashUtils = new HashUtilsLib();
+        this.loops = [];
+
+        // Grab commands directly from config
+        this.commandsConfig = config.get('commands');
     }
 
     start() {
-        //if (process.argv.length !== 7) {
-        //    console.log('Usage : node index.js <hash-prefix-owner> <hash-prefix-trusted> <host> <port> <username>');
-        //    .exit(1);
-        //}
-
         this.bot = mineflayer.createBot({
             host: config.get("connection.serverName"),
             username: config.get("connection.botName"),
             auth: 'offline'
         });
 
-        var core;
         this.bot.on('spawn', () => {
-            
-            
-            
-            this.bot.chatAddPattern(
-                /db:(\S+) ?(.+)?/,
-                "command",
-                "Command Sent"
-            );
-            var loop;
+            this.bot.chatAddPattern(/db:(\S+) ?(.+)?/, "command", "Command Sent");
 
             const io = new WebServer(config.get("webServer.port"), this.bot, this.HashUtils);
             io.start();
-            this.bot.core = new CommandCore({x:6000,y:-50,z:6000}, {x:6010,y:-52,z:6010}, this.bot);
+
+            this.bot.core = new CommandCore({ x: 6000, y: -50, z: 6000 }, { x: 6010, y: -52, z: 6010 }, this.bot);
             this.bot.chat("/tp DecayBot 6000 110 6000");
+
             this.say("DecayBot core initialized");
+
             this.bot.on('command', (command, argsraw) => {
-                this.handleCommand(command, argsraw);
+                if (command === "help") {
+                    this.showHelp();
+                } else {
+                    this.handleCommand(command, argsraw ? argsraw.split(" ") : []);
+                }
             });
+
             this.bot.on('error', console.log);
         });
     }
-    say(text, colour="white"){
-        const core = this.bot.core;
-        core.run('tellraw @a [{"text":"' + text + '","color":"' + colour + '"}]');
+
+    say(text, colour = "white") {
+        this.bot.core.run(`tellraw @a [{"text":"${text}","color":"${colour}"}]`);
     }
-    handleCommand(command, argsraw) {
-        let args = argsraw ? argsraw.split(" ") : [];
-        switch (command) {
-            case 'help':
-                this.handleHelp();
-                break;
-            case 'hello':
-                this.handleHello();
-                break;
-            case 'creator':
-                this.handleCreator();
-                break;
-            case 'stop-cloops':
-                this.handleStopCloop(args);
-                break;
-            case 'core':
-                this.handleCore(args);
-                break;
-            case 'cloop':
-                this.handleCloop(args);
-                break;
-            case 'stop':
-                this.handleStop(args);
-                break;
-            default:
-                this.handleUnknown();
-                break;
+
+    showHelp() {
+        const roles = {
+            public: [],
+            trusted: [],
+            owner: []
+        };
+
+        this.commandsConfig.forEach(cmd => {
+            cmd.roles.forEach(role => {
+                if (!roles[role]) roles[role] = [];
+                roles[role].push(cmd.name);
+            });
+        });
+
+        const messageParts = [];
+
+        if (roles.public.length > 0) {
+            messageParts.push({
+                text: `Public: ${roles.public.join(", ")} `,
+                color: "blue"
+            });
         }
+
+        if (roles.trusted.length > 0) {
+            messageParts.push({
+                text: `Trusted: ${roles.trusted.join(", ")} `,
+                color: "green"
+            });
+        }
+
+        if (roles.owner.length > 0) {
+            messageParts.push({
+                text: `Owner: ${roles.owner.join(", ")}`,
+                color: "red"
+            });
+        }
+
+        this.bot.core.run(`tellraw @a ${JSON.stringify(messageParts)}`);
     }
 
-    handleHelp() {
-        const core = this.bot.core; // Assuming core is set at the bot level
-        core.run('tellraw @a [{"text":"Public ","color":"blue"},{"text":"Trusted ","color":"green"},{"text":"Owner ","color":"red"},{"text":"hello, code, creator, hash-test, ","color":"blue"},{"text":"cloop, stop-cloops, ","color":"green"},{"text":"stop, core","color":"dark_red"}]');
+    handleCommand(command, args) {
+        const cmdConfig = this.commandsConfig.find(c => c.name === command);
 
+        if (!cmdConfig) {
+            this.say("Unknown Command!", "red");
+            return;
+        }
+
+        this.executeActions(cmdConfig.actions, args);
     }
-     handleHello() {
-        const core = this.bot.core; // Assuming core is set at the bot level
-        this.say("Hello World!");
-    }
-    handleCreator() {
-        const core = this.bot.core; // Assuming core is set at the bot level
-        this.say("Made by DataDecay!");
-    }
-    handleCode() {
-        const core = this.bot.core; // Assuming core is set at the bot level
-        core.run('tellraw @a ["",{"text":"Github Repo","color":"red","bold":true,"underlined":false,"clickEvent":{"action":"open_url","value":"https://github.com/DataDecay/DecayBot"}}]');
-    }
-    handleCore(args) {
-        const core = this.bot.core; // Assuming core is set at the bot level
-        
-            switch (args[0]) {
-                case "refill":
-                    core.refillCore();
+
+    executeActions(actions, args) {
+        for (const action of actions) {
+            switch (action.type) {
+                case "chat":
+                    this.say(action.message);
                     break;
-                case "run":
-                    let cmd = args.slice(1).join(" ");
-                    core.run(cmd);
+
+                case "tellraw":
+                    this.bot.core.run(`tellraw @a ${JSON.stringify(action.json)}`);
                     break;
+
+                case "coreCommand":
+                    if (action.command === "refillCore") {
+                        this.bot.core.refillCore();
+                    } else if (action.command === "run") {
+                        const cmd = this.evaluateArg(action.args, args);
+                        this.bot.core.run(cmd);
+                    }
+                    break;
+
+                case "validateHash":
+                    const hash = args[action.hashArgIndex];
+                    const prefix = config.get(`prefixes.${action.hashType}Prefix`);
+                    const isValid = this.HashUtils.validateOwner(hash, prefix);
+
+                    if (isValid && action.then) {
+                        this.executeActions(action.then, args);
+                    } else if (!isValid && action.else) {
+                        this.executeActions(action.else, args);
+                    }
+                    break;
+
+                case "startLoop":
+                    const loopCommand = this.evaluateArg(action.command, args);
+                    this.loops.push(setInterval(() => {
+                        this.bot.core.run(loopCommand);
+                    }, action.intervalMs));
+                    break;
+
+                case "stopLoops":
+                    this.loops.forEach(loop => clearInterval(loop));
+                    this.loops = [];
+                    break;
+
+                case "stopBot":
+                    this.bot.quit("db:stop");
+                    break;
+
+                case "conditional":
+                    const condition = eval(action.condition); // ⚠️ risky, sanitize before prod
+                    if (condition && action.then) {
+                        this.executeActions(action.then, args);
+                    } else if (!condition && action.else) {
+                        this.executeActions(action.else, args);
+                    }
+                    break;
+
                 default:
-                    core.run('tellraw @a [{"text":"Invalid argument for \'core\' command.","color":"red"}]');
-                    break;
+                    this.say(`Unknown action type: ${action.type}`, "red");
             }
-    }
-
-    handleCloop(args) {
-        const core = this.bot.core; // Assuming core is set at the bot level
-        if (this.HashUtils.validateOwner(args[0], config.get("prefixes.ownerPrefix"))) {
-            this.loops.push(setInterval(() => {
-                core.run(args.slice(1).join(" "));
-            }, 1000));
-            core.run('tellraw @a [{"text":"Started cloop.","color":"green"}]');
-        } else {
-            core.run('tellraw @a [{"text":"Invalid Hash","color":"red"}]');
         }
     }
 
-    handleStop(args) {
-        const core = this.bot.core; // Assuming core is set at the bot level
-        if (this.this.HashUtils.validateOwner(args[0], config.get("prefixes.ownerPrefix"))) {
-            
-            core.run('tellraw @a [{"text":"Stopping Bot...","color":"red"}]');
-            this.bot.quit("db:stop");
-        } else {
-            core.run('tellraw @a [{"text":"Invalid Hash","color":"red"}]');
+    evaluateArg(expression, args) {
+        try {
+            return eval(expression); // ⚠️ be careful with eval!
+        } catch (error) {
+            console.error("Failed to evaluate expression:", expression);
+            return "";
         }
-    }
-
-    handleUnknown() {
-        const core = this.bot.core; // Assuming core is set at the bot level
-        core.run('tellraw @a [{"text":"Unknown Command!","color":"red"}]');
     }
 }
 
