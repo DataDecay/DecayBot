@@ -77,14 +77,14 @@ class WebServer {
     // Send list of roles to the frontend
     socket.emit('roles', Object.values(hashLevels));
 
-    socket.on('generateHash', (role) => {
+    socket.on('hash', (role) => {
         const roleConfig = hashLevels[role];
 
         if (roleConfig) {
             // Generate the hash based on the selected role
             const prefix = roleConfig.prefix;
             let hash;
-                hash = this.HashUtils.generateCustom(prefix);
+                hash = this.HashUtils.generateOwner(prefix);
             socket.emit('gen', {
                 hash: hash
             });
