@@ -72,28 +72,31 @@ class WebServer {
 
     
     handleSocketConnection(socket) {
-    const hashLevels = config.get('hashLevels');
+    const hashLevels = config.get('hashLevels');  // Fetch hashLevels from config
 
     // Send list of roles to the frontend
-    socket.emit('roles', Object.values(hashLevels));
+    socket.emit('roles', Object.keys(hashLevels));  // Send just the role keys
 
-    socket.on('hash', (role) => {
-        const roleConfig = hashLevels[role];
+    // Listen for role requests to generate hashes
+    socket.on('generateHash', (roleKey) => {
+        const roleConfig = hashLevels[roleKey];  // Get role configuration from hashLevels
 
         if (roleConfig) {
-            // Generate the hash based on the selected role
-            const prefix = roleConfig.prefix;
             let hash;
-                hash = this.HashUtils.generateOwner(prefix);
+            // Generate hash based on role key
+            
+                    hash = this.HashUtils.generateOwner(roleConfig.prefix);
+            }
+
+            // Send the generated hash back to the frontend along with the role key
             socket.emit('gen', {
                 hash: hash
             });
         } else {
-            socket.emit('error', `Role "${role}" not found.`);
+            socket.emit('error', `Role "${roleKey}" not found.`);
         }
     });
 }
-
 }
 
 module.exports = WebServer;
