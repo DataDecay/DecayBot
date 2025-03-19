@@ -15,14 +15,17 @@ class WebServer {
         this.server = null;
         this.io = null;
         this.isRunning = false;
-        this.sessions = {}; // Session token -> { username, level }
-
-        // Users should be stored in a database, but hardcoded here for demo
+        this.sessions = {}; // Session token -> { username, level, expiresAt }
+        
+        // Users (Hardcoded, ideally should be stored in a database)
         this.users = {
             'admin': { password: 'adminpass', level: 3 },
             'moderator': { password: 'modpass', level: 2 },
             'user': { password: 'userpass', level: 1 }
         };
+
+        this.sessionTimeout = 1000 * 60 * 60; // 1 hour session expiry
+        this.cleanupInterval = 1000 * 60 * 10; // Clean expired sessions every 10 minutes
     }
 
     start() {
@@ -31,6 +34,7 @@ class WebServer {
             return;
         }
 
+        // SSL setup
         if (config.get("webServer.ssl")) {
             this.httpOptions = {
                 key: fs.readFileSync("keys/privkey.pem"),
@@ -64,6 +68,9 @@ class WebServer {
         });
 
         console.error("STARTED");
+
+        // Start session cleanup
+        setInterval(this.cleanupSessions.bind(this), this.cleanupInterval);
     }
 
     stop() {
@@ -98,7 +105,9 @@ class WebServer {
 
                 if (user && user.password === password) {
                     const token = crypto.randomBytes(16).toString('hex');
-                    this.sessions[token] = { username, level: user.level };
+                    const expiresAt = Date.now() + this.sessionTimeout;
+
+                    this.sessions[token] = { username, level: user.level, expiresAt };
 
                     console.log(`User "${username}" logged in. Level: ${user.level}`);
                     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -109,6 +118,18 @@ class WebServer {
                     res.end(JSON.stringify({ error: 'Invalid credentials' }));
                 }
             });
+        } else if (req.method === 'POST' && req.url === '/logout') {
+            const token = req.headers['authorization'];
+
+            if (token && this.sessions[token]) {
+                delete this.sessions[token];
+                console.log(`User with token "${token}" logged out.`);
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true }));
+            } else {
+                res.writeHead(401, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Unauthorized' }));
+            }
         } else {
             let pathname = req.url.split('?')[0];
             if (pathname === '/') pathname = '/index.html';
@@ -211,6 +232,16 @@ class WebServer {
         socket.on('send', (msg) => {
             this.bot.chat(msg);
         });
+    }
+
+    cleanupSessions() {
+        const now = Date.now();
+        for (const token in this.sessions) {
+            if (this.sessions[token].expiresAt < now) {
+                console.log(`Session expired for user ${this.sessions[token].username}`);
+                delete this.sessions[token];
+            }
+        }
     }
 }
 
