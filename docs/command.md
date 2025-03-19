@@ -117,7 +117,7 @@ Only the `owner` can execute this command by providing a valid hash.
 }
 ```
 
-🔹 Users run: `!shutdown <hash>`  
+🔹 Users run: `db:shutdown <hash>`  
 🔹 Hash is validated using `HashUtils.validateOwner()`.  
 🔹 If valid → stops the bot.  
 🔹 If invalid → sends an access denied message.
@@ -177,7 +177,7 @@ Runs different actions based on the first argument.
 }
 ```
 
-🔹 Users run: `!server <hash> start` or `!server <hash> stop`  
+🔹 Users run: `db:server <hash> start` or `!server <hash> stop`  
 🔹 Executes based on the second argument (`args[1]`).
 
 ---
@@ -218,7 +218,7 @@ Starts a repeating action every second.
 }
 ```
 
-🔹 Users run: `!autoMessage <hash>`  
+🔹 Users run: `db:autoMessage <hash>`  
 🔹 Sends "This is an automated message!" every second until stopped.
 
 ---
@@ -250,20 +250,12 @@ This action restricts command access based on user hashes.
 | `then`          | Actions if the hash is valid.                                    |
 | `else`          | Actions if the hash is invalid.                                  |
 
-🚨 **Internally**, your JS file uses `HashUtils.validateOwner()`  
-✅ Result must be `true` for `then` to run.
+**Internally**, the parser uses `HashUtils.validateOwner()` which functions as a validator for **all levels**
+Result must be `true` for `then` to run.
 
 ---
 
-## ⚠️ `eval()` Warning (Advanced)
-
-The `conditional` and `evaluateArg` actions rely on `eval()` in your `CommandParser`.  
-➡️ Do **not** pass untrusted user input directly!  
-➡️ Always sanitize or restrict who can execute commands that evaluate conditions.
-
----
-
-## 🆘 Show Command Help (Built-in)
+## Show Command Help (Built-in)
 
 You can show available commands by calling:
 
@@ -275,7 +267,7 @@ This sends a `tellraw` message listing all commands, categorized by role.
 
 ---
 
-## 📝 Example Command Template
+## Example Command Template
 
 ```json
 {
@@ -290,14 +282,3 @@ This sends a `tellraw` message listing all commands, categorized by role.
   ]
 }
 ```
-
----
-
-# 🎯 Pro Tips
-- ✅ Test commands in a staging environment before going live.
-- ✅ Use `roles` wisely to protect sensitive commands.
-- ✅ Regularly audit commands that use `validateHash` and `eval()`.
-
----
-
-Let me know if you want an **auto-generator for commands** or a **JSON schema** to validate the config!
