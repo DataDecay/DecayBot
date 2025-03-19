@@ -26,9 +26,11 @@ class WebServer {
  
  cert: fs.readFileSync("keys/privkey.pem")
 }
+        console.log("SSL on");
         this.server = http.createServer(this.httpOptions, this.handler.bind(this));
         } else {
         this.server = http.createServer(this.handler.bind(this));
+            console.log("SSL off");
         }
         this.io = socketIO(this.server);
 
