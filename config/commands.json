@@ -18,12 +18,12 @@
       "actions": [
          {
           "type": "validateHash",
-          "hashType": ["trusted", "owner"],
+          "hashType": ["trusted", "elevated", "owner"],
           "hashArgIndex": 0,
           "then": [
         {
           "type": "chat",
-          "message": "Hello World"
+          "message": "Hello World with valid hash"
         }
       ],
       "else": [
