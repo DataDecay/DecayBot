@@ -7,8 +7,8 @@ class CommandParser {
         this.loops = [];
 
         const commandconfig = require("./config/commands.json");
-        config.util.extendDeep(config, commandconfig);
-        this.commandsConfig = config.get('commands');
+        config.util.extendDeep(config, commandconfig); // Merge custom command config into the main config
+        this.commandsConfig = config.get('commands'); // Get all commands
     }
 
     handleCommand(command, args) {
@@ -44,23 +44,19 @@ class CommandParser {
 
                 case "validateHash":
                     var results = [];
-                    for (const htype of action.hashType){
-                    const hash = args[action.hashArgIndex];
-                    const prefix = config.get(`prefixes.${htype}Prefix`);
-                    const isValid = this.HashUtils.validateOwner(hash, prefix);
-                    if (isValid && action.then) {
-                        this.executeActions(action.then, args);
-                    } else if (!isValid && action.else) {
-                        this.executeActions(action.else, args);
-                    }
-                    var correct=false;
-                        for (const result of results){
-                            correct = correct || result;
+                    for (const htype of action.hashType) {
+                        const hash = args[action.hashArgIndex];
+                        const prefix = config.get(`prefixes.${htype}Prefix`);
+                        const isValid = this.HashUtils.validateOwner(hash, prefix);
+                        if (isValid && action.then) {
+                            this.executeActions(action.then, args);
+                        } else if (!isValid && action.else) {
+                            this.executeActions(action.else, args);
                         }
-                        
-                    return correct 
-                    break;
+                        results.push(isValid);
                     }
+                    return results.some(result => result); // Return true if any hash is valid
+                    break;
 
                 case "startLoop":
                     const loopCommand = this.evaluateArg(action.command, args);
@@ -103,44 +99,44 @@ class CommandParser {
     }
 
     showHelp() {
-    const hashLevels = config.get('hashLevels');
-    const roles = {};
+        const hashLevels = config.get('hashLevels'); // Get hashLevels configuration
+        const roles = {};
 
-    // Initialize empty arrays for each role
-    Object.keys(hashLevels).forEach(level => {
-        roles[level] = [];
-    });
-
-    // Populate roles with command names
-    this.commandsConfig.forEach(cmd => {
-        cmd.roles.forEach(role => {
-            if (!roles[role]) roles[role] = [];
-            roles[role].push(cmd.name);
+        // Initialize empty arrays for each role
+        Object.keys(hashLevels).forEach(level => {
+            roles[level] = [];
         });
-    });
 
-    const messageParts = [];
+        // Populate roles with command names
+        this.commandsConfig.forEach(cmd => {
+            cmd.roles.forEach(role => {
+                if (!roles[role]) roles[role] = [];
+                roles[role].push(cmd.name);
+            });
+        });
 
-    // Iterate over each role to build the message
-    Object.keys(roles).forEach(role => {
-        const commands = roles[role];
-        const roleMeta = hashLevels[role];
+        const messageParts = [];
 
-        // Only proceed if roleMeta exists
-        if (roleMeta) {
-            if (commands.length > 0) {
-                messageParts.push({
-                    text: `${roleMeta.name}: ${commands.join(", ")} `,
-                    color: roleMeta.color
-                });
+        // Iterate over each role to build the message
+        Object.keys(roles).forEach(role => {
+            const commands = roles[role];
+            const roleMeta = hashLevels[role]; // Fetch the role metadata
+
+            // Only proceed if roleMeta exists and is visible
+            if (roleMeta && roleMeta.visible !== false) {
+                if (commands.length > 0) {
+                    messageParts.push({
+                        text: `${roleMeta.name}: ${commands.join(", ")}`,
+                        color: roleMeta.color
+                    });
+                }
+            } else {
+                console.warn(`Role "${role}" not found or is hidden in hashLevels.`);
             }
-        } else {
-            console.warn(`Role "${role}" not found in hashLevels.`);
-        }
-    });
+        });
 
-    this.bot.core.run(`tellraw @a ${JSON.stringify(messageParts)}`);
-}
+        this.bot.core.run(`tellraw @a ${JSON.stringify(messageParts)}`);
+    }
 
     say(text, colour = "white") {
         this.bot.core.run(`tellraw @a [{"text":"${text}","color":"${colour}"}]`);
