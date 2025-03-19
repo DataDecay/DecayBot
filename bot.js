@@ -46,6 +46,9 @@ class Bot {
                     this.commandParser.handleCommand(command, argsraw ? argsraw.split(" ") : []);
                 }
             });
+            this.bot.on('death', () => {
+                this.client.chat("/tp " + config.get("connection.botName") + " 6000 -49 6000");
+        });
 
             this.bot.on('error', console.log);
         });
