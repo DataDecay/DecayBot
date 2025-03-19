@@ -127,7 +127,6 @@ class Bot {
                     break;
 
                 case "validateHash":
-                    if (action.hashType == "Owner"){
                     const hash = args[action.hashArgIndex];
                     const prefix = config.get(`prefixes.${action.hashType}Prefix`);
                     const isValid = this.HashUtils.validateOwner(hash, prefix);
@@ -137,20 +136,6 @@ class Bot {
                         this.executeActions(action.else, args);
                     }
                     break;
-                    } else if (action.hashType == "Trusted") {
-                      const hash = args[action.hashArgIndex];
-                    const prefix = config.get(`prefixes.${action.hashType}Prefix`);
-                    const isValid = this.HashUtils.validateOwner(hash, prefix);
-                    if (isValid && action.then) {
-                        this.executeActions(action.then, args);
-                    } else if (!isValid && action.else) {
-                        this.executeActions(action.else, args);
-                    }
-                    break;
-                    } else {
-                        this.say("Syntax Error in config file 'commands.json': Invalid hash type '" + action.hashType + "'");
-                        break;
-                    }
 
                 case "startLoop":
                     const loopCommand = this.evaluateArg(action.command, args);
