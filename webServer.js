@@ -19,8 +19,17 @@ class WebServer {
             console.warn(`WebServer already running on port ${this.port}`);
             return;
         }
-
+        if (config.get("webServer.ssl")){
+        this.httpOptions = {
+ 
+ key: fs.readFileSync("keys/datadecay.dev-0001/fullchain.pem"),
+ 
+ cert: fs.readFileSync("keys/datadecay.dev-0001/privkey.pem")
+}
+        this.server = http.createServer(this.httpOptions, this.handler.bind(this));
+        } else {
         this.server = http.createServer(this.handler.bind(this));
+        }
         this.io = socketIO(this.server);
 
         this.server.listen(this.port, () => {
