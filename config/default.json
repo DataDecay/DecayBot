@@ -12,7 +12,7 @@
     },
     "elevated": {
       "prefix": "da",
-      "color": "orange"
+      "color": "orange",
       "name": "Elevated"
     }
   },  
