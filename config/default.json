@@ -1,7 +1,7 @@
 {
   "prefixes":{
-    "OwnerPrefix": "db",
-    "TrustedPrefix": "dt"
+    "ownerPrefix": "db",
+    "trustedPrefix": "dt"
   },  
   "connection":{
     "serverName": "kaboom.pw",
