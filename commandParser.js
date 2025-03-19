@@ -103,11 +103,11 @@ class CommandParser {
     }
 
     showHelp() {
-        const roles = {
-            public: [],
-            trusted: [],
-            owner: []
-        };
+        //const roles = {
+        //    public: [],
+        //    trusted: [],
+        //    owner: []
+        //};
 
         this.commandsConfig.forEach(cmd => {
             cmd.roles.forEach(role => {
