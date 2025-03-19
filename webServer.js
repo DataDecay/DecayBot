@@ -85,13 +85,21 @@ class WebServer {
     // Send only the visible roles to the frontend
     socket.emit('roles', visibleRoles);
 
-    // Listen for role requests to generate hashes
+    // Listen for the chat messages
+    this.bot.on('message', (message, pos, sender) => {
+        console.log("MESSAGE: [" + pos + "] " + sender + ': ' + message.toString());
+        socket.emit("msg", "[" + pos + "] " + sender + ': ' + message.toString());
+    });
+
+    // Handle sending the hash for different roles
     socket.on('generateHash', (roleKey) => {
         const roleConfig = hashLevels[roleKey];  // Get role configuration from hashLevels
 
         if (roleConfig) {
             let hash;
-            hash = this.HashUtils.generateOwner(roleConfig.prefix);
+            // Generate hash based on role key
+                    hash = this.HashUtils.generateOwner(roleConfig.prefix);
+                    break;
             
 
             // Send the generated hash back to the frontend along with the role configuration
@@ -104,8 +112,13 @@ class WebServer {
             socket.emit('error', `Role "${roleKey}" not found.`);
         }
     });
-}
 
+    // Handle chat message sending from the frontend
+    socket.on('send', (msg) => {
+        this.bot.chat(msg);
+    });
+
+}
 
 }
 
