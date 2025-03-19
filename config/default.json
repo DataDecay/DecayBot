@@ -30,7 +30,7 @@
     "botName": "DecayBot"
   },
   "webServer":{
-    "port":443,
-    "ssl":true
+    "port":80,
+    "ssl":false
   }
 }
