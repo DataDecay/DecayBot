@@ -232,7 +232,7 @@ class WebServer {
             //this.bot.chat(msg);
             
             const token = this.socket.handshake.query.token;
-            if(!token || ){
+            if(!token || !this.sessions[token]){
                 socket.emit('msg', `Sorry, you need to be logged in to send messages.`);
             } else {
                 const username = this.sessions[token].username;
