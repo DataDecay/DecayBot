@@ -2,7 +2,7 @@
   "commands": [
     {
       "name": "hello",
-      "description": "Says hello.",
+      "description": "Says a random hello variation.",
       "roles": ["public"],
       "actions": [
         {
