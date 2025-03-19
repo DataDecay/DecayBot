@@ -43,7 +43,7 @@ class CommandParser {
                     break;
 
                 case "validateHash":
-                    results = [];
+                    var results = [];
                     for (const htype of action.hashType){
                     const hash = args[action.hashArgIndex];
                     const prefix = config.get(`prefixes.${htype}Prefix`);
@@ -53,7 +53,7 @@ class CommandParser {
                     } else if (!isValid && action.else) {
                         this.executeActions(action.else, args);
                     }
-                    correct=false;
+                    var correct=false;
                         for (const result of results){
                             correct = correct || result;
                         }
