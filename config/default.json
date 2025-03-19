@@ -1,9 +1,18 @@
 {
   "prefixes":{
     "README": "when you add permission levels, also add keys here or the program will FAIL",
-    "ownerPrefix": "db",
-    "trustedPrefix": "dt"
-    "adminPrefix": "da"
+    "owner": {
+      "prefix": "db",
+      "color": "red"
+    },
+    "trusted": {
+      "prefix": "dt",
+      "color": "yellow"
+    },
+    "admin": {
+      "prefix": "db",
+      "color": "orange"
+    }
   },  
   "connection":{
     "serverName": "kaboom.pw",
