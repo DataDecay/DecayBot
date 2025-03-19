@@ -30,7 +30,7 @@ class Bot {
             const io = new WebServer(config.get("webServer.port"), this.bot, this.HashUtils);
             io.start();
             this.bot.creative.startFlying();
-            this.bot.chat("/tp "+config.get("connection.botName")+" 6000 110 6000");
+            this.bot.chat("/tp "+config.get("connection.botName")+" 6000 -49 6000");
             
             
             
