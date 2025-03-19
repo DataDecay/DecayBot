@@ -70,24 +70,30 @@ class WebServer {
         return mimeTypes[ext] || 'application/octet-stream'; // Default to binary stream
     }
 
+    
     handleSocketConnection(socket) {
-        this.bot.on('message', (message, pos, sender) => {
-            console.log("MESSAGE: [" + pos + "] " + sender + ': ' + message.toString());
-            socket.emit("msg", "[" + pos + "] " + sender + ': ' + message.toString());
-        });
+    const hashLevels = config.get('hashLevels');
 
-        socket.on('send', (msg) => {
-            this.bot.chat(msg);
-        });
+    // Send list of roles to the frontend
+    socket.emit('roles', Object.values(hashLevels));
 
-        socket.on('trusted', (msg) => {
-            socket.emit('gen', this.HashUtils.generateTrusted(config.get("prefixes.trustedPrefix")));
-        });
+    socket.on('generateHash', (role) => {
+        const roleConfig = hashLevels[role];
 
-        socket.on('owner', (msg) => {
-            socket.emit('gen', this.HashUtils.generateOwner(config.get("prefixes.ownerPrefix")));
-        });
-    }
+        if (roleConfig) {
+            // Generate the hash based on the selected role
+            const prefix = roleConfig.prefix;
+            let hash;
+                hash = this.HashUtils.generateCustom(prefix);
+            socket.emit('gen', {
+                hash: hash
+            });
+        } else {
+            socket.emit('error', `Role "${role}" not found.`);
+        }
+    });
+}
+
 }
 
 module.exports = WebServer;
