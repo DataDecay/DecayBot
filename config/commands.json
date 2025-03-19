@@ -111,8 +111,8 @@
           "then": [
             {
               "type": "startLoop",
-              "intervalMs": 1000,
-              "command": "args.slice(1).join(' ')"
+              "intervalMs": "5",
+              "command": "args.slice(2).join(' ')"
             },
             {
               "type": "chat",
