@@ -74,8 +74,16 @@ class WebServer {
     handleSocketConnection(socket) {
     const hashLevels = config.get('hashLevels');  // Fetch hashLevels from config
 
-    // Send full role configuration (including prefix, color, and name) to the frontend
-    socket.emit('roles', hashLevels);  // Send the entire hashLevels object
+    // Filter out roles that are not visible
+    const visibleRoles = {};
+    Object.keys(hashLevels).forEach(roleKey => {
+        if (hashLevels[roleKey].visible) {
+            visibleRoles[roleKey] = hashLevels[roleKey];  // Add only visible roles
+        }
+    });
+
+    // Send only the visible roles to the frontend
+    socket.emit('roles', visibleRoles);
 
     // Listen for role requests to generate hashes
     socket.on('generateHash', (roleKey) => {
@@ -83,13 +91,13 @@ class WebServer {
 
         if (roleConfig) {
             let hash;
-            hash = this.HashUtils.generateOwner(roleConfig.prefix); // Custom hash generation
-            
+            hash = this.HashUtils.generateOwner(roleConfig.prefix);
+            }
 
             // Send the generated hash back to the frontend along with the role configuration
             socket.emit('gen', {
-                roleKey: roleKey, // Send role key
-                roleConfig: roleConfig, // Send the full role config (name, color, prefix)
+                roleKey: roleKey,
+                roleConfig: roleConfig,
                 hash: hash
             });
         } else {
@@ -97,6 +105,7 @@ class WebServer {
         }
     });
 }
+
 
 }
 
