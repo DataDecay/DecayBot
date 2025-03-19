@@ -6,6 +6,7 @@ class CommandParser {
         this.HashUtils = hashUtils;
         this.loops = [];
 
+        // Loading the custom command config from the command JSON
         const commandconfig = require("./config/commands.json");
         config.util.extendDeep(config, commandconfig); // Merge custom command config into the main config
         this.commandsConfig = config.get('commands'); // Get all commands
@@ -43,19 +44,31 @@ class CommandParser {
                     break;
 
                 case "validateHash":
-                    this.results = [];
+                    var results = [];
                     for (const htype of action.hashType) {
-                        const hash = args[action.hashArgIndex];
-                        const prefix = config.get(`prefixes.${htype}Prefix`);
-                        const isValid = this.HashUtils.validateOwner(hash, prefix);
+                        const hash = args[action.hashArgIndex];  // Get hash from args
+                        const roleMeta = config.get(`hashLevels.${htype}`);  // Get role metadata from config
+                        
+                        if (!roleMeta) {
+                            console.error(`Role "${htype}" not found in hashLevels.`);
+                            continue;
+                        }
+
+                        const prefix = roleMeta.prefix;  // Get the prefix for the role
+                        const isValid = this.HashUtils.validateHash(hash, prefix);  // Validate hash with prefix
+                        
+                        // If valid, run actions specified in "then"
                         if (isValid && action.then) {
                             this.executeActions(action.then, args);
-                        } else if (!isValid && action.else) {
+                        } 
+                        // If invalid, run actions specified in "else"
+                        else if (!isValid && action.else) {
                             this.executeActions(action.else, args);
                         }
-                        this.results.push(isValid);
+
+                        results.push(isValid);
                     }
-                    return this.results.some(result => result); // Return true if any hash is valid
+                    return results.some(result => result); // Return true if any hash is valid
                     break;
 
                 case "startLoop":
@@ -140,6 +153,18 @@ class CommandParser {
 
     say(text, colour = "white") {
         this.bot.core.run(`tellraw @a [{"text":"${text}","color":"${colour}"}]`);
+    }
+
+    // Hash validation logic
+    validateHash(hash, role) {
+        const roleMeta = config.get(`hashLevels.${role}`);
+        if (!roleMeta) {
+            console.error(`Role "${role}" not found in hashLevels.`);
+            return false;
+        }
+
+        const prefix = roleMeta.prefix;
+        return this.HashUtils.validateHash(hash, prefix);
     }
 }
 
