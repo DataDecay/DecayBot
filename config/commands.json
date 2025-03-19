@@ -18,7 +18,7 @@
       "actions": [
          {
           "type": "validateHash",
-          "hashType": "Trusted",
+          "hashType": "trusted",
           "hashArgIndex": 0,
           "then": [
         {
@@ -74,6 +74,11 @@
       "roles": ["owner"],
       "actions": [
         {
+          "type": "validateHash",
+          "hashType": "owner",
+          "hashArgIndex": 0,
+          "then": [
+         {
           "type": "conditional",
           "condition": "args[0] === 'refill'",
           "then": [
@@ -88,6 +93,8 @@
               "command": "run",
               "args": "args.slice(1).join(' ')"
             }
+          ]
+        }
           ]
         }
       ]
