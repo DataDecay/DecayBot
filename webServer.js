@@ -84,7 +84,7 @@ class WebServer {
         if (roleConfig) {
             let hash;
             hash = this.HashUtils.generateOwner(roleConfig.prefix); // Custom hash generation
-            }
+            
 
             // Send the generated hash back to the frontend along with the role configuration
             socket.emit('gen', {
