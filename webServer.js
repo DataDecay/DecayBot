@@ -231,7 +231,7 @@ class WebServer {
         socket.on('send', (msg) => {
             //this.bot.chat(msg);
             
-            const token = this.socket.handshake.query.token;
+            const token = socket.handshake.query.token;
             if(!token || !this.sessions[token]){
                 socket.emit('msg', `Sorry, you need to be logged in to send messages.`);
                 console.log(`Received message: ${msg} & denied`);
