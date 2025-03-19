@@ -1,0 +1,25 @@
+name: Deploy to Linux Server via SSH
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Connect to Server and Pull Code
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: deploy
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22 # change if needed
+        script: |
+          cd /home/datadecayvps/bot/DecayBot
+          git pull
