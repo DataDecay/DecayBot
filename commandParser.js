@@ -126,11 +126,16 @@ class CommandParser {
         const commands = roles[role];
         const roleMeta = hashLevels[role];
 
-        if (commands.length > 0) {
-            messageParts.push({
-                text: `${roleMeta.name}: ${commands.join(", ")} `,
-                color: roleMeta.color
-            });
+        // Only proceed if roleMeta exists
+        if (roleMeta) {
+            if (commands.length > 0) {
+                messageParts.push({
+                    text: `${roleMeta.name}: ${commands.join(", ")} `,
+                    color: roleMeta.color
+                });
+            }
+        } else {
+            console.warn(`Role "${role}" not found in hashLevels.`);
         }
     });
 
