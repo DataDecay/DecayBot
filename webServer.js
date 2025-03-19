@@ -55,7 +55,7 @@ class WebServer {
         });
 
         this.io.on('connection', (socket) => {
-            const token = socket.handshake.query.token;
+            const token = socket.handshake.query.token; // Fetch token from query string
 
             if (!token || !this.sessions[token]) {
                 console.log("Unauthorized socket connection attempt.");
@@ -66,8 +66,6 @@ class WebServer {
 
             this.handleSocketConnection(socket, token);
         });
-
-        console.error("STARTED");
 
         // Start session cleanup
         setInterval(this.cleanupSessions.bind(this), this.cleanupInterval);
