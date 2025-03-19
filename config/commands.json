@@ -18,7 +18,7 @@
       "actions": [
          {
           "type": "validateHash",
-          "hashType": "trusted",
+          "hashType": ["trusted", "owner"],
           "hashArgIndex": 0,
           "then": [
         {
@@ -75,7 +75,7 @@
       "actions": [
         {
           "type": "validateHash",
-          "hashType": "owner",
+          "hashType": ["owner"],
           "hashArgIndex": 0,
           "then": [
          {
@@ -106,7 +106,7 @@
       "actions": [
         {
           "type": "validateHash",
-          "hashType": "owner",
+          "hashType": ["owner"],
           "hashArgIndex": 0,
           "then": [
             {
@@ -134,11 +134,18 @@
       "roles": ["owner"],
       "actions": [
         {
+          "type": "validateHash",
+          "hashType": ["owner"],
+          "hashArgIndex": 0,
+          "then": [
+        {
           "type": "stopLoops"
         },
         {
           "type": "chat",
           "message": "Stopped all cloops."
+        }
+          ]
         }
       ]
     },
@@ -149,7 +156,7 @@
       "actions": [
         {
           "type": "validateHash",
-          "hashType": "owner",
+          "hashType": ["owner"],
           "hashArgIndex": 0,
           "then": [
             {
