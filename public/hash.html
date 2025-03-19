@@ -44,7 +44,6 @@
   <body>
     <!-- Sidebar -->
     <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
-
       <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
         <li class="nav-item">
           <a class="nav-link " href="/">
@@ -62,7 +61,6 @@
           </a>
         </li>
       </ul>
-
       <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
     </div>
 
@@ -87,23 +85,11 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <div class="card-header">Owner & Trusted Hashes</div>
+                <div class="card-header">Role-Based Hashes</div>
                 <div class="card-body">
                   <div class="form-section">
-                    <!-- Input Field -->
-                    <!-- Owner Button -->
-                    
-                      <button onclick="owner();" class="btn btn-danger w-100">
-                        Owner
-                      </button>
-                    
-
-                    <!-- Trusted Button -->
-                    
-                      <button onclick="trusted();" class="btn btn-warning w-100">
-                        Trusted
-                      </button>
-                    
+                    <!-- Dynamic Buttons for Roles -->
+                    <div id="role-buttons"></div>
 
                     <!-- Output Area -->
                     <div id="public" class="mt-4">Output</div>
@@ -129,23 +115,33 @@
     <!-- Socket Logic -->
     <script>
       const socket = io();
-
       const out = document.getElementById('public');
-      const trustedform = document.getElementById('trustedsend');
-      const ownerform = document.getElementById('ownersend');
-      function trusted(){
-          socket.emit('trusted');
-        }
-      
+      const roleButtonsContainer = document.getElementById('role-buttons');
 
-      function owner(){
-          socket.emit('owner');
-        }
+      // Fetch roles dynamically from the server
+      socket.emit('getRoles'); // Request roles from the server
 
+      // Populate buttons based on available roles
+      socket.on('roles', function (roles) {
+        roles.forEach(role => {
+          const button = document.createElement('button');
+          button.classList.add('btn', 'w-100');
+          button.textContent = role.name;
+          button.style.backgroundColor = role.color;
+          button.onclick = () => generateHash(role.name); // Send role when clicked
+          roleButtonsContainer.appendChild(button);
+        });
+      });
+
+      // Request hash for the selected role
+      function generateHash(roleName) {
+        socket.emit('generateHash', roleName);
+      }
+
+      // Listen for generated hash and display it
       socket.on('gen', function (msg) {
         console.log(msg);
-        out.innerHTML = msg;
-        
+        out.innerHTML = msg.hash;
       });
     </script>
   </body>
