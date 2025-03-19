@@ -92,18 +92,18 @@
                   <div class="form-section">
                     <!-- Input Field -->
                     <!-- Owner Button -->
-                    <form id="ownersend">
-                      <button type="submit" class="btn btn-danger w-100">
+                    
+                      <button onclick="owner();" class="btn btn-danger w-100">
                         Owner
                       </button>
-                    </form>
+                    
 
                     <!-- Trusted Button -->
-                    <form id="trustedsend">
-                      <button type="submit" class="btn btn-warning w-100">
+                    
+                      <button onclick="trusted();" class="btn btn-warning w-100">
                         Trusted
                       </button>
-                    </form>
+                    
 
                     <!-- Output Area -->
                     <div id="public" class="mt-4">Output</div>
@@ -133,21 +133,19 @@
       const out = document.getElementById('public');
       const trustedform = document.getElementById('trustedsend');
       const ownerform = document.getElementById('ownersend');
-      trustedform.addEventListener('submit', function (e) {
-        e.preventDefault();
+      function trusted(){
           socket.emit('trusted');
         }
-      });
+      
 
-      ownerform.addEventListener('submit', function (e) {
-        e.preventDefault();
+      function owner(){
           socket.emit('owner');
         }
-      });
 
       socket.on('gen', function (msg) {
         console.log(msg);
         out.innerHTML = msg;
+        
       });
     </script>
   </body>
