@@ -126,11 +126,20 @@ class Bot {
                     }
                     break;
 
-                case "validateHash":
+                case "validateOwnerHash":
                     const hash = args[action.hashArgIndex];
                     const prefix = config.get(`prefixes.${action.hashType}Prefix`);
                     const isValid = this.HashUtils.validateOwner(hash, prefix);
-
+                    if (isValid && action.then) {
+                        this.executeActions(action.then, args);
+                    } else if (!isValid && action.else) {
+                        this.executeActions(action.else, args);
+                    }
+                    break;
+                case "validateTrustedHash":
+                    const hash = args[action.hashArgIndex];
+                    const prefix = config.get(`prefixes.${action.hashType}Prefix`);
+                    const isValid = this.HashUtils.validateTrusted(hash, prefix);
                     if (isValid && action.then) {
                         this.executeActions(action.then, args);
                     } else if (!isValid && action.else) {
