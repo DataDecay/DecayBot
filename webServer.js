@@ -15,17 +15,18 @@ class WebServer {
         this.server = null;
         this.io = null;
         this.isRunning = false;
-        this.sessions = {}; // Session token -> { username, level, expiresAt }
+        this.sessions = {};
         
-        // Users (Hardcoded, ideally should be stored in a database)
+        // TODO: add config files but im lazy so later
         this.users = {
-            'admin': { password: 'adminpass', level: 3 },
-            'moderator': { password: 'modpass', level: 2 },
-            'user': { password: 'userpass', level: 1 }
+            'datadecay': { password: 'me :D', level: 4},
+            'elevated': { password: 'notme', level: 3 },
+            'trusted': { password: 'notme', level: 2 },
+            'user': { password: 'notme', level: 1 }
         };
 
-        this.sessionTimeout = 1000 * 60 * 60; // 1 hour session expiry
-        this.cleanupInterval = 1000 * 60 * 10; // Clean expired sessions every 10 minutes
+        this.sessionTimeout = 1000 * 60 * 60; 
+        this.cleanupInterval = 1000 * 60 * 10; 
     }
 
     start() {
@@ -228,7 +229,15 @@ class WebServer {
         });
 
         socket.on('send', (msg) => {
-            this.bot.chat(msg);
+            //this.bot.chat(msg);
+            
+            const token = socket.handshake.query.token;
+            if(!token){
+                socket.emit('msg', `Sorry, you need to be logged in to send messages.`);
+            } else {
+                const username = sessions[token].username;
+                this.bot.core.run(`tellraw @a ["${username} via DecayBot webchat: ${msg}"]`)
+            }
         });
     }
 
