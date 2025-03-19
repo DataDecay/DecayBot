@@ -43,15 +43,24 @@ class CommandParser {
                     break;
 
                 case "validateHash":
+                    results = [];
+                    for (const htype of action.hashType){
                     const hash = args[action.hashArgIndex];
-                    const prefix = config.get(`prefixes.${action.hashType}Prefix`);
+                    const prefix = config.get(`prefixes.${htype}Prefix`);
                     const isValid = this.HashUtils.validateOwner(hash, prefix);
                     if (isValid && action.then) {
                         this.executeActions(action.then, args);
                     } else if (!isValid && action.else) {
                         this.executeActions(action.else, args);
                     }
+                    correct=false;
+                        for (const result of results){
+                            correct = correct || result;
+                        }
+                        
+                    return correct 
                     break;
+                    }
 
                 case "startLoop":
                     const loopCommand = this.evaluateArg(action.command, args);
