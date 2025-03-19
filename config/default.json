@@ -4,19 +4,22 @@
       "prefix": "db",
       "color": "red",
       "name": "Owner",
-      "visible": true
-    },
-    "trusted": {
-      "prefix": "dt",
-      "color": "yellow",
-      "name": "Trusted",
-      "visible": true
+      "visible": true,
+      "requiredLevel": 4
     },
     "elevated": {
       "prefix": "da",
       "color": "orange",
       "name": "Elevated",
-      "visible": true
+      "visible": true,
+      "requiredLevel": 3
+    },
+    "trusted": {
+      "prefix": "dt",
+      "color": "yellow",
+      "name": "Trusted",
+      "visible": true,
+      "requiredLevel": 2
     },
     "public":{
       "prefix": "N/A",
