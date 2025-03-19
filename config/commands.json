@@ -18,7 +18,7 @@
       "actions": [
          {
           "type": "validateHash",
-          "hashType": "owner",
+          "hashType": "Trusted",
           "hashArgIndex": 0,
           "then": [
         {
