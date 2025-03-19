@@ -1,6 +1,6 @@
 # Command Configuration Guide
 
-This guide explains how to create and structure custom commands for your bot, powered by the `CommandParser` class.
+This guide explains how to create and structure custom commands for DecayBot.
 
 Your `CommandParser` loads commands from `/config/commands.json` and executes them dynamically. Follow the instructions below to create or modify commands in that file.
 
@@ -117,10 +117,10 @@ Only the `owner` can execute this command by providing a valid hash.
 }
 ```
 
-🔹 Users run: `db:shutdown <hash>`  
-🔹 Hash is validated using `HashUtils.validateOwner()`.  
-🔹 If valid → stops the bot.  
-🔹 If invalid → sends an access denied message.
+- Users run: `db:shutdown <hash>`  
+- Hash is validated using `HashUtils.validateOwner()`.  
+- If valid → stops the bot.
+- If invalid → sends an access denied message.
 
 ---
 
@@ -177,8 +177,8 @@ Runs different actions based on the first argument.
 }
 ```
 
-🔹 Users run: `db:server <hash> start` or `!server <hash> stop`  
-🔹 Executes based on the second argument (`args[1]`).
+- Users run: `db:server <hash> start` or `db:server <hash> stop`  
+- Executes based on the second argument (`args[1]`).
 
 ---
 
@@ -264,21 +264,3 @@ commandParser.showHelp();
 ```
 
 This sends a `tellraw` message listing all commands, categorized by role.
-
----
-
-## Example Command Template
-
-```json
-{
-  "name": "example",
-  "description": "Example command.",
-  "roles": ["public"],
-  "actions": [
-    {
-      "type": "chat",
-      "message": "This is an example command!"
-    }
-  ]
-}
-```
