@@ -61,7 +61,7 @@ class WebServer {
             if (!token || !this.sessions[token]) {
                 console.log("Unauthorized socket connection attempt.");
                 socket.emit('error', 'Unauthorized. Please log in.');
-                socket.disconnect(true);
+                //socket.disconnect(true);
                 return;
             }
 
