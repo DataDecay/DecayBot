@@ -218,7 +218,7 @@ class CommandParser {
             const commands = roles[role];
             const roleMeta = hashLevels[role]; // Fetch the role metadata
 
-            if (roleMeta && roleMeta.visible !== false) {
+            if (roleMeta) {
                 if (commands.length > 0) {
                     messageParts.push({
                         text: `${roleMeta.name}: ${commands.join(", ")}`,
