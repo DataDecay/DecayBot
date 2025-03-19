@@ -1,13 +1,13 @@
 {
-"prefixes":{
-"ownerPrefix": "db",
-"trustedPrefix": "dt"
-},
-"connection":{
-"serverName": "kaboom.pw",
-"botName": "DecayBot"
-},
-"webServer":{
-"port":8888
-}
+  "prefixes":{
+    "OwnerPrefix": "db",
+    "TrustedPrefix": "dt"
+  },  
+  "connection":{
+    "serverName": "kaboom.pw",
+    "botName": "DecayBot"
+  },
+  "webServer":{
+    "port":8888
+  }
 }
