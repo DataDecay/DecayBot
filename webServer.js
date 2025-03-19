@@ -16,7 +16,7 @@ class WebServer {
     start() {
         const server = http.createServer(this.handler.bind(this));
         const io = socketIO(server);
-
+        console.error("STARTED")
         server.listen(this.port, () => {
             console.log(`Server running on port ${this.port}`);
         });
