@@ -12,15 +12,22 @@
       ]
     },
     {
-      "name": "envy",
-      "description": "drinkable",
-      "roles": ["owner"],
+      "name": "test",
+      "description": "A test command.",
+      "roles": ["trusted"],
       "actions": [
+         {
+          "type": "validateHash",
+          "hashType": "owner",
+          "hashArgIndex": 0,
+          "then": [
         {
           "type": "chat",
-          "message": "slurrp"
+          "message": "Hello World"
         }
       ]
+    }
+  ]
     },
     {
       "name": "creator",
