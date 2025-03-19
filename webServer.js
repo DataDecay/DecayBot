@@ -231,11 +231,11 @@ class WebServer {
         socket.on('send', (msg) => {
             //this.bot.chat(msg);
             
-            const token = socket.handshake.query.token;
-            if(!token){
+            const token = this.socket.handshake.query.token;
+            if(!token || ){
                 socket.emit('msg', `Sorry, you need to be logged in to send messages.`);
             } else {
-                const username = sessions[token].username;
+                const username = this.sessions[token].username;
                 this.bot.core.run(`tellraw @a ["${username} via DecayBot webchat: ${msg}"]`)
             }
         });
