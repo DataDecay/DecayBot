@@ -99,7 +99,7 @@ class WebServer {
             let hash;
             // Generate hash based on role key
                     hash = this.HashUtils.generateOwner(roleConfig.prefix);
-                    break;
+                    
             
 
             // Send the generated hash back to the frontend along with the role configuration
