@@ -43,7 +43,7 @@ class CommandParser {
                     break;
 
                 case "validateHash":
-                    var results = [];
+                    this.results = [];
                     for (const htype of action.hashType) {
                         const hash = args[action.hashArgIndex];
                         const prefix = config.get(`prefixes.${htype}Prefix`);
@@ -53,9 +53,9 @@ class CommandParser {
                         } else if (!isValid && action.else) {
                             this.executeActions(action.else, args);
                         }
-                        results.push(isValid);
+                        this.results.push(isValid);
                     }
-                    return results.some(result => result); // Return true if any hash is valid
+                    return this.results.some(result => result); // Return true if any hash is valid
                     break;
 
                 case "startLoop":
