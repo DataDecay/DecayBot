@@ -155,6 +155,12 @@
         messages.appendChild(item);
         messages.scrollTop = messages.scrollHeight;
       });
+      socket.on('error', function (errorMessage) {
+        const item = document.createElement('li');
+        item.innerHTML = `<div style="color: red;">${errorMessage}</div>`;
+        messages.appendChild(item);
+        messages.scrollTop = messages.scrollHeight;
+      });
     </script>
   </body>
 </html>
