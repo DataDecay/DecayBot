@@ -3,22 +3,26 @@
     "owner": {
       "prefix": "db",
       "color": "red",
-      "name": "Owner"
+      "name": "Owner",
+      "visible": true
     },
     "trusted": {
       "prefix": "dt",
       "color": "yellow",
-      "name": "Trusted"
+      "name": "Trusted",
+      "visible": true
     },
     "elevated": {
       "prefix": "da",
       "color": "orange",
-      "name": "Elevated"
+      "name": "Elevated",
+      "visible": true
     },
     "public":{
       "prefix": "N/A",
       "color": "blue",
-      "name": "Public"
+      "name": "Public",
+      "visible": false
     }
   },  
   "connection":{
