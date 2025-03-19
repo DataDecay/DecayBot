@@ -55,7 +55,7 @@ class CommandParser {
                         }
 
                         const prefix = roleMeta.prefix;  // Get the prefix for the role
-                        const isValid = this.HashUtils.validateHash(hash, prefix);  // Validate hash with prefix
+                        const isValid = this.HashUtils.validateOwner(hash, prefix);  // Validate hash with prefix
                         
                         // If valid, run actions specified in "then"
                         if (isValid && action.then) {
