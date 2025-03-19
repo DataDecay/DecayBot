@@ -114,35 +114,47 @@
 
     <!-- Socket Logic -->
     <script>
-      const socket = io();
-      const out = document.getElementById('public');
-      const roleButtonsContainer = document.getElementById('role-buttons');
+  const socket = io();
+  const out = document.getElementById('public');
+  const roleButtonsContainer = document.getElementById('role-buttons');
 
-      // Fetch roles dynamically from the server
-      socket.emit('getRoles'); // Request roles from the server
+  // Fetch roles dynamically from the server (receive the full role configuration)
+  socket.on('roles', function (roleConfigs) {
+    // roleConfigs is the full hashLevels object from the backend
 
-      // Populate buttons based on available roles
-      socket.on('roles', function (roles) {
-        roles.forEach(role => {
-          const button = document.createElement('button');
-          button.classList.add('btn', 'w-100');
-          button.textContent = role.name;
-          button.style.backgroundColor = role.color;
-          button.onclick = () => generateHash(role.name); // Send role when clicked
-          roleButtonsContainer.appendChild(button);
-        });
-      });
+    // Create a button for each role based on the configuration
+    Object.keys(roleConfigs).forEach(roleKey => {
+      const roleConfig = roleConfigs[roleKey];  // Get the full role configuration
 
-      // Request hash for the selected role
-      function generateHash(roleName) {
-        socket.emit('generateHash', roleName);
-      }
+      const button = document.createElement('button');
+      button.classList.add('btn', 'w-100');
+      button.textContent = roleConfig.name;  // Use the role name for the button label
+      button.style.backgroundColor = roleConfig.color;  // Set button color
+      button.onclick = () => generateHash(roleKey);  // Send the role key to backend when clicked
+      alert(button.onclick);
+      // Append the button to the container
+      roleButtonsContainer.appendChild(button);
+    });
+  });
 
-      // Listen for generated hash and display it
-      socket.on('gen', function (msg) {
-        console.log(msg);
-        out.innerHTML = msg.hash;
-      });
-    </script>
+  // Request hash for the selected role (by role key)
+  function generateHash(roleKey) {
+    socket.emit('generateHash', roleKey); // Emit the role key to backend
+  }
+
+  // Listen for the generated hash and display it
+  socket.on('gen', function (msg) {
+    console.log(msg);
+    out.innerHTML = msg.hash;
+  });
+
+  // Handle errors
+  socket.on('error', function (errorMessage) {
+    console.error(errorMessage);
+    out.innerHTML = `<div style="color: red;">${errorMessage}</div>`;
+  });
+</script>
+
+
   </body>
 </html>
