@@ -103,45 +103,39 @@ class CommandParser {
     }
 
     showHelp() {
-        //const roles = {
-        //    public: [],
-        //    trusted: [],
-        //    owner: []
-        //};
+    const hashLevels = config.get('hashLevels');
+    const roles = {};
 
-        this.commandsConfig.forEach(cmd => {
-            cmd.roles.forEach(role => {
-                if (!roles[role]) roles[role] = [];
-                roles[role].push(cmd.name);
-            });
+    // Initialize empty arrays for each role
+    Object.keys(hashLevels).forEach(level => {
+        roles[level] = [];
+    });
+
+    // Populate roles with command names
+    this.commandsConfig.forEach(cmd => {
+        cmd.roles.forEach(role => {
+            if (!roles[role]) roles[role] = [];
+            roles[role].push(cmd.name);
         });
+    });
 
-        const messageParts = [];
+    const messageParts = [];
 
-        if (roles.public.length > 0) {
+    // Iterate over each role to build the message
+    Object.keys(roles).forEach(role => {
+        const commands = roles[role];
+        const roleMeta = hashLevels[role];
+
+        if (commands.length > 0) {
             messageParts.push({
-                text: `Public: ${roles.public.join(", ")} `,
-                color: "blue"
+                text: `${roleMeta.name}: ${commands.join(", ")} `,
+                color: roleMeta.color
             });
         }
+    });
 
-        if (roles.trusted.length > 0) {
-            messageParts.push({
-                text: `Trusted: ${roles.trusted.join(", ")} `,
-                color: "green"
-            });
-        }
-
-        if (roles.owner.length > 0) {
-            messageParts.push({
-                text: `Owner: ${roles.owner.join(", ")}`,
-                color: "red"
-            });
-        }
-
-        console.log("help shown");
-        this.bot.core.run(`tellraw @a ${JSON.stringify(messageParts)}`);
-    }
+    this.bot.core.run(`tellraw @a ${JSON.stringify(messageParts)}`);
+}
 
     say(text, colour = "white") {
         this.bot.core.run(`tellraw @a [{"text":"${text}","color":"${colour}"}]`);
