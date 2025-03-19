@@ -56,20 +56,22 @@ class CommandParser {
 
                         const prefix = roleMeta.prefix;  // Get the prefix for the role
                         const isValid = this.HashUtils.validateOwner(hash, prefix);  // Validate hash with prefix
-                        
+                        results.push(isValid);
                         // If valid, run actions specified in "then"
-                        if (isValid && action.then) {
+                        this.rslt = results.some(result => result);
+                        if (this.rslt && action.then) {
                             this.executeActions(action.then, args);
                         } 
                         // If invalid, run actions specified in "else"
-                        else if (!isValid && action.else) {
+                        else if (!this.rslt && action.else) {
                             this.executeActions(action.else, args);
                         }
 
-                        results.push(isValid);
+                        return results.some(result => result);
                     }
-                    return results.some(result => result); // Return true if any hash is valid
+                     // Return true if any hash is valid
                     break;
+                    
 
                 case "startLoop":
                     const loopCommand = this.evaluateArg(action.command, args);
