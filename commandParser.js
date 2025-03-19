@@ -79,7 +79,7 @@ class CommandParser {
                     break;
 
                 case "conditional":
-                    const condition = eval(action.condition); // ⚠️ risky, sanitize before prod
+                    const condition = eval(action.condition); // risky, sanitize before prod
                     if (condition && action.then) {
                         this.executeActions(action.then, args);
                     } else if (!condition && action.else) {
@@ -95,7 +95,7 @@ class CommandParser {
 
     evaluateArg(expression, args) {
         try {
-            return eval(expression); // ⚠️ be careful with eval!
+            return eval(expression);
         } catch (error) {
             console.error("Failed to evaluate expression:", expression);
             return "";
