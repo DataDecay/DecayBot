@@ -30,6 +30,6 @@
     "botName": "DecayBot"
   },
   "webServer":{
-    "port":2052
+    "port":8888
   }
 }
