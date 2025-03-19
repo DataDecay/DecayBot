@@ -190,7 +190,7 @@ class WebServer {
         socket.emit('roles', visibleRoles);
 
         const messageHandler = (message, pos, sender) => {
-            console.log(`MESSAGE: [${pos}] ${sender}: ${message.toString()}`);
+            //console.log(`MESSAGE: [${pos}] ${sender}: ${message.toString()}`);
             socket.emit('msg', `[${pos}] ${sender}: ${message.toString()}`);
         };
 
@@ -234,9 +234,11 @@ class WebServer {
             const token = this.socket.handshake.query.token;
             if(!token || !this.sessions[token]){
                 socket.emit('msg', `Sorry, you need to be logged in to send messages.`);
+                console.log(`Received message: ${msg} & denied`);
             } else {
                 const username = this.sessions[token].username;
-                this.bot.core.run(`tellraw @a ["${username} via DecayBot webchat: ${msg}"]`)
+                this.bot.core.run(`tellraw @a ["${username} via DecayBot webchat: ${msg}"]`);
+                console.log(`Received message: ${msg}, from ${username}`);
             }
         });
     }
