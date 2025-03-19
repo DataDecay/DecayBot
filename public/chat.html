@@ -144,7 +144,6 @@
         e.preventDefault();
         if (input.value.trim()) {
           socket.emit('send', input.value);
-          alert(`sent with ${input.value}`)
           input.value = '';
         }
       });
