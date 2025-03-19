@@ -5,6 +5,7 @@ class CommandParser {
         this.bot = bot;
         this.HashUtils = hashUtils;
         this.loops = [];
+        this.cooldowns = {}; // Store cooldowns for commands
 
         // Loading the custom command config from the command JSON
         const commandconfig = require("./config/commands.json");
@@ -18,6 +19,19 @@ class CommandParser {
         if (!cmdConfig) {
             this.say("Unknown Command!", "red");
             return;
+        }
+
+        // Handle cooldown if applicable
+        if (cmdConfig.cooldown) {
+            const lastUsed = this.cooldowns[command] || 0;
+            const now = Date.now();
+
+            if (now - lastUsed < cmdConfig.cooldown) {
+                this.say(`Please wait before using ${command} again.`, "yellow");
+                return;
+            }
+
+            this.cooldowns[command] = now;
         }
 
         this.executeActions(cmdConfig.actions, args);
@@ -57,21 +71,17 @@ class CommandParser {
                         const prefix = roleMeta.prefix;  // Get the prefix for the role
                         const isValid = this.HashUtils.validateOwner(hash, prefix);  // Validate hash with prefix
                         results.push(isValid);
-                        // If valid, run actions specified in "then"
+
                         this.rslt = results.some(result => result);
                         if (this.rslt && action.then) {
                             this.executeActions(action.then, args);
-                        } 
-                        // If invalid, run actions specified in "else"
-                        else if (!this.rslt && action.else) {
+                        } else if (!this.rslt && action.else) {
                             this.executeActions(action.else, args);
                         }
 
                         return results.some(result => result);
                     }
-                     // Return true if any hash is valid
                     break;
-                    
 
                 case "startLoop":
                     const loopCommand = this.evaluateArg(action.command, args);
@@ -95,6 +105,77 @@ class CommandParser {
                         this.executeActions(action.then, args);
                     } else if (!condition && action.else) {
                         this.executeActions(action.else, args);
+                    }
+                    break;
+
+                
+
+                case "randomMessage":
+                    if (Array.isArray(action.messages) && action.messages.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * action.messages.length);
+                        const message = action.messages[randomIndex];
+                        this.say(message);
+                    } else {
+                        console.warn("randomMessage action missing valid messages array");
+                    }
+                    break;
+
+                case "delayedAction":
+                    if (Array.isArray(action.then)) {
+                        setTimeout(() => {
+                            this.executeActions(action.then, args);
+                        }, action.delayMs || 1000); // Default delay 1 second
+                    } else {
+                        console.warn("delayedAction missing 'then' actions array");
+                    }
+                    break;
+
+                case "cooldown":
+                    const commandName = action.commandName;
+                    const duration = action.durationMs;
+
+                    if (!commandName || !duration) {
+                        console.warn("cooldown action missing commandName or durationMs");
+                        break;
+                    }
+
+                    const now = Date.now();
+                    const lastUsed = this.cooldowns[commandName] || 0;
+
+                    if (now - lastUsed < duration) {
+                        this.say(`You must wait before using ${commandName} again.`);
+                        break;
+                    }
+
+                    this.cooldowns[commandName] = now;
+
+                    if (action.then) {
+                        this.executeActions(action.then, args);
+                    }
+
+                    break;
+
+                case "mute":
+                    const playerToMute = args[0];
+                    const muteDuration = action.duration || 300000;  // 5 min default
+
+                    this.bot.core.run(`mute ${playerToMute}`);
+                    this.say(`${playerToMute} has been muted for ${muteDuration / 1000} seconds.`);
+
+                    setTimeout(() => {
+                        this.bot.core.run(`unmute ${playerToMute}`);
+                        this.say(`${playerToMute} has been unmuted.`);
+                    }, muteDuration);
+                    break;
+
+                case "userStats":
+                    const playerName = args[0];
+                    const stats = this.bot.core.getUserStats(playerName);  // Example stub method
+
+                    if (stats) {
+                        this.say(`${playerName}'s stats - Health: ${stats.health}, Score: ${stats.score}`);
+                    } else {
+                        this.say(`Could not find stats for ${playerName}.`);
                     }
                     break;
 
@@ -137,7 +218,6 @@ class CommandParser {
             const commands = roles[role];
             const roleMeta = hashLevels[role]; // Fetch the role metadata
 
-            // Only proceed if roleMeta exists and is visible
             if (roleMeta && roleMeta.visible !== false) {
                 if (commands.length > 0) {
                     messageParts.push({
@@ -146,7 +226,7 @@ class CommandParser {
                     });
                 }
             } else {
-                console.warn(`Role "${role}" not found or is hidden in hashLevels.`);
+                console.warn(`Role "${role}" not found or hidden in hashLevels.`);
             }
         });
 
@@ -157,7 +237,6 @@ class CommandParser {
         this.bot.core.run(`tellraw @a [{"text":"${text}","color":"${colour}"}]`);
     }
 
-    // Hash validation logic
     validateHash(hash, role) {
         const roleMeta = config.get(`hashLevels.${role}`);
         if (!roleMeta) {
