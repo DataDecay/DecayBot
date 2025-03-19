@@ -23,7 +23,7 @@ class Bot {
             auth: 'offline',
             version: ''
         });
-        this.client = bot._client;
+        this.client = this.bot._client;
         this.bot.on('spawn', () => {
             this.bot.chatAddPattern(/db:(\S+) ?(.+)?/, "command", "Command Sent");
 
