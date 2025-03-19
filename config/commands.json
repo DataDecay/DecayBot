@@ -25,6 +25,12 @@
           "type": "chat",
           "message": "Hello World"
         }
+      ],
+      "else": [
+        {
+          "type": "chat",
+          "message": "Hello World with invalid hash"
+        }
       ]
     }
   ]
