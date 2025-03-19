@@ -2,15 +2,18 @@
   "hashLevels":{
     "owner": {
       "prefix": "db",
-      "color": "red"
+      "color": "red",
+      "name": "Owner"
     },
     "trusted": {
       "prefix": "dt",
-      "color": "yellow"
+      "color": "yellow",
+      "name": "Trusted"
     },
-    "admin": {
-      "prefix": "db",
+    "elevated": {
+      "prefix": "da",
       "color": "orange"
+      "name": "Elevated"
     }
   },  
   "connection":{
