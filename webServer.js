@@ -22,9 +22,9 @@ class WebServer {
         if (config.get("webServer.ssl")){
         this.httpOptions = {
  
- key: fs.readFileSync("keys/datadecay.dev-0001/fullchain.pem"),
+ key: fs.readFileSync("keys/fullchain.pem"),
  
- cert: fs.readFileSync("keys/datadecay.dev-0001/privkey.pem")
+ cert: fs.readFileSync("keys/privkey.pem")
 }
         this.server = http.createServer(this.httpOptions, this.handler.bind(this));
         } else {
