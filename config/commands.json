@@ -48,7 +48,7 @@
     },
     {
       "name": "code",
-      "description": "Sends GitHub link.",
+      "description": "Shows GitHub link.",
       "roles": ["public"],
       "actions": [
         {
