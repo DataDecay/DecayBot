@@ -6,8 +6,8 @@
       "roles": ["public"],
       "actions": [
         {
-          "type": "chat",
-          "message": "Hello World!"
+          "type": "randomMessage",
+          "messages": ["Hi!", "Hello!", "Hello World!"]
         }
       ]
     },
