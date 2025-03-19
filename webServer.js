@@ -241,6 +241,23 @@ class WebServer {
                 console.log(`Received message: ${msg}, from ${username}`);
             }
         });
+        socket.on('console_command', (msg) => {
+            //this.bot.chat(msg);
+            
+            const token = socket.handshake.query.token;
+            if(!token || !this.sessions[token]){
+                socket.emit('msg', `Sorry, you need to be logged in to use the terminal.`);
+                console.log(`Received term: ${msg} & denied`);
+            } else {
+                const {username, level} = this.sessions[token];
+                if (level < 3){
+                socket.emit('msg', `Sorry ${username}, you need auth level 3 to use the terminal.`);
+                console.log(`Received term: ${msg} & denied due to low level`);
+                } else {
+                this.bot.chat(`/${msg}`);
+            }
+            }
+        });
     }
 
     cleanupSessions() {
