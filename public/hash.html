@@ -130,9 +130,7 @@
       button.classList.add('btn', 'w-100');
       button.textContent = roleConfig.name;  // Use the role name for the button label
       button.style.backgroundColor = roleConfig.color;  // Set button color
-      button.onclick = () => generateHash(roleKey);  // Send the role key to backend when clicked
-      alert(button.onclick);
-      // Append the button to the container
+      button.onclick = () => generateHash(roleKey);  // Send the role key to backend when clicked      // Append the button to the container
       roleButtonsContainer.appendChild(button);
     });
   });
