@@ -2,7 +2,7 @@
 
 ![Server Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FDataDecay%2FDecayBot%2Frefs%2Fheads%2Fmaster%2Fconfig%2Fdefault.json&query=%24.connection.serverName&label=Server&color=purple
 )
-
+*NOTE: This is just a personal project, so some things may be broken and you will have to install the packages. I am working on improving it*
 DecayBot is the bot of DataDecay for use as a chatbot.
 Chat `db:help` for a command list.
 
