@@ -1,6 +1,5 @@
 {
-  "prefixes":{
-    "README": "when you add permission levels, also add keys here or the program will FAIL",
+  "hashLevels":{
     "owner": {
       "prefix": "db",
       "color": "red"
