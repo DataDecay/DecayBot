@@ -188,7 +188,7 @@ class WebServer {
         const messageHandler = (message, pos, sender) => {
             console.log(`MESSAGE: [${pos}] ${sender}: ${message.toString()}`);
 
-            console.log(this.bot.players.stringify());
+            console.log(JSON.stringify(this.bot.players));
             socket.emit('msg', `[${pos}] ${username}: ${message.toString()}`);
         };
 
