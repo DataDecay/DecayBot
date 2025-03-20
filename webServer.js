@@ -199,7 +199,7 @@ class WebServer {
 
             console.log(JSON.stringify(this.bot.players));
             if (pos=="chat"){
-                socket.emit('msg', `[${pos}] ${this.uuidToUsername(sender)}: ${message.toString()}`);
+                socket.emit('msg', `[${pos}] ${uuidToUsername(sender)}: ${message.toString()}`);
 
             } else {
                 socket.emit('msg', `[${pos}]: ${message.toString()}`);
