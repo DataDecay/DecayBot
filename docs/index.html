@@ -62,6 +62,169 @@
       }
     };
 
+    Blockly.Blocks['add_action_tellraw'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Tellraw Message")
+            .appendField(new Blockly.FieldTextInput("Hello World!"), "MESSAGE");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Send a tellraw message");
+        this.setHelpUrl("");
+      }
+    };
+
+    Blockly.Blocks['add_action_coreCommand'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Core Command")
+            .appendField(new Blockly.FieldTextInput("refillCore"), "COMMAND");
+        this.appendValueInput("ARGS")
+            .setCheck("Array")
+            .appendField("Arguments");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Execute a core command");
+        this.setHelpUrl("");
+      }
+    };
+
+    Blockly.Blocks['add_action_validateHash'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Validate Hash");
+        this.appendValueInput("HASH_ARG")
+            .setCheck("String")
+            .appendField("Hash");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Validate a user's hash");
+        this.setHelpUrl("");
+      }
+    };
+
+    Blockly.Blocks['add_action_startLoop'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Start Loop")
+            .appendField(new Blockly.FieldTextInput("loopCommand"), "COMMAND");
+        this.appendValueInput("INTERVAL_MS")
+            .setCheck("Number")
+            .appendField("Interval (ms)");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Start a looping command");
+        this.setHelpUrl("");
+      }
+    };
+
+    Blockly.Blocks['add_action_stopLoops'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Stop All Loops");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Stop all running loops");
+        this.setHelpUrl("");
+      }
+    };
+
+    Blockly.Blocks['add_action_stopBot'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Stop Bot");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Stop the bot");
+        this.setHelpUrl("");
+      }
+    };
+
+    Blockly.Blocks['add_action_conditional'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Condition")
+            .appendField(new Blockly.FieldTextInput("true"), "CONDITION");
+        this.appendStatementInput("THEN")
+            .setCheck(null)
+            .appendField("Then Actions");
+        this.appendStatementInput("ELSE")
+            .setCheck(null)
+            .appendField("Else Actions");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Execute actions based on a condition");
+        this.setHelpUrl("");
+      }
+    };
+
+    Blockly.Blocks['add_action_randomMessage'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Random Message")
+            .appendField(new Blockly.FieldTextInput("Hello!"), "MESSAGES");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Send a random message");
+        this.setHelpUrl("");
+      }
+    };
+
+    Blockly.Blocks['add_action_delayedAction'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Delayed Action");
+        this.appendValueInput("DELAY_MS")
+            .setCheck("Number")
+            .appendField("Delay (ms)");
+        this.appendStatementInput("THEN")
+            .setCheck(null)
+            .appendField("Then Actions");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Execute actions after a delay");
+        this.setHelpUrl("");
+      }
+    };
+
+    Blockly.Blocks['add_action_eval'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Eval Expression")
+            .appendField(new Blockly.FieldTextInput("expression"), "EXPRESSION");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Evaluate a JavaScript expression");
+        this.setHelpUrl("");
+      }
+    };
+
+    Blockly.Blocks['add_action_cooldown'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Cooldown")
+            .appendField(new Blockly.FieldTextInput("commandName"), "COMMAND_NAME");
+        this.appendValueInput("DURATION")
+            .setCheck("Number")
+            .appendField("Duration (ms)");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Set a cooldown for a command");
+        this.setHelpUrl("");
+      }
+    };
+
     Blockly.Blocks['add_action_mute'] = {
       init: function() {
         this.appendDummyInput()
@@ -102,6 +265,54 @@
               action.type = "chat";
               action.message = actionBlock.getFieldValue('MESSAGE');
               break;
+            case 'add_action_tellraw':
+              action.type = "tellraw";
+              action.json = actionBlock.getFieldValue('MESSAGE');
+              break;
+            case 'add_action_coreCommand':
+              action.type = "coreCommand";
+              action.command = actionBlock.getFieldValue('COMMAND');
+              action.args = Blockly.JavaScript.workspaceToCode(actionBlock.getInputTargetBlock("ARGS"));
+              break;
+            case 'add_action_validateHash':
+              action.type = "validateHash";
+              action.hashArgIndex = actionBlock.getFieldValue('HASH_ARG');
+              break;
+            case 'add_action_startLoop':
+              action.type = "startLoop";
+              action.command = actionBlock.getFieldValue('COMMAND');
+              action.intervalMs = actionBlock.getFieldValue('INTERVAL_MS');
+              break;
+            case 'add_action_stopLoops':
+              action.type = "stopLoops";
+              break;
+            case 'add_action_stopBot':
+              action.type = "stopBot";
+              break;
+            case 'add_action_conditional':
+              action.type = "conditional";
+              action.condition = actionBlock.getFieldValue('CONDITION');
+              action.then = Blockly.JavaScript.workspaceToCode(actionBlock.getInputTargetBlock("THEN"));
+              action.else = Blockly.JavaScript.workspaceToCode(actionBlock.getInputTargetBlock("ELSE"));
+              break;
+            case 'add_action_randomMessage':
+              action.type = "randomMessage";
+              action.messages = actionBlock.getFieldValue('MESSAGES');
+              break;
+            case 'add_action_delayedAction':
+              action.type = "delayedAction";
+              action.delayMs = actionBlock.getFieldValue('DELAY_MS');
+              action.then = Blockly.JavaScript.workspaceToCode(actionBlock.getInputTargetBlock("THEN"));
+              break;
+            case 'add_action_eval':
+              action.type = "eval";
+              action.eval = actionBlock.getFieldValue('EXPRESSION');
+              break;
+            case 'add_action_cooldown':
+              action.type = "cooldown";
+              action.commandName = actionBlock.getFieldValue('COMMAND_NAME');
+              action.durationMs = actionBlock.getFieldValue('DURATION');
+              break;
             case 'add_action_mute':
               action.type = "mute";
               action.player = actionBlock.getFieldValue('PLAYER');
@@ -133,7 +344,7 @@
       grid: { spacing: 20, length: 3, colour: '#ccc', snap: true }
     });
 
-    // Dynamically add blocks to create new commands and actions
+    // Dynamically add blocks to create new commands
     function addNewCommand() {
       var newCommandBlock = Blockly.Xml.textToDom('<xml><block type="command_name"></block></xml>');
       Blockly.Xml.domToWorkspace(newCommandBlock, workspace);
