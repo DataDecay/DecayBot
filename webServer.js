@@ -186,14 +186,14 @@ class WebServer {
         socket.emit('roles', visibleRoles);
 
         const messageHandler = (message, pos, sender) => {
-            //console.log(`MESSAGE: [${pos}] ${sender}: ${message.toString()}`);
+            console.log(`MESSAGE: [${pos}] ${sender}: ${message.toString()}`);
             if (pos=="system"){
             socket.emit('msg', `[${pos}]: ${message.toString()}`);
             }
         };
 
          const chatHandler = (username, message,) => {
-            //console.log(`MESSAGE: [${pos}] ${sender}: ${message.toString()}`);
+            console.log(`CHAT: [chat] ${username}: ${message.toString()}`);
             socket.emit('msg', `[chat] ${username}: ${message.toString()}`);
         };
         this.bot.on('chat', chatHandler);
