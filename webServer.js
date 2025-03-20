@@ -190,7 +190,6 @@ class WebServer {
 
             console.log(this.bot.players.toString());
             socket.emit('msg', `[${pos}] ${username}: ${message.toString()}`);
-            }
         };
 
         this.bot.on('message', messageHandler);
