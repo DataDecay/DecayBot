@@ -194,7 +194,6 @@
 function handleCommand(input) {
     socket.emit('console_command', input);
     }
-}
 
       socket.on('msg', function (msg) {
         term.writeln(msg);
