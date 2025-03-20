@@ -69,7 +69,7 @@ class WebServer {
     }
     uuidToName(uuid, bot) {
   for (const username in bot.players) {
-    const player = this.bot.players[username];
+    const player = bot.players[username];
     if (player && player.uuid === uuid) {
       return player.username;
     }
@@ -199,7 +199,7 @@ class WebServer {
 
             console.log(JSON.stringify(this.bot.players));
             if (pos=="chat"){
-                socket.emit('msg', `[${pos}] ${this.uuidToName(sender)}: ${message.toString()}`);
+                socket.emit('msg', `[${pos}] ${this.uuidToName(sender, this.bot)}: ${message.toString()}`);
 
             } else {
                 socket.emit('msg', `[${pos}]: ${message.toString()}`);
