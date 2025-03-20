@@ -43,7 +43,7 @@ class Bot {
                 if (command === "help") {
                     this.commandParser.showHelp();
                 } else {
-                    this.commandParser.handleCommand(command, argsraw ? argsraw.split(" ") : []);
+                    await this.commandParser.handleCommand(command, argsraw ? argsraw.split(" ") : []);
                 }
             });
             this.bot.on('death', () => {
