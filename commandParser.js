@@ -134,7 +134,7 @@ class CommandParser {
                 case "eval":
                     const what = this.evaluateArg(action.eval);
                     this.evalresult = await this.evalWorker.SandboxedEval(what);
-                    this.say(this.evalresult, blue);
+                    this.say(this.evalresult, "blue");
                 break;
 
                 case "cooldown":
