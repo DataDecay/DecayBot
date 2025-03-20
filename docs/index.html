@@ -62,32 +62,61 @@
       }
     };
 
+    Blockly.Blocks['add_action_mute'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Mute Player")
+            .appendField(new Blockly.FieldTextInput("player_name"), "PLAYER");
+        this.appendValueInput("DURATION")
+            .setCheck("Number")
+            .appendField("Duration (ms)");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Mute a player for a specific duration");
+        this.setHelpUrl("");
+      }
+    };
+
     function generateJSON() {
       var jsonOutput = [];
-      var commandName = Blockly.getMainWorkspace().getBlocksByType('command_name')[0].getFieldValue('NAME');
-      var roles = [];
-      var actions = [];
+      var commandBlocks = Blockly.getMainWorkspace().getBlocksByType('command_name');
 
-      // Collect roles
-      var roleBlock = Blockly.getMainWorkspace().getBlocksByType('add_role');
-      roleBlock.forEach(block => {
-        roles.push(block.getFieldValue('ROLE'));
-      });
+      commandBlocks.forEach(function(commandBlock) {
+        var commandName = commandBlock.getFieldValue('NAME');
+        var roles = [];
+        var actions = [];
 
-      // Collect actions
-      var actionBlocks = Blockly.getMainWorkspace().getBlocksByType('add_action_chat');
-      actionBlocks.forEach(block => {
-        actions.push({
-          "type": "chat",
-          "message": block.getFieldValue('MESSAGE')
+        // Collect roles
+        var roleBlocks = commandBlock.getChildren().filter(block => block.type === 'add_role');
+        roleBlocks.forEach(function(roleBlock) {
+          roles.push(roleBlock.getFieldValue('ROLE'));
         });
-      });
 
-      // Build the command object
-      jsonOutput.push({
-        "name": commandName,
-        "roles": roles,
-        "actions": actions
+        // Collect actions
+        var actionBlocks = commandBlock.getChildren().filter(block => block.type.startsWith('add_action'));
+        actionBlocks.forEach(function(actionBlock) {
+          var action = {};
+          switch (actionBlock.type) {
+            case 'add_action_chat':
+              action.type = "chat";
+              action.message = actionBlock.getFieldValue('MESSAGE');
+              break;
+            case 'add_action_mute':
+              action.type = "mute";
+              action.player = actionBlock.getFieldValue('PLAYER');
+              action.duration = actionBlock.getFieldValue('DURATION');
+              break;
+          }
+          actions.push(action);
+        });
+
+        // Build the command object
+        jsonOutput.push({
+          name: commandName,
+          roles: roles,
+          actions: actions
+        });
       });
 
       // Show the generated JSON
@@ -98,11 +127,24 @@
       toolbox: `
         <xml>
           <block type="command_name"></block>
-          <block type="add_role"></block>
-          <block type="add_action_chat"></block>
         </xml>
-      `
+      `,
+      scrollbars: true,
+      grid: { spacing: 20, length: 3, colour: '#ccc', snap: true }
     });
+
+    // Dynamically add blocks to create new commands and actions
+    function addNewCommand() {
+      var newCommandBlock = Blockly.Xml.textToDom('<xml><block type="command_name"></block></xml>');
+      Blockly.Xml.domToWorkspace(newCommandBlock, workspace);
+    }
+
+    // Adding a button to dynamically add new commands
+    var addCommandButton = document.createElement("button");
+    addCommandButton.innerHTML = "Add New Command";
+    addCommandButton.onclick = addNewCommand;
+    document.body.appendChild(addCommandButton);
+
   </script>
 </body>
 </html>
