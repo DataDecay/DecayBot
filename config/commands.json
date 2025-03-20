@@ -12,6 +12,27 @@
       ]
     },
     {
+      "name": "webchat",
+      "description": "Gives webchat link",
+      "roles": ["public"],
+      "actions": [
+        {
+          "type": "tellraw",
+          "json": [
+            "",
+            {
+              "text": "Webchat link",
+              "color": "red",
+              "bold": true,
+              "clickEvent": {
+                "action": "open_url",
+                "value": "https://datadecay.dev/"
+              }
+            }
+        }
+      ]
+    },
+    {
       "name": "test",
       "description": "A test command.",
       "roles": ["trusted"],
