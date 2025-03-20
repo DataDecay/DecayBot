@@ -6,15 +6,18 @@ class evalWorker {
     this.sandbox = this.createNewSandbox();
 
     // Compile the script for repeated execution
-    this.script = new vm.Script(`
-      result = (function() {
-        try {
-          return eval(input);
-        } catch (e) {
-          return "Error: " + e.message;
-        }
-      })();
-    `);
+    const scriptCode = `
+  (function() {
+    try {
+      globalThis.result = eval(globalThis.input);
+    } catch (e) {
+      globalThis.result = "Error: " + e.message;
+    }
+  })();
+`;
+
+this.script = new vm.Script(scriptCode);
+
   }
 
   createNewSandbox() {
