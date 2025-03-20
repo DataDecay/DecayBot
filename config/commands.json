@@ -50,7 +50,7 @@
             "actions": [
                 {
                     "type": "eval",
-                    "eval": "args[1]"
+                    "eval": "args.slice(0).join(' ')"
                 }
             ]
         },
