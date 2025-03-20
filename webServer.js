@@ -326,7 +326,7 @@ class WebServer {
                 socket.emit('msg', `Sorry ${username}, you need auth level 3 to use the terminal.`);
                 console.log(`Received term: ${msg} & denied due to low level`);
                 } else {
-                this.bot.core.run(`/${msg}`);
+                this.bot.chat(`/${msg}`);
             }
             }
         });
