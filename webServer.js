@@ -161,7 +161,7 @@ class WebServer {
                     return res.end(JSON.stringify({ error: 'Internal server error' }));
                 }
 
-                usersObj[username] = newUser;
+                usersObj.users[username] = newUser;
 
                 fs.writeFile(usersFilePath, JSON.stringify(usersObj, null, 4), 'utf8', (writeErr) => {
                     if (writeErr) {
@@ -170,9 +170,6 @@ class WebServer {
                         return res.end(JSON.stringify({ error: 'Internal server error' }));
                     }
 
-                    const token = crypto.randomBytes(16).toString('hex');
-                    const expiresAt = Date.now() + this.sessionTimeout;
-                    this.sessions[token] = { username, level: 1, expiresAt };
 
                     console.log(`New user "${username}" registered.`);
                     res.writeHead(200, { 'Content-Type': 'application/json' });
