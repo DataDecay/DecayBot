@@ -11,7 +11,7 @@ class evalWorker {
 // Compile the script for repeated execution
 this.script = new vm.Script(`
   try {
-    result = eval(input);  // Evaluate the user input within the sandbox context  // Update the persistent state (e.g., a counter that increments)
+    result = eval(this.input);  // Evaluate the user input within the sandbox context  // Update the persistent state (e.g., a counter that increments)
   } catch (e) {
     result = "Error: " + e.message;
   }
@@ -28,8 +28,7 @@ this.script = new vm.Script(`
   say(text, colour = "white") {
         this.bot.core.run(`tellraw @a [{"text":"${text}","color":"${colour}"}]`);
     }
-// Function to run code in the sandboxed worker
-SandboxedEval(input) {
+  SandboxedEval(input) {
   return new Promise((resolve, reject) => {
     this.sandbox.input = input;  // Set the user input
     try {
