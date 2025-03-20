@@ -2,6 +2,14 @@ const vm = require('vm');
 
 class evalWorker {
 // Create a sandboxed environment
+  createNewSandbox() {
+  return {
+    result: null,
+    send: (message) => { this.say(message); },
+    counter: 0,
+    Math: Math,
+  };
+}
   constructor(bot){
     this.bot=bot;
     this.sandbox = createNewSandbox();
@@ -19,14 +27,6 @@ this.script = new vm.Script(`
   say(text, colour = "white") {
         this.bot.core.run(`tellraw @a [{"text":"${text}","color":"${colour}"}]`);
     }
-createNewSandbox() {
-  return {
-    result: null,
-    send: (message) => { this.say(message); },
-    counter: 0,
-    Math: Math,
-  };
-}
 // Function to run code in the sandboxed worker
 SandboxedEval(input) {
   return new Promise((resolve, reject) => {
