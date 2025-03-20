@@ -248,25 +248,25 @@ class CommandParser {
     }
 
     // Show help for a specific command
-    const command = commands.find(c => c.name === commandName);
-    if (!command) {
+    const commandused = commands.find(c => c.name === commandName);
+    if (!commandused) {
         this.bot.chat(`Command "${commandName}" not found.`);
         return;
     }
-        const command = commands.find(c => c.name === commandName);
-    if (!command) {
+        const commandused = commands.find(c => c.name === commandName);
+    if (!commandused) {
         this.bot.chat(`Command "${commandName}" not found.`);
         return;
     }
 
-    let roles = command.roles.join(", ");
-    let description = command.description || "No description available.";
-    let actions = command.actions
+    let roles = commandused.roles.join(", ");
+    let description = commandused.description || "No description available.";
+    let actions = commandused.actions
         .map(action => `- ${action.type}: ${JSON.stringify(action)}`)
         .join("\n");
 
     // Build the help message
-    let message = `Command: ${command.name}\nDescription: ${description}\nRoles: ${roles}\nActions:\n${actions}`;
+    let message = `Command: ${commandused.name}\nDescription: ${description}\nRoles: ${roles}\nActions:\n${actions}`;
 this.say(message, "blue");
         
 
