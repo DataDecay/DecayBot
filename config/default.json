@@ -21,11 +21,19 @@
       "visible": true,
       "requiredLevel": 2
     },
+    "confirm": {
+      "prefix": "cf",
+      "color": "green",
+      "name": "Confirm Command",
+      "visible": true,
+      "requiredLevel": 1
+    },
     "public":{
       "prefix": "N/A",
       "color": "blue",
       "name": "Public",
-      "visible": false
+      "visible": false,
+      "requiredLevel": 1
     }
   },  
   "connection":{
