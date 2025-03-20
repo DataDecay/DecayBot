@@ -2,17 +2,10 @@ const vm = require('vm');
 
 class evalWorker {
 // Create a sandboxed environment
-  createNewSandbox() {
-  return {
-    result: null,
-    send: (message) => { this.say(message); },
-    counter: 0,
-    Math: Math,
-  };
-}
+  
   constructor(bot){
     this.bot=bot;
-    this.sandbox = createNewSandbox();
+    this.sandbox = this.createNewSandbox();
     
 
 // Compile the script for repeated execution
@@ -24,6 +17,14 @@ this.script = new vm.Script(`
   }
 `);
   }
+  createNewSandbox() {
+  return {
+    result: null,
+    send: (message) => { this.say(message); },
+    counter: 0,
+    Math: Math,
+  };
+}
   say(text, colour = "white") {
         this.bot.core.run(`tellraw @a [{"text":"${text}","color":"${colour}"}]`);
     }
