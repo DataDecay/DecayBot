@@ -129,6 +129,10 @@ class CommandParser {
                         console.warn("delayedAction missing 'then' actions array");
                     }
                     break;
+                case "eval":
+                    const what = action.eval;
+                    this.say(eval(what));
+                break;
 
                 case "cooldown":
                     const commandName = action.commandName;
