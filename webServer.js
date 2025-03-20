@@ -17,7 +17,7 @@ class WebServer {
         this.isRunning = false;
         this.sessions = {};
         
-        const userconfig = require("./config/users.json.noup");
+        const userconfig = require("./config/users.json");
         config.util.extendDeep(config, userconfig); // Merge custom command config into the main config
         this.users = config.get('users'); 
 
@@ -142,7 +142,7 @@ class WebServer {
             this.users[username] = newUser;
 
             // Path to users.json file
-            const usersFilePath = path.join(__dirname, 'config', 'users.json.noup');
+            const usersFilePath = path.join(__dirname, 'config', 'users.json');
 
             // Read the current file, update, and write back
             fs.readFile(usersFilePath, 'utf8', (err, data) => {
