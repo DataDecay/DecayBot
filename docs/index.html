@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blockly Command Generator</title>
+  <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+  <style>
+    #blocklyDiv { height: 480px; width: 600px; }
+    #jsonOutput { white-space: pre-wrap; font-family: monospace; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>Blockly Command Generator</h1>
+  <div id="blocklyDiv"></div>
+  <button onclick="generateJSON()">Generate commands.json</button>
+  <pre id="jsonOutput"></pre>
+
+  <script>
+    Blockly.Blocks['command_name'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Command Name")
+            .appendField(new Blockly.FieldTextInput("command_name"), "NAME");
+        this.setOutput(true, "String");
+        this.setColour(160);
+        this.setTooltip("Set the name of the command");
+        this.setHelpUrl("");
+      }
+    };
+
+    Blockly.Blocks['add_role'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Role")
+            .appendField(new Blockly.FieldTextInput("role_name"), "ROLE");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(120);
+        this.setTooltip("Add a role to the command");
+        this.setHelpUrl("");
+      }
+    };
+
+    Blockly.Blocks['add_action_chat'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Chat Message")
+            .appendField(new Blockly.FieldTextInput("Hello World!"), "MESSAGE");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Send a chat message");
+        this.setHelpUrl("");
+      }
+    };
+
+    function generateJSON() {
+      var jsonOutput = [];
+      var commandName = Blockly.getMainWorkspace().getBlocksByType('command_name')[0].getFieldValue('NAME');
+      var roles = [];
+      var actions = [];
+
+      // Collect roles
+      var roleBlock = Blockly.getMainWorkspace().getBlocksByType('add_role');
+      roleBlock.forEach(block => {
+        roles.push(block.getFieldValue('ROLE'));
+      });
+
+      // Collect actions
+      var actionBlocks = Blockly.getMainWorkspace().getBlocksByType('add_action_chat');
+      actionBlocks.forEach(block => {
+        actions.push({
+          "type": "chat",
+          "message": block.getFieldValue('MESSAGE')
+        });
+      });
+
+      // Build the command object
+      jsonOutput.push({
+        "name": commandName,
+        "roles": roles,
+        "actions": actions
+      });
+
+      // Show the generated JSON
+      document.getElementById('jsonOutput').textContent = JSON.stringify(jsonOutput, null, 2);
+    }
+
+    var workspace = Blockly.inject('blocklyDiv', {
+      toolbox: `
+        <xml>
+          <block type="command_name"></block>
+          <block type="add_role"></block>
+          <block type="add_action_chat"></block>
+        </xml>
+      `
+    });
+  </script>
+</body>
+</html>
