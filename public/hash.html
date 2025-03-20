@@ -43,26 +43,28 @@
 
   <body>
     <!-- Sidebar -->
-    <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
-      <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
-        <li class="nav-item">
-          <a class="nav-link " href="/">
-            <i class="nav-icon cil-applications-home"></i> Home
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/chat.html">
-            <i class="nav-icon cil-applications-settings"></i> Chat
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="/hash.html">
-            <i class="nav-icon cil-settings"></i> Hash
-          </a>
-        </li>
-      </ul>
-      <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
-    </div>
+   <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar"></div>
+<script>
+  fetch('/sidebar.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('sidebar').innerHTML = html;
+
+      // After sidebar loads, run this:
+      setActiveLink();
+    });
+
+  function setActiveLink() {
+    const links = document.querySelectorAll('#sidebar a');
+    const currentPath = window.location.pathname;
+
+    links.forEach(link => {
+      if (link.getAttribute('href') === currentPath) {
+        link.classList.add('active');
+      }
+    });
+  }
+</script>
 
     <!-- Main Content -->
     <div class="wrapper d-flex flex-column min-vh-100 bg-light">
