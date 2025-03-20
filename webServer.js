@@ -24,7 +24,16 @@ class WebServer {
         this.sessionTimeout = 1000 * 60 * 60; 
         this.cleanupInterval = 1000 * 60 * 10; 
     }
+    uuidToName(uuid, bot) {
+  for (const username in bot.players) {
+    const player = bot.players[username];
+    if (player && player.uuid === uuid) {
+      return player.username;
+    }
+  }
 
+  return null;
+}
     start() {
         if (this.isRunning) {
             console.warn(`WebServer already running on port ${this.port}`);
@@ -189,7 +198,12 @@ class WebServer {
             console.log(`MESSAGE: [${pos}] ${sender}: ${message.toString()}`);
 
             console.log(JSON.stringify(this.bot.players));
-            socket.emit('msg', `[${pos}] ${username}: ${message.toString()}`);
+            if (pos=="chat"){
+                socket.emit('msg', `[${pos}] ${this.uuidToUsername(sender)}: ${message.toString()}`);
+
+            } else {
+                socket.emit('msg', `[${pos}] ${this.uuidToUsername(sender)}: ${message.toString()}`);
+            }
         };
 
         this.bot.on('message', messageHandler);
