@@ -253,7 +253,6 @@ class CommandParser {
         this.bot.chat(`Command "${commandName}" not found.`);
         return;
     }
-        const commandused = commands.find(c => c.name === commandName);
     if (!commandused) {
         this.bot.chat(`Command "${commandName}" not found.`);
         return;
