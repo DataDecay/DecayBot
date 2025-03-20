@@ -108,13 +108,13 @@
                 <div class="card-body">
                   <div id="terminal" class="terminal-container"></div>
                   <form id="form" class="chat-input">
-                    <!--<input
+                    <input
                       id="input"
                       class="form-control"
                       autocomplete="off"
                       placeholder="Type a command..."
                     />
-                    <button class="btn btn-primary" type="submit">Send</button>-->
+                    <button class="btn btn-primary" type="submit">Send</button>
                   </form>
                 </div>
               </div>
@@ -153,7 +153,7 @@
       const term = new Terminal({
         cursorBlink: true,
         theme: {
-          background: '#000000',
+          background: '#0f0',
         },
       });
 
@@ -168,16 +168,16 @@
       const form = document.getElementById('form');
       const input = document.getElementById('input');
 
-      /*term.addEventListener('submit', function (e) {
-        //e.preventDefault();
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
         const command = input.value.trim();
         if (command) {
           term.writeln(`\r\n> ${command}`);
           socket.emit('console_command', command);
           input.value = '';
         }
-      });*/
-      term.onData(e => {
+      });
+     /* term.onData(e => {
     if (e === '\r') { // Enter key
         handleCommand(command.trim());
         command = ''; // Reset command buffer
@@ -190,7 +190,7 @@
         term.write(e); // Echo the typed character
         command += e; // Add typed character to command buffer
     }
-});
+});*/
 function handleCommand(input) {
     socket.emit('console_command', input);
     }
