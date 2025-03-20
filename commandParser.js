@@ -133,7 +133,7 @@ class CommandParser {
                     break;
                 case "eval":
                     const what = this.evaluateArg(action.eval);
-                    this.evalresult = await evalWorker.SandboxedEval(what);
+                    this.evalresult = await this.evalWorker.SandboxedEval(what);
                     this.say(this.evalresult, blue);
                 break;
 
