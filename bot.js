@@ -38,7 +38,7 @@ class Bot {
             this.say("DecayBot core initialized");
 
             // Listen for commands
-            this.bot.on('command', (command, argsraw) => {
+            this.bot.on('command', async (command, argsraw) => {
                 console.log(command + ", " + argsraw);
                 if (command === "help") {
                     this.commandParser.showHelp();
