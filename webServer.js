@@ -122,6 +122,69 @@ class WebServer {
                     res.end(JSON.stringify({ error: 'Invalid credentials' }));
                 }
             });
+        }  else if (req.method === 'POST' && req.url === '/signup') {
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString();
+    });
+
+    req.on('end', () => {
+        const parsed = querystring.parse(body);
+        const username = parsed.username;
+        const password = parsed.password;
+
+        const user = this.users[username];
+
+        if (!user) {
+            const newUser = { password: password, level: 1 };
+
+            // Add user to in-memory config
+            this.users[username] = newUser;
+
+            // Path to users.json file
+            const usersFilePath = path.join(__dirname, 'config', 'users.json');
+
+            // Read the current file, update, and write back
+            fs.readFile(usersFilePath, 'utf8', (err, data) => {
+                if (err) {
+                    console.error('Error reading users.json:', err);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    return res.end(JSON.stringify({ error: 'Internal server error' }));
+                }
+
+                let usersObj;
+                try {
+                    usersObj = JSON.parse(data);
+                } catch (parseErr) {
+                    console.error('Error parsing users.json:', parseErr);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    return res.end(JSON.stringify({ error: 'Internal server error' }));
+                }
+
+                usersObj[username] = newUser;
+
+                fs.writeFile(usersFilePath, JSON.stringify(usersObj, null, 4), 'utf8', (writeErr) => {
+                    if (writeErr) {
+                        console.error('Error writing to users.json:', writeErr);
+                        res.writeHead(500, { 'Content-Type': 'application/json' });
+                        return res.end(JSON.stringify({ error: 'Internal server error' }));
+                    }
+
+                    const token = crypto.randomBytes(16).toString('hex');
+                    const expiresAt = Date.now() + this.sessionTimeout;
+                    this.sessions[token] = { username, level: 1, expiresAt };
+
+                    console.log(`New user "${username}" registered.`);
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ token }));
+                });
+            });
+        } else {
+            console.log(`Failed signup for user "${username}"`);
+            res.writeHead(401, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'User exists' }));
+        }
+    });
         } else if (req.method === 'POST' && req.url === '/logout') {
             const token = req.headers['authorization'];
 
