@@ -5,25 +5,23 @@ class evalWorker {
     this.bot = bot;
     this.sandbox = this.createNewSandbox();
 
-    // Compile the script for repeated execution
     const scriptCode = `
-  (function() {
-    try {
-      globalThis.result = eval(globalThis.input);
-    } catch (e) {
-      globalThis.result = "Error: " + e.message;
-    }
-  })();
-`;
+      (function() {
+        try {
+          globalThis.result = eval(globalThis.input);
+        } catch (e) {
+          globalThis.result = "Error: " + e.message;
+        }
+      })();
+    `;
 
-this.script = new vm.Script(scriptCode);
-
+    this.script = new vm.Script(scriptCode);
   }
 
   createNewSandbox() {
     return {
       result: null,
-      input: null,  // You need to declare this so it's clear.
+      input: null,
       send: (message) => { this.say(message); },
       counter: 0,
       Math: Math,
@@ -34,10 +32,10 @@ this.script = new vm.Script(scriptCode);
     this.bot.core.run(`tellraw @a [{"text":"${text}","color":"${colour}"}]`);
   }
 
-  // Function to run code in the sandboxed worker
   SandboxedEval(input) {
     return new Promise((resolve, reject) => {
-      this.sandbox.input = input;  // Set the user input
+      this.sandbox.input = input;
+
       try {
         this.script.runInNewContext(this.sandbox, { timeout: 5000 });
         resolve(this.sandbox.result);
