@@ -5,9 +5,10 @@ class evalWorker {
   constructor(bot){
     this.bot=bot;
     this.sandbox = createNewSandbox();
+    
 
 // Compile the script for repeated execution
-const this.script = new vm.Script(`
+this.script = new vm.Script(`
   try {
     result = eval(input);  // Evaluate the user input within the sandbox context  // Update the persistent state (e.g., a counter that increments)
   } catch (e) {
