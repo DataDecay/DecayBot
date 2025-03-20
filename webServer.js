@@ -193,11 +193,6 @@ class WebServer {
             }
         };
 
-         const chatHandler = (username, message) => {
-            console.log(`CHAT: [chat] ${username}: ${message.toString()}`);
-            socket.emit('msg', `[chat] ${username}: ${message.toString()}`);
-        };
-        this.bot.on('chat', chatHandler);
         this.bot.on('message', messageHandler);
 
 
