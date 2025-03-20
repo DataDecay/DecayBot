@@ -69,7 +69,7 @@ class WebServer {
     }
     uuidToName(uuid, bot) {
   for (const username in bot.players) {
-    const player = bot.players[username];
+    const player = this.bot.players[username];
     if (player && player.uuid === uuid) {
       return player.username;
     }
