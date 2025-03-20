@@ -18,7 +18,7 @@ class WebServer {
         this.sessions = {};
         
         const userconfig = require("./config/users.json");
-        config.util.extendDeep(config, commandconfig); // Merge custom command config into the main config
+        config.util.extendDeep(config, userconfig); // Merge custom command config into the main config
         this.users = config.get('users'); 
 
         this.sessionTimeout = 1000 * 60 * 60; 
