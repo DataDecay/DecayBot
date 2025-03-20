@@ -342,5 +342,5 @@ class WebServer {
         }
     }
 }
-s
+
 module.exports = WebServer;
