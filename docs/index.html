@@ -19,7 +19,7 @@
 <body>
 
   <h1>Blockly Command Generator</h1>
-  <div id="blocklyDiv"></div>
+  <div id="blocklyDiv"><div id="toolbox"></div></div>
   <button onclick="generateJSON()">Generate commands.json</button>
   <pre id="jsonOutput"></pre>
 
@@ -334,7 +334,7 @@
       document.getElementById('jsonOutput').textContent = JSON.stringify(jsonOutput, null, 2);
     }
 
-    var workspace = Blockly.inject('blocklyDiv', {
+    var workspace = Blockly.inject('toolbox', {
       toolbox: `
         <xml xmlns="https://developers.google.com/blockly/xml">
   <!-- Command Block -->
