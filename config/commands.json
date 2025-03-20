@@ -34,6 +34,19 @@
       ]
     },
     {
+      "name": "eval",
+      "description": "evaluates code",
+      "roles": ["public"],
+      "actions": [
+        {
+          "type": "eval",
+          "eval": "args[1]"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "test",
       "description": "A test command.",
       "roles": ["trusted"],
