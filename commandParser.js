@@ -15,7 +15,7 @@ class CommandParser {
         this.commandsConfig = config.get('commands'); // Get all commands
     }
 
-    handleCommand(command, args) {
+    async handleCommand(command, args) {
         const cmdConfig = this.commandsConfig.find(c => c.name === command);
 
         if (!cmdConfig) {
@@ -39,7 +39,7 @@ class CommandParser {
         this.executeActions(cmdConfig.actions, args);
     }
 
-    executeActions(actions, args) {
+    async executeActions(actions, args) {
         for (const action of actions) {
             switch (action.type) {
                 case "chat":
