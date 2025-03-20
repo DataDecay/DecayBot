@@ -206,15 +206,16 @@ class CommandParser {
         }
     }
 
-    showHelp() {
+    showHelp(commandName = null) {
+        const commands = this.commandsConfig;
+        if (!commandName) {
+        // No command name, show general help (list of all commands)
         const hashLevels = config.get('hashLevels'); // Get hashLevels configuration
         const roles = {};
-
-        // Initialize empty arrays for each role
         Object.keys(hashLevels).forEach(level => {
             roles[level] = [];
         });
-
+    
         // Populate roles with command names
         this.commandsConfig.forEach(cmd => {
             cmd.roles.forEach(role => {
@@ -243,6 +244,34 @@ class CommandParser {
         });
 
         this.bot.core.run(`tellraw @a ${JSON.stringify(messageParts)}`);
+        return;
+    }
+
+    // Show help for a specific command
+    const command = commands.find(c => c.name === commandName);
+    if (!command) {
+        this.bot.chat(`Command "${commandName}" not found.`);
+        return;
+    }
+        const command = commands.find(c => c.name === commandName);
+    if (!command) {
+        this.bot.chat(`Command "${commandName}" not found.`);
+        return;
+    }
+
+    let roles = command.roles.join(", ");
+    let description = command.description || "No description available.";
+    let actions = command.actions
+        .map(action => `- ${action.type}: ${JSON.stringify(action)}`)
+        .join("\n");
+
+    // Build the help message
+    let message = `Command: ${command.name}\nDescription: ${description}\nRoles: ${roles}\nActions:\n${actions}`;
+this.say(message, "blue");
+        
+
+        // Initialize empty arrays for each role
+        
     }
 
     say(text, colour = "white") {
