@@ -202,7 +202,7 @@ class WebServer {
                 socket.emit('msg', `[${pos}] ${this.uuidToUsername(sender)}: ${message.toString()}`);
 
             } else {
-                socket.emit('msg', `[${pos}] ${this.uuidToUsername(sender)}: ${message.toString()}`);
+                socket.emit('msg', `[${pos}]: ${message.toString()}`);
             }
         };
 
