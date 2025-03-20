@@ -1,6 +1,18 @@
 {
-            'datadecay': { password: ' ', level: 4},
-            'testuser1': { password: 'notme', level: 2 },
-            'trusteduser': { password: 'notme', level: 2 },
-            'user1': { password: 'notme', level: 1 }
+  "datadecay": {
+    "password": " ",
+    "level": 4
+  },
+  "testuser1": {
+    "password": "notme", 
+    "level": 2 
+  },
+  "trusteduser": {
+    "password": "notme", 
+    "level": 2 
+  },
+  "user1": { 
+    "password": "notme",
+    "level": 1 
   }
+}
