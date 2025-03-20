@@ -196,11 +196,6 @@ class WebServer {
 
         this.bot.on('message', messageHandler);
 
-        socket.on('disconnect', () => {
-            console.log(`Socket disconnected: ${socket.id} (${username})`);
-            this.bot.removeListener('message', messageHandler);
-            delete this.sessions[sessionToken];
-        });
 
         socket.on('generateHash', (roleKey) => {
             const roleConfig = hashLevels[roleKey];
