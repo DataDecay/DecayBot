@@ -134,7 +134,12 @@ class CommandParser {
                 case "eval":
                     const what = this.evaluateArg(action.eval);
                     this.evalresult = await this.evalWorker.SandboxedEval(what);
+                    if(this.evalresult){
                     this.say(this.evalresult, "blue");
+                    } else {
+                        this.say("Result returned undefined.", "red");
+                    }
+                    console.log("Evaluating:", what); 
                 break;
 
                 case "cooldown":
