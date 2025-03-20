@@ -17,13 +17,9 @@ class WebServer {
         this.isRunning = false;
         this.sessions = {};
         
-        // TODO: add config files but im lazy so later
-        this.users = {
-            'datadecay': { password: 'me :D', level: 4},
-            'elevated': { password: 'notme', level: 3 },
-            'trusted': { password: 'notme', level: 2 },
-            'user': { password: 'notme', level: 1 }
-        };
+        const userconfig = require("./config/users.json");
+        config.util.extendDeep(config, commandconfig); // Merge custom command config into the main config
+        this.users = config.get('users'); 
 
         this.sessionTimeout = 1000 * 60 * 60; 
         this.cleanupInterval = 1000 * 60 * 10; 
