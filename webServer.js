@@ -24,16 +24,7 @@ class WebServer {
         this.sessionTimeout = 1000 * 60 * 60; 
         this.cleanupInterval = 1000 * 60 * 10; 
     }
-    uuidToName(uuid, bot) {
-  for (const username in bot.players) {
-    const player = bot.players[username];
-    if (player && player.uuid === uuid) {
-      return player.username;
-    }
-  }
-
-  return null;
-}
+    
     start() {
         if (this.isRunning) {
             console.warn(`WebServer already running on port ${this.port}`);
@@ -76,7 +67,16 @@ class WebServer {
         // Start session cleanup
         setInterval(this.cleanupSessions.bind(this), this.cleanupInterval);
     }
+    this.uuidToName(uuid, bot) {
+  for (const username in bot.players) {
+    const player = bot.players[username];
+    if (player && player.uuid === uuid) {
+      return player.username;
+    }
+  }
 
+  return null;
+}
     stop() {
         if (!this.isRunning) {
             console.warn(`WebServer is not running!`);
