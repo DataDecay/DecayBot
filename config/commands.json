@@ -28,11 +28,8 @@
                 "action": "open_url",
                 "value": "https://datadecay.dev/"
               }
-              ]
-        }
-        }
-      ]
             }
+          ]
         }
       ]
     },
@@ -41,24 +38,24 @@
       "description": "A test command.",
       "roles": ["trusted"],
       "actions": [
-         {
+        {
           "type": "validateHash",
           "hashType": ["trusted", "elevated", "owner"],
           "hashArgIndex": 0,
           "then": [
-        {
-          "type": "chat",
-          "message": "Hello World with valid hash"
-        }
-      ],
-      "else": [
-        {
-          "type": "chat",
-          "message": "Hello World with invalid hash"
+            {
+              "type": "chat",
+              "message": "Hello World with valid hash"
+            }
+          ],
+          "else": [
+            {
+              "type": "chat",
+              "message": "Hello World with invalid hash"
+            }
+          ]
         }
       ]
-    }
-  ]
     },
     {
       "name": "creator",
@@ -103,23 +100,23 @@
           "hashType": ["owner"],
           "hashArgIndex": 0,
           "then": [
-         {
-          "type": "conditional",
-          "condition": "args[0] === 'refill'",
-          "then": [
             {
-              "type": "coreCommand",
-              "command": "refillCore"
+              "type": "conditional",
+              "condition": "args[0] === 'refill'",
+              "then": [
+                {
+                  "type": "coreCommand",
+                  "command": "refillCore"
+                }
+              ],
+              "else": [
+                {
+                  "type": "coreCommand",
+                  "command": "run",
+                  "args": "args.slice(1).join(' ')"
+                }
+              ]
             }
-          ],
-          "else": [
-            {
-              "type": "coreCommand",
-              "command": "run",
-              "args": "args.slice(1).join(' ')"
-            }
-          ]
-        }
           ]
         }
       ]
@@ -163,13 +160,13 @@
           "hashType": ["owner"],
           "hashArgIndex": 0,
           "then": [
-        {
-          "type": "stopLoops"
-        },
-        {
-          "type": "chat",
-          "message": "Stopped all cloops."
-        }
+            {
+              "type": "stopLoops"
+            },
+            {
+              "type": "chat",
+              "message": "Stopped all cloops."
+            }
           ]
         }
       ]
