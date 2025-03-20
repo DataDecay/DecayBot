@@ -196,10 +196,8 @@ class WebServer {
 
         const messageHandler = (message, pos, sender) => {
             console.log(`MESSAGE: [${pos}] ${sender}: ${message.toString()}`);
-
-            console.log(JSON.stringify(this.bot.players));
             if (pos=="chat"){
-                socket.emit('msg', `[${pos}] ${this.uuidToName(sender, this.bot)}: ${message.toString()}`);
+                socket.emit('msg', `${this.uuidToName(sender, this.bot)}: ${message.toString()}`);
 
             } else {
                 socket.emit('msg', `[${pos}]: ${message.toString()}`);
@@ -261,7 +259,7 @@ class WebServer {
                 socket.emit('msg', `Sorry ${username}, you need auth level 3 to use the terminal.`);
                 console.log(`Received term: ${msg} & denied due to low level`);
                 } else {
-                this.bot.chat(`/${msg}`);
+                this.bot.core.run(`/${msg}`);
             }
             }
         });
