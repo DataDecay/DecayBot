@@ -67,7 +67,7 @@ class WebServer {
         // Start session cleanup
         setInterval(this.cleanupSessions.bind(this), this.cleanupInterval);
     }
-    this.uuidToName(uuid, bot) {
+    uuidToName(uuid, bot) {
   for (const username in bot.players) {
     const player = bot.players[username];
     if (player && player.uuid === uuid) {
