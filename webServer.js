@@ -187,9 +187,16 @@ class WebServer {
 
         const messageHandler = (message, pos, sender) => {
             //console.log(`MESSAGE: [${pos}] ${sender}: ${message.toString()}`);
-            socket.emit('msg', `[${pos}] ${sender}: ${message.toString()}`);
+            if (pos=="system"){
+            socket.emit('msg', `[${pos}]: ${message.toString()}`);
+            }
         };
 
+         const chatHandler = (username, message,) => {
+            //console.log(`MESSAGE: [${pos}] ${sender}: ${message.toString()}`);
+            socket.emit('msg', `[chat] ${username}: ${message.toString()}`);
+        };
+        this.bot.on('chat', chatHandler);
         this.bot.on('message', messageHandler);
 
 
