@@ -1,9 +1,11 @@
 const config = require('config');
+const evalWorkerLib = require('./evalWorker.js');
 
 class CommandParser {
     constructor(bot, hashUtils) {
         this.bot = bot;
         this.HashUtils = hashUtils;
+        this.evalWorker = new evalWorkerLib(this.bot);
         this.loops = [];
         this.cooldowns = {}; // Store cooldowns for commands
 
@@ -131,7 +133,8 @@ class CommandParser {
                     break;
                 case "eval":
                     const what = action.eval;
-                    this.say(eval(what));
+                    this.evalresult = await evalWorker.SandboxedEval(what);
+                    this.say(this.evalresult, blue);
                 break;
 
                 case "cooldown":
