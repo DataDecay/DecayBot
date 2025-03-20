@@ -256,6 +256,10 @@ class WebServer {
         });
 
         socket.emit('roles', visibleRoles);
+        socket.on('disconnect', () => {
+    console.log(`${username} disconnected.`);
+    this.bot.removeListener('message', messageHandler);
+});
 
         const messageHandler = (message, pos, sender) => {
             console.log(`MESSAGE: [${pos}] ${sender}: ${message.toString()}`);
@@ -338,5 +342,5 @@ class WebServer {
         }
     }
 }
-
+s
 module.exports = WebServer;
