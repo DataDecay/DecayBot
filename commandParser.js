@@ -1,65 +1,20 @@
 const config = require('config');
 const evalWorkerLib = require('./evalWorker.js');
 
-/**
- * CommandParser handles parsing and execution of commands for the bot.
- * It supports features like cooldowns, hash validation, loops, and dynamic command execution.
- */
 class CommandParser {
-    /**
-     * Creates a new instance of CommandParser.
-     * @param {Object} bot - The bot instance that exposes core methods to run commands and manage state.
-     * @param {Object} hashUtils - Utility class used for hash validation and other hash-related operations.
-     */
     constructor(bot, hashUtils) {
-        /**
-         * @type {Object}
-         * @description The bot instance.
-         */
         this.bot = bot;
-
-        /**
-         * @type {Object}
-         * @description Utility methods for working with hashes.
-         */
         this.HashUtils = hashUtils;
-
-        /**
-         * @type {Object}
-         * @description Instance of the eval worker library.
-         */
         this.evalWorker = new evalWorkerLib(this.bot);
-
-        /**
-         * @type {Array<NodeJS.Timeout>}
-         * @description Stores active loops that are executing periodically.
-         */
         this.loops = [];
+        this.cooldowns = {}; // Store cooldowns for commands
 
-        /**
-         * @type {Object.<string, number>}
-         * @description Stores timestamps of last command executions for cooldown enforcement.
-         */
-        this.cooldowns = {};
-
-        // Load and merge custom command configuration.
+        // Loading the custom command config from the command JSON
         const commandconfig = require("./config/commands.json");
-        config.util.extendDeep(config, commandconfig);
-
-        /**
-         * @type {Array<Object>}
-         * @description The loaded command configurations from the JSON and config modules.
-         */
-        this.commandsConfig = config.get('commands');
+        config.util.extendDeep(config, commandconfig); // Merge custom command config into the main config
+        this.commandsConfig = config.get('commands'); // Get all commands
     }
 
-    /**
-     * Handles an incoming command and triggers its associated actions.
-     * @async
-     * @param {string} command - The name of the command to handle.
-     * @param {Array<string>} args - Arguments passed to the command.
-     * @returns {Promise<void>}
-     */
     async handleCommand(command, args) {
         const cmdConfig = this.commandsConfig.find(c => c.name === command);
 
@@ -68,7 +23,7 @@ class CommandParser {
             return;
         }
 
-        // Cooldown handling
+        // Handle cooldown if applicable
         if (cmdConfig.cooldown) {
             const lastUsed = this.cooldowns[command] || 0;
             const now = Date.now();
@@ -81,36 +36,20 @@ class CommandParser {
             this.cooldowns[command] = now;
         }
 
-        await this.executeActions(cmdConfig.actions, args);
+        this.executeActions(cmdConfig.actions, args);
     }
 
-    /**
-     * Executes a series of actions defined in a command configuration.
-     * @async
-     * @param {Array<Object>} actions - Array of action objects to execute.
-     * @param {Array<string>} args - Arguments passed to the command.
-     * @returns {Promise<void>}
-     */
     async executeActions(actions, args) {
         for (const action of actions) {
             switch (action.type) {
-                /**
-                 * Sends a chat message.
-                 */
                 case "chat":
                     this.say(action.message);
                     break;
 
-                /**
-                 * Sends a raw JSON tellraw message to all players.
-                 */
                 case "tellraw":
                     this.bot.core.run(`tellraw @a ${JSON.stringify(action.json)}`);
                     break;
 
-                /**
-                 * Executes a core bot command.
-                 */
                 case "coreCommand":
                     if (action.command === "refillCore") {
                         this.bot.core.refillCore();
@@ -120,38 +59,32 @@ class CommandParser {
                     }
                     break;
 
-                /**
-                 * Validates a hash against defined hash types and executes conditional actions.
-                 */
                 case "validateHash":
                     var results = [];
                     for (const htype of action.hashType) {
-                        const hash = args[action.hashArgIndex];
-                        const roleMeta = config.get(`hashLevels.${htype}`);
+                        const hash = args[action.hashArgIndex];  // Get hash from args
+                        const roleMeta = config.get(`hashLevels.${htype}`);  // Get role metadata from config
                         
                         if (!roleMeta) {
                             console.error(`Role "${htype}" not found in hashLevels.`);
                             continue;
                         }
 
-                        const prefix = roleMeta.prefix;
-                        const isValid = this.HashUtils.validateOwner(hash, prefix);
+                        const prefix = roleMeta.prefix;  // Get the prefix for the role
+                        const isValid = this.HashUtils.validateOwner(hash, prefix);  // Validate hash with prefix
                         results.push(isValid);
 
                         this.rslt = results.some(result => result);
                         if (this.rslt && action.then) {
-                            await this.executeActions(action.then, args);
+                            this.executeActions(action.then, args);
                         } else if (!this.rslt && action.else) {
-                            await this.executeActions(action.else, args);
+                            this.executeActions(action.else, args);
                         }
 
                         return results.some(result => result);
                     }
                     break;
 
-                /**
-                 * Starts a repeating loop that runs a command at a specified interval.
-                 */
                 case "startLoop":
                     const loopCommand = this.evaluateArg(action.command, args);
                     this.loops.push(setInterval(() => {
@@ -159,36 +92,26 @@ class CommandParser {
                     }, action.intervalMs));
                     break;
 
-                /**
-                 * Stops all active loops.
-                 */
                 case "stopLoops":
                     this.loops.forEach(loop => clearInterval(loop));
                     this.loops = [];
                     break;
 
-                /**
-                 * Stops the bot and disconnects.
-                 */
                 case "stopBot":
                     this.bot.quit("db:stop");
                     break;
 
-                /**
-                 * Runs conditional actions based on an evaluated JavaScript expression.
-                 */
                 case "conditional":
-                    const condition = eval(action.condition); // ⚠️ Use caution!
+                    const condition = eval(action.condition); // risky, sanitize before prod
                     if (condition && action.then) {
-                        await this.executeActions(action.then, args);
+                        this.executeActions(action.then, args);
                     } else if (!condition && action.else) {
-                        await this.executeActions(action.else, args);
+                        this.executeActions(action.else, args);
                     }
                     break;
 
-                /**
-                 * Sends a random message from a provided list.
-                 */
+                
+
                 case "randomMessage":
                     if (Array.isArray(action.messages) && action.messages.length > 0) {
                         const randomIndex = Math.floor(Math.random() * action.messages.length);
@@ -199,31 +122,21 @@ class CommandParser {
                     }
                     break;
 
-                /**
-                 * Executes actions after a specified delay.
-                 */
                 case "delayedAction":
                     if (Array.isArray(action.then)) {
                         setTimeout(() => {
                             this.executeActions(action.then, args);
-                        }, action.delayMs || 1000);
+                        }, action.delayMs || 1000); // Default delay 1 second
                     } else {
                         console.warn("delayedAction missing 'then' actions array");
                     }
                     break;
-
-                /**
-                 * Runs code inside an eval sandbox.
-                 */
                 case "eval":
                     const what = action.eval;
-                    this.evalresult = await this.evalWorker.SandboxedEval(what);
-                    this.say(this.evalresult, "blue");
-                    break;
+                    this.evalresult = await evalWorker.SandboxedEval(what);
+                    this.say(this.evalresult, blue);
+                break;
 
-                /**
-                 * Enforces a cooldown on a specific command and executes actions if allowed.
-                 */
                 case "cooldown":
                     const commandName = action.commandName;
                     const duration = action.durationMs;
@@ -244,16 +157,14 @@ class CommandParser {
                     this.cooldowns[commandName] = now;
 
                     if (action.then) {
-                        await this.executeActions(action.then, args);
+                        this.executeActions(action.then, args);
                     }
+
                     break;
 
-                /**
-                 * Mutes a player for a specific duration, then unmutes them automatically.
-                 */
                 case "mute":
                     const playerToMute = args[0];
-                    const muteDuration = action.duration || 300000;
+                    const muteDuration = action.duration || 300000;  // 5 min default
 
                     this.bot.core.run(`mute ${playerToMute}`);
                     this.say(`${playerToMute} has been muted for ${muteDuration / 1000} seconds.`);
@@ -264,12 +175,9 @@ class CommandParser {
                     }, muteDuration);
                     break;
 
-                /**
-                 * Displays user statistics.
-                 */
                 case "userStats":
                     const playerName = args[0];
-                    const stats = this.bot.core.getUserStats(playerName);
+                    const stats = this.bot.core.getUserStats(playerName);  // Example stub method
 
                     if (stats) {
                         this.say(`${playerName}'s stats - Health: ${stats.health}, Score: ${stats.score}`);
@@ -278,21 +186,12 @@ class CommandParser {
                     }
                     break;
 
-                /**
-                 * Handles unknown action types.
-                 */
                 default:
                     this.say(`Unknown action type: ${action.type}`, "red");
             }
         }
     }
 
-    /**
-     * Evaluates a JavaScript expression within the current context.
-     * @param {string} expression - The expression to evaluate.
-     * @param {Array<string>} args - Arguments passed to the command, available in the evaluation scope.
-     * @returns {*} The result of the evaluation, or an empty string if evaluation fails.
-     */
     evaluateArg(expression, args) {
         try {
             return eval(expression);
@@ -302,18 +201,16 @@ class CommandParser {
         }
     }
 
-    /**
-     * Displays help information about available commands categorized by role.
-     * @returns {void}
-     */
     showHelp() {
-        const hashLevels = config.get('hashLevels');
+        const hashLevels = config.get('hashLevels'); // Get hashLevels configuration
         const roles = {};
 
+        // Initialize empty arrays for each role
         Object.keys(hashLevels).forEach(level => {
             roles[level] = [];
         });
 
+        // Populate roles with command names
         this.commandsConfig.forEach(cmd => {
             cmd.roles.forEach(role => {
                 if (!roles[role]) roles[role] = [];
@@ -323,37 +220,30 @@ class CommandParser {
 
         const messageParts = [];
 
+        // Iterate over each role to build the message
         Object.keys(roles).forEach(role => {
             const commands = roles[role];
-            const roleMeta = hashLevels[role];
+            const roleMeta = hashLevels[role]; // Fetch the role metadata
 
-            if (roleMeta && commands.length > 0) {
-                messageParts.push({
-                    text: `${roleMeta.name}: ${commands.join(", ")}`,
-                    color: roleMeta.color
-                });
+            if (roleMeta) {
+                if (commands.length > 0) {
+                    messageParts.push({
+                        text: `${roleMeta.name}: ${commands.join(", ")}`,
+                        color: roleMeta.color
+                    });
+                }
+            } else {
+                console.warn(`Role "${role}" not found or hidden in hashLevels.`);
             }
         });
 
         this.bot.core.run(`tellraw @a ${JSON.stringify(messageParts)}`);
     }
 
-    /**
-     * Sends a chat message to all players.
-     * @param {string} text - The message content.
-     * @param {string} [colour="white"] - The text color.
-     * @returns {void}
-     */
     say(text, colour = "white") {
         this.bot.core.run(`tellraw @a [{"text":"${text}","color":"${colour}"}]`);
     }
 
-    /**
-     * Validates a hash against the prefix for a given role.
-     * @param {string} hash - The hash to validate.
-     * @param {string} role - The role whose prefix should be used for validation.
-     * @returns {boolean} True if the hash is valid, false otherwise.
-     */
     validateHash(hash, role) {
         const roleMeta = config.get(`hashLevels.${role}`);
         if (!roleMeta) {
