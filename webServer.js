@@ -17,7 +17,7 @@ class WebServer {
         this.isRunning = false;
         this.sessions = {};
         
-        const userconfig = require("./config/users.json");
+        const userconfig = require("./config/users.json.noup");
         config.util.extendDeep(config, userconfig); // Merge custom command config into the main config
         this.users = config.get('users'); 
 
@@ -142,7 +142,7 @@ class WebServer {
             this.users[username] = newUser;
 
             // Path to users.json file
-            const usersFilePath = path.join(__dirname, 'config', 'users.json');
+            const usersFilePath = path.join(__dirname, 'config', 'users.json.noup');
 
             // Read the current file, update, and write back
             fs.readFile(usersFilePath, 'utf8', (err, data) => {
@@ -172,8 +172,7 @@ class WebServer {
 
 
                     console.log(`New user "${username}" registered.`);
-                    res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ token }));
+                    res.end(JSON.stringify());
                 });
             });
         } else {
