@@ -147,7 +147,7 @@
       }
 
       const socket = io({
-        query: { token: token },
+        query: { token: token } // Pass token in the query string
       });
 
       const term = new Terminal({
