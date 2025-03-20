@@ -20,7 +20,76 @@
 
   <h1>Blockly Command Generator</h1>
   <div id="blocklyDiv"></div>
-   <div id="toolbox" style="display:none;"></div>
+   <div id="toolbox" style="display:none;">`
+        <xml xmlns="https://developers.google.com/blockly/xml">
+  <!-- Command Block -->
+  <block type="command_name">
+    <field name="COMMAND_NAME">command_name</field>
+  </block>
+
+  <!-- Role Block -->
+  <block type="add_role">
+    <field name="ROLE">role</field>
+  </block>
+
+  <!-- Action Blocks -->
+  <block type="add_action_chat">
+    <field name="MESSAGE">Message</field>
+  </block>
+
+  <block type="add_action_tellraw">
+    <field name="JSON">{"text":"Hello, World!"}</field>
+  </block>
+
+  <block type="add_action_coreCommand">
+    <field name="COMMAND">refillCore</field>
+    <field name="ARGS">[]</field>
+  </block>
+
+  <block type="add_action_cooldown">
+    <field name="COMMAND_NAME">command_name</field>
+    <field name="DURATION_MS">5000</field>
+  </block>
+
+  <block type="add_action_conditional">
+    <field name="CONDITION">condition</field>
+  </block>
+
+  <block type="add_action_startLoop">
+    <field name="COMMAND">loopCommand</field>
+    <field name="INTERVAL_MS">1000</field>
+  </block>
+
+  <block type="add_action_stopLoop">
+  </block>
+
+  <block type="add_action_stopBot">
+  </block>
+
+  <block type="add_action_randomMessage">
+    <field name="MESSAGES">["Message 1", "Message 2"]</field>
+  </block>
+
+  <block type="add_action_delayedAction">
+    <field name="DELAY_MS">1000</field>
+  </block>
+
+  <block type="add_action_eval">
+    <field name="EVAL">expression</field>
+  </block>
+
+  <block type="add_action_mute">
+    <field name="PLAYER_TO_MUTE">player</field>
+    <field name="DURATION_MS">300000</field>
+  </block>
+
+  <block type="add_action_userStats">
+    <field name="PLAYER_NAME">player</field>
+  </block>
+
+</xml>
+
+      `</div>
   <button onclick="generateJSON()">Generate commands.json</button>
   <pre id="jsonOutput"></pre>
 
@@ -336,76 +405,7 @@
     }
 
     var workspace = Blockly.inject('blocklyDiv', {
-      toolbox: `
-        <xml xmlns="https://developers.google.com/blockly/xml">
-  <!-- Command Block -->
-  <block type="command_name">
-    <field name="COMMAND_NAME">command_name</field>
-  </block>
-
-  <!-- Role Block -->
-  <block type="add_role">
-    <field name="ROLE">role</field>
-  </block>
-
-  <!-- Action Blocks -->
-  <block type="add_action_chat">
-    <field name="MESSAGE">Message</field>
-  </block>
-
-  <block type="add_action_tellraw">
-    <field name="JSON">{"text":"Hello, World!"}</field>
-  </block>
-
-  <block type="add_action_coreCommand">
-    <field name="COMMAND">refillCore</field>
-    <field name="ARGS">[]</field>
-  </block>
-
-  <block type="add_action_cooldown">
-    <field name="COMMAND_NAME">command_name</field>
-    <field name="DURATION_MS">5000</field>
-  </block>
-
-  <block type="add_action_conditional">
-    <field name="CONDITION">condition</field>
-  </block>
-
-  <block type="add_action_startLoop">
-    <field name="COMMAND">loopCommand</field>
-    <field name="INTERVAL_MS">1000</field>
-  </block>
-
-  <block type="add_action_stopLoop">
-  </block>
-
-  <block type="add_action_stopBot">
-  </block>
-
-  <block type="add_action_randomMessage">
-    <field name="MESSAGES">["Message 1", "Message 2"]</field>
-  </block>
-
-  <block type="add_action_delayedAction">
-    <field name="DELAY_MS">1000</field>
-  </block>
-
-  <block type="add_action_eval">
-    <field name="EVAL">expression</field>
-  </block>
-
-  <block type="add_action_mute">
-    <field name="PLAYER_TO_MUTE">player</field>
-    <field name="DURATION_MS">300000</field>
-  </block>
-
-  <block type="add_action_userStats">
-    <field name="PLAYER_NAME">player</field>
-  </block>
-
-</xml>
-
-      `,
+      toolbox: document.getElementById("toolbox"),
       scrollbars: true,
       grid: { spacing: 20, length: 3, colour: '#ccc', snap: true }
     });
