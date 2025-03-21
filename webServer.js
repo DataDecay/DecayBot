@@ -143,6 +143,9 @@ class WebServer {
 
             // Path to users.json file
             const usersFilePath = path.join(__dirname, 'config', 'users.json');
+            const token = crypto.randomBytes(16).toString('hex');
+            const expiresAt = Date.now() + this.sessionTimeout;
+            this.sessions[token] = { username, level: 1, expiresAt };
 
             // Read the current file, update, and write back
             fs.readFile(usersFilePath, 'utf8', (err, data) => {
