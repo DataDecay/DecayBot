@@ -172,7 +172,8 @@ class WebServer {
 
 
                     console.log(`New user "${username}" registered.`);
-                    res.end(JSON.stringify());
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ token }));
                 });
             });
         } else {
