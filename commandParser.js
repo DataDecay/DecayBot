@@ -265,7 +265,7 @@ class CommandParser {
         .join("\n");
 
     // Build the help message
-    let message = `Command: ${commandused.name}\nDescription: ${description}\nRoles: ${roles}\nActions:\n${actions}`;
+    let message = `Command: ${commandused.name}\nDescription: ${description}\nRoles: ${roles}`;
 this.say(message, "blue");
         
 
