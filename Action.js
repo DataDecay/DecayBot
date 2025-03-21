@@ -1,10 +1,10 @@
-class Command {
+class Action {
     constructor(bot, args) {
         this.bot = bot;
         this.args = args;
     }
 
-    // A method to be overridden by individual commands for execution logic
+    // A method to be overridden by individual actions for execution logic
     execute() {
         throw new Error("execute method must be implemented in the child class.");
     }
@@ -15,4 +15,4 @@ class Command {
     }
 }
 
-module.exports = Command;
+module.exports = Action;
