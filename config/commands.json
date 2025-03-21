@@ -244,6 +244,63 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "ping",
+            "description": "Check if the bot is online.",
+            "roles": ["public"],
+            "actions": [
+                {
+                    "type": "chat",
+                    "message": "Pong!"
+                }
+            ]
+        },
+        {
+            "name": "sethome",
+            "description": "Sets the bot's home position.",
+            "roles": ["trusted"],
+            "actions": [
+                {
+                    "type": "setVariable",
+                    "variable": "home",
+                    "value": "{bot.position}"
+                },
+                {
+                    "type": "chat",
+                    "message": "Home position set!"
+                }
+            ]
+        },
+        {
+            "name": "home",
+            "description": "Teleports the bot to its home position.",
+            "roles": ["trusted"],
+            "actions": [
+                {
+                    "type": "teleport",
+                    "position": "{home}"
+                },
+                {
+                    "type": "chat",
+                    "message": "Teleported to home!"
+                }
+            ]
+        },
+        {
+            "name": "setname",
+            "description": "Sets a new name for the bot.",
+            "roles": ["owner"],
+            "actions": [
+                {
+                    "type": "executeCommand",
+                    "command": "/username {args[0]}"
+                },
+                {
+                    "type": "chat",
+                    "message": "Bot's name changed to {args[0]}."
+                }
+            ]
         }
     ]
 }
