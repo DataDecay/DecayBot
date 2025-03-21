@@ -16,6 +16,7 @@ class CommandParser {
     }
 
     async handleCommand(command, args) {
+        console.log(command)
         const cmdConfig = this.commandsConfig.find(c => c.name === command);
 
         if (!cmdConfig) {
