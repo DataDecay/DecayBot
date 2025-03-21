@@ -39,7 +39,7 @@ class Bot {
             this.bot.on('command', async (command, argsraw) => {
                 console.log(command + ", " + argsraw);
                 if (command === "help") {
-                    this.commandParser.showHelp();
+                    this.commandParser.showHelp(argsraw);
                 } else {
                     await this.commandParser.handleCommand(command, argsraw ? argsraw.split(" ") : []);
                 }
