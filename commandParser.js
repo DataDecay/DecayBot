@@ -243,7 +243,7 @@ class CommandParser {
             }
         });
 
-        this.bot.chat.run(`tellraw @a ${JSON.stringify(messageParts)}`);
+        this.bot.core.run(`tellraw @a ${JSON.stringify(messageParts)}`);
         return;
     }
 
@@ -265,8 +265,8 @@ class CommandParser {
         .join("\n");
 
     // Build the help message
-    let message = `Command: ${commandused.name} Description: ${description} Roles: ${roles}`;
-    this.bot.core.run(`tellraw @a "${message}"`);
+    let message = `${commandused.name}, ${description}. Roles: ${roles}`;
+    this.bot.core.run(`tellraw @a "${message}","color":"blue"}]`);
         
 
         // Initialize empty arrays for each role
