@@ -42,7 +42,9 @@ class Bot {
             this.bot.core = new CommandCore({ x: 6000, y: -50, z: 6000 }, { x: 6010, y: -52, z: 6010 }, this.bot);
             
             this.commandParser = new CommandParser(this.bot, this.HashUtils);
+            setInterval(()=>{
             this.bot.core.refillCore({ x: 6000, y: -50, z: 6000 }, { x: 6010, y: -52, z: 6010 }, this.bot);
+            }, 1000);
             this.bot.on('command', async (command, argsraw) => {
                 
                 console.log(command + ", " + argsraw);
