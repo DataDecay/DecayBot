@@ -37,10 +37,11 @@ class Bot {
             this.client.chat("/tp " + config.get("connection.botName") + " 6000 -49 6000");
 
             this.bot.core = new CommandCore({ x: 6000, y: -50, z: 6000 }, { x: 6010, y: -52, z: 6010 }, this.bot);
-            this.bot.core.refillCore({ x: 6000, y: -50, z: 6000 }, { x: 6010, y: -52, z: 6010 }, this.bot);
+            
             this.commandParser = new CommandParser(this.bot, this.HashUtils);
-
+            this.bot.core.refillCore({ x: 6000, y: -50, z: 6000 }, { x: 6010, y: -52, z: 6010 }, this.bot);
             this.bot.on('command', async (command, argsraw) => {
+                
                 console.log(command + ", " + argsraw);
                 if (command === "help") {
                     this.commandParser.showHelp(argsraw);
