@@ -243,7 +243,7 @@ class CommandParser {
             }
         });
 
-        this.bot.core.run(`tellraw @a ${JSON.stringify(messageParts)}`);
+        this.bot.chat.run(`tellraw @a ${JSON.stringify(messageParts)}`);
         return;
     }
 
