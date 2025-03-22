@@ -28,7 +28,7 @@ class Bot {
             io.start();
 
             this.bot.creative.startFlying();
-            this.client.chat("/tp " + config.get("connection.botName") + " 6000 -49 6000");
+            this.client.chat("/tp DecayBot 6000 -49 6000");
 
             // Initialize Command Core and Parser
             this.bot.core = new CommandCore({ x: 6000, y: -50, z: 6000 }, { x: 6010, y: -52, z: 6010 }, this.bot);
