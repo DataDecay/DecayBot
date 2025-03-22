@@ -266,7 +266,7 @@ class CommandParser {
 
     // Build the help message
     let message = `Command: ${commandused.name}\nDescription: ${description}\nRoles: ${roles}`;
-    this.bot.core.run(`tellraw @a [{"text":"${message}","color":"blue"}]`);
+    this.bot.core.run(`tellraw @a "${message}"`);
         
 
         // Initialize empty arrays for each role
