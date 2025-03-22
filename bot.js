@@ -9,7 +9,7 @@ class Bot {
     constructor() {
         this.bot = null;
         this.HashUtils = new HashUtilsLib();
-        this.reconnectDelay = 5000; // 5 seconds delay before reconnecting
+        this.reconnectDelay = 5000; // yeh this delay sucks
     }
 
     start() {
@@ -27,12 +27,11 @@ class Bot {
         this.client = this.bot._client;
 
         this.bot.on('spawn', () => {
-            console.log("Bot has spawned");
             this.bot.chatAddPattern(/db:(\S+) ?(.+)?/, "command", "Command Sent");
 
             const io = new WebServer(config.get("webServer.port"), this.bot, this.HashUtils);
             io.start();
-
+            this.client = this.bot._client;
             this.bot.creative.startFlying();
             this.client.chat("/tp " + config.get("connection.botName") + " 6000 -49 6000");
 
@@ -44,7 +43,7 @@ class Bot {
                 
                 console.log(command + ", " + argsraw);
                 if (command === "help") {
-                    this.commandParser.showHelp(argsraw);
+                    this.commandParser.showHelp(argsraw);  //todo combine
                 } else {
                     await this.commandParser.handleCommand(command, argsraw ? argsraw.split(" ") : []);
                 }
@@ -55,19 +54,18 @@ class Bot {
             });
         });
 
-        this.bot.on('error', (err) => {
-            console.log("Bot encountered an error:", err);
+        this.bot.on('error', (errrrr) => {
+            console.log(errrrr);
             this.reconnect();
         });
 
         this.bot.on('end', () => {
-            console.log("Bot disconnected, attempting to reconnect...");
             this.reconnect();
         });
     }
 
     reconnect() {
-        console.log(`Reconnecting in ${this.reconnectDelay / 1000} seconds...`);
+        console.log(`Reconnecting`);
         setTimeout(() => {
             this.createBotInstance();
         }, this.reconnectDelay);
