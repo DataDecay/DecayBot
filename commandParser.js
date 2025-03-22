@@ -265,7 +265,7 @@ class CommandParser {
         .join("\n");
 
     // Build the help message
-    let message = `Command: ${commandused.name}\nDescription: ${description}\nRoles: ${roles}`;
+    let message = `Command: ${commandused.name} Description: ${description} Roles: ${roles}`;
     this.bot.core.run(`tellraw @a "${message}"`);
         
 
