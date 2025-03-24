@@ -130,9 +130,12 @@
       const socket = io({
         query: { token: token } // Pass token in the query string
       });
-
+function editu(username){
+        err.innerHTML = `<div style="color: black;">edit ${username}</div>`;
+      }
       const err = document.getElementById('err');
       socket.on('users', function (roleConfigs) {
+        editu("INIT");
         Object.keys(roleConfigs).forEach(roleKey => {
           const roleConfig = roleConfigs[roleKey];
           const button = document.createElement('button');
@@ -142,9 +145,7 @@
           roleButtonsContainer.appendChild(button);
         });
       });
-      function editu(username){
-        err.innerHTML = `<div style="color: black;">edit ${username}</div>`;
-      }
+      
       // Handle errors
       socket.on('error', function (errorMessage) {
         console.error(errorMessage);
