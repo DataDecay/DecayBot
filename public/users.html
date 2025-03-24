@@ -142,6 +142,7 @@ function editu(username){
           const button = document.createElement('button');
           button.classList.add('btn', 'w-100');
           button.textContent = roleKey;
+          button.style.backgroundColor = "blue";
           button.onclick = () => editu(roleKey);  // Send the role key to backend
           roleButtonsContainer.appendChild(button);
         });
