@@ -148,7 +148,8 @@
       const socket = io({
         query: { token: token } // Pass token in the query string
       });
-      var current = null;
+      const err = document.getElementById('err');
+      let current = null;
 function editu(username){
         err.innerHTML = `<div style="color: green;">editing ${username}</div>`;
         current = username;
@@ -163,14 +164,13 @@ function editu(username){
       }
       function changePassword(){
         if (current){
-        socket.emit("passwordchange", {username: current);
+        socket.emit("passwordchange", { username: current });
           err.innerHTML = `<div style="color: blue;">Changed password..</div>`;
         } else {
           err.innerHTML = `<div style="color: red;">Please select a user.</div>`;
         }
       }
           
-      const err = document.getElementById('err');
       var roleButtonsContainer = document.getElementById('users');
       socket.on('users', function (roleConfigs) {
         editu("INIT");
