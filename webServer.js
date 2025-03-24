@@ -259,7 +259,7 @@ class WebServer {
         Object.keys(this.users).forEach(roleKey => {
             const role = this.users[roleKey];
             console.log("--ROLE??--");
-            console.log(role);
+            console.log(roleKey);
             console.log(role.level);
             console.log("--USER--");
             console.log(level);
