@@ -153,7 +153,7 @@ function editu(username){
         err.innerHTML = `<div style="color: green;">editing ${username}</div>`;
         current = username;
       }
-      function deleteUser(){
+      /*function deleteUser(){
         if (current){
         socket.emit("deleteuser", current);
           err.innerHTML = `<div style="color: blue;">Deleted user.</div>`;
@@ -168,7 +168,7 @@ function editu(username){
         } else {
           err.innerHTML = `<div style="color: red;">Please select a user.</div>`;
         }
-      }
+      }*/
           
       const err = document.getElementById('err');
       var roleButtonsContainer = document.getElementById('users');
