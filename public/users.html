@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DecayBot Dashboard - User Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- CoreUI CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/css/coreui.min.css" rel="stylesheet" />
+    <!-- CoreUI Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/@coreui/icons@3.0.0/css/all.min.css" rel="stylesheet" />
+
+    <style>
+      body {
+        margin: 0;
+        height: 100%;
+      }
+
+      .wrapper {
+        margin-left: var(--cui-sidebar-occupy-start, 16rem);
+        transition: margin-left 0.3s;
+      }
+
+      .sidebar.sidebar-unfoldable ~ .wrapper {
+        margin-left: var(--cui-sidebar-occupy-start, 4rem);
+      }
+
+      .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      #public {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.375rem;
+        border: 1px solid #dee2e6;
+        min-height: 3rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Sidebar -->
+   <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar"></div>
+<script>
+  fetch('/sidebar.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('sidebar').innerHTML = html;
+
+      // After sidebar loads, run this:
+      setActiveLink();
+    });
+
+  function setActiveLink() {
+    const links = document.querySelectorAll('#sidebar a');
+    const currentPath = window.location.pathname;
+
+    links.forEach(link => {
+      if (link.getAttribute('href') === currentPath) {
+        link.classList.add('active');
+      }
+    });
+  }
+</script>
+
+    <!-- Main Content -->
+    <div class="wrapper d-flex flex-column min-vh-100 bg-light">
+      <!-- Header (No profile!) -->
+      <header class="header header-sticky mb-4">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+          <button class="header-toggler px-md-0 me-md-3" type="button"
+            onclick="coreui.Sidebar.getInstance(document.getElementById('sidebar')).toggle()">
+            <i class="cil-menu"></i>
+          </button>
+          <div class="d-none d-md-flex align-items-center">
+            <span class="fw-bold">DecayBot Dashboard</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Body -->
+      <div class="body flex-grow-1 px-3">
+        <div class="container-lg">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">Users</div>
+                <div class="card-body">
+                  <div class="form-section">
+                    <!-- Dynamic Buttons for Roles -->
+                    <div class="row">
+                      <div id="users" class="col-sm"></div>
+                      <div id="edit" class="col-lg"></div>
+                    </div>
+                    <!-- Output Area -->
+                    <div id="err" class="mt-4"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div><a href="#">DecayBot Dashboard</a> © 2025</div>
+      </footer>
+    </div>
+
+    <!-- CoreUI JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.0.0/dist/js/coreui.bundle.min.js"></script>
+    <!-- Socket.IO -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Socket Logic -->
+    <script>
+      // Ensure token is retrieved from localStorage after login
+      const token = localStorage.getItem('token');
+      
+
+      if (!token) {
+        alert('You must be logged in to access this page.');
+        window.location.href = '/login.html';
+      }
+
+      const socket = io({
+        query: { token: token } // Pass token in the query string
+      });
+
+      const err = document.getElementById('err');
+      socket.on('users', function (roleConfigs) {
+        Object.keys(roleConfigs).forEach(roleKey => {
+          const roleConfig = roleConfigs[roleKey];
+          const button = document.createElement('button');
+          button.classList.add('btn', 'w-100');
+          button.textContent = roleKey;
+          button.onclick = () => editu(roleKey);  // Send the role key to backend
+          roleButtonsContainer.appendChild(button);
+        });
+      });
+      // Handle errors
+      socket.on('error', function (errorMessage) {
+        console.error(errorMessage);
+        err.innerHTML = `<div style="color: red;">${errorMessage}</div>`;
+      });
+    </script>
+  </body>
+</html>
