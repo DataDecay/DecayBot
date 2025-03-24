@@ -251,7 +251,7 @@
             "roles": ["public"],
             "actions": [
                 {
-                    "type": "pig"
+                    "type": "ping"
                 }
             ]
         },
