@@ -142,6 +142,9 @@
           roleButtonsContainer.appendChild(button);
         });
       });
+      function editu(username){
+        err.innerHTML = `<div style="color: black;">edit ${username}</div>`;
+      }
       // Handle errors
       socket.on('error', function (errorMessage) {
         console.error(errorMessage);
