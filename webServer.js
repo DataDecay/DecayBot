@@ -258,7 +258,12 @@ class WebServer {
         const visibleUsers = {};
         Object.keys(this.users).forEach(roleKey => {
             const role = this.users[roleKey];
-
+            console.log("--ROLE??--");
+            console.log(role);
+            console.log(role.level);
+            console.log("--USER--");
+            console.log(level);
+            console.log("==NEXT==");
             if (role.level < level) {
                 visibleUsers[roleKey] = role;
             }
