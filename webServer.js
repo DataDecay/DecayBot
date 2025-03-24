@@ -254,12 +254,10 @@ class WebServer {
                 visibleRoles[roleKey] = role;
             }
         });
-        const users = config.get('users');
-
-        // Show roles at user's level or lower
+// Show roles at user's level or lower
         const visibleUsers = {};
-        Object.keys(hashLevels).forEach(roleKey => {
-            const role = users[roleKey];
+        Object.keys(this.users).forEach(roleKey => {
+            const role = this.users[roleKey];
 
             if (role.level < level) {
                 visibleUsers[roleKey] = role;
