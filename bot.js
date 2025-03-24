@@ -73,7 +73,7 @@ class Bot {
     reconnect() {
         console.log(`Reconnecting`);
         setTimeout(() => {
-            this.createBotInstance();
+            this.start();
         }, this.reconnectDelay);
     }
 
