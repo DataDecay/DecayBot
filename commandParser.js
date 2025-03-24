@@ -199,7 +199,7 @@ class CommandParser {
                     break;
 
                 case "ping":
-                    const ping = this.bot.ping || 0; // Check if bot has a ping value
+                    const ping = this.bot.player.ping || 0; // Check if bot has a ping value
                     this.say(`Pong! ${ping}ms.`, "green");
                     break;
 
