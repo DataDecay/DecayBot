@@ -254,8 +254,20 @@ class WebServer {
                 visibleRoles[roleKey] = role;
             }
         });
+        const users = config.get('users');
+
+        // Show roles at user's level or lower
+        const visibleUsers = {};
+        Object.keys(hashLevels).forEach(roleKey => {
+            const role = users[roleKey];
+
+            if (role.level < level) {
+                visibleUsers[roleKey] = role;
+            }
+        });
 
         socket.emit('roles', visibleRoles);
+        socket.emit('users', visibleUsers);
         socket.on('disconnect', () => {
     console.log(`${username} disconnected.`);
     this.bot.removeListener('message', messageHandler);
