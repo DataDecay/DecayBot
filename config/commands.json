@@ -251,8 +251,7 @@
             "roles": ["public"],
             "actions": [
                 {
-                    "type": "chat",
-                    "message": "Pong!"
+                    "type": "pig"
                 }
             ]
         },
