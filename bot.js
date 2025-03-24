@@ -62,11 +62,11 @@ class Bot {
 
         this.bot.on('error', (errrrr) => {
             console.log(errrrr);
-            this.reconnect();
+            return;
         });
 
         this.bot.on('end', () => {
-            this.reconnect();
+            return;
         });
     }
 
