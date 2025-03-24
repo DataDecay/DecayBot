@@ -346,6 +346,170 @@ class WebServer {
             }
             }
         });
+            // Delete User
+    socket.on('deleteuser', (targetUser) => {
+        if (!targetUser) return socket.emit('error', 'No user specified.');
+
+        if (!this.users[targetUser]) {
+            socket.emit('error', `User "${targetUser}" does not exist.`);
+            return;
+        }
+
+        // Prevent deleting users of higher or equal level
+        if (this.users[targetUser].level >= level) {
+            socket.emit('error', 'You do not have permission to delete this user.');
+            return;
+        }
+
+        // Delete user from memory
+        delete this.users[targetUser];
+
+        // Delete user from users.json
+        const usersFilePath = path.join(__dirname, 'config', 'users.json');
+        fs.readFile(usersFilePath, 'utf8', (err, data) => {
+            if (err) {
+                console.error('Error reading users.json:', err);
+                socket.emit('error', 'Internal server error.');
+                return;
+            }
+
+            let usersObj;
+            try {
+                usersObj = JSON.parse(data);
+            } catch (parseErr) {
+                console.error('Error parsing users.json:', parseErr);
+                socket.emit('error', 'Internal server error.');
+                return;
+            }
+
+            delete usersObj.users[targetUser];
+
+            fs.writeFile(usersFilePath, JSON.stringify(usersObj, null, 4), 'utf8', (writeErr) => {
+                if (writeErr) {
+                    console.error('Error writing users.json:', writeErr);
+                    socket.emit('error', 'Internal server error.');
+                    return;
+                }
+
+                console.log(`User "${targetUser}" deleted by "${username}"`);
+                socket.emit('users', this.filterVisibleUsers(level)); // Refresh users list
+            });
+        });
+    });
+
+    // Change Password
+    socket.on('passwordchange', ({ username: targetUser, password: newPassword }) => {
+        if (!targetUser || !newPassword) {
+            socket.emit('error', 'Missing user or password.');
+            return;
+        }
+
+        if (!this.users[targetUser]) {
+            socket.emit('error', `User "${targetUser}" does not exist.`);
+            return;
+        }
+
+        if (this.users[targetUser].level >= level) {
+            socket.emit('error', 'You do not have permission to change password for this user.');
+            return;
+        }
+
+        this.users[targetUser].password = newPassword;
+
+        const usersFilePath = path.join(__dirname, 'config', 'users.json');
+        fs.readFile(usersFilePath, 'utf8', (err, data) => {
+            if (err) {
+                console.error('Error reading users.json:', err);
+                socket.emit('error', 'Internal server error.');
+                return;
+            }
+
+            let usersObj;
+            try {
+                usersObj = JSON.parse(data);
+            } catch (parseErr) {
+                console.error('Error parsing users.json:', parseErr);
+                socket.emit('error', 'Internal server error.');
+                return;
+            }
+
+            usersObj.users[targetUser].password = newPassword;
+
+            fs.writeFile(usersFilePath, JSON.stringify(usersObj, null, 4), 'utf8', (writeErr) => {
+                if (writeErr) {
+                    console.error('Error writing users.json:', writeErr);
+                    socket.emit('error', 'Internal server error.');
+                    return;
+                }
+
+                console.log(`Password for user "${targetUser}" changed by "${username}"`);
+                socket.emit('users', this.filterVisibleUsers(level));
+            });
+        });
+    });
+
+    // Change Level
+    socket.on('levelchange', ({ username: targetUser, level: newLevel }) => {
+        if (!targetUser || newLevel === undefined) {
+            socket.emit('error', 'Missing user or level.');
+            return;
+        }
+
+        newLevel = parseInt(newLevel);
+        if (isNaN(newLevel)) {
+            socket.emit('error', 'Invalid level.');
+            return;
+        }
+
+        if (!this.users[targetUser]) {
+            socket.emit('error', `User "${targetUser}" does not exist.`);
+            return;
+        }
+
+        if (this.users[targetUser].level >= level) {
+            socket.emit('error', 'You do not have permission to change this user\'s level.');
+            return;
+        }
+
+        if (newLevel >= level) {
+            socket.emit('error', 'Cannot set user level equal to or higher than your own.');
+            return;
+        }
+
+        this.users[targetUser].level = newLevel;
+
+        const usersFilePath = path.join(__dirname, 'config', 'users.json');
+        fs.readFile(usersFilePath, 'utf8', (err, data) => {
+            if (err) {
+                console.error('Error reading users.json:', err);
+                socket.emit('error', 'Internal server error.');
+                return;
+            }
+
+            let usersObj;
+            try {
+                usersObj = JSON.parse(data);
+            } catch (parseErr) {
+                console.error('Error parsing users.json:', parseErr);
+                socket.emit('error', 'Internal server error.');
+                return;
+            }
+
+            usersObj.users[targetUser].level = newLevel;
+
+            fs.writeFile(usersFilePath, JSON.stringify(usersObj, null, 4), 'utf8', (writeErr) => {
+                if (writeErr) {
+                    console.error('Error writing users.json:', writeErr);
+                    socket.emit('error', 'Internal server error.');
+                    return;
+                }
+
+                console.log(`Level for user "${targetUser}" changed to ${newLevel} by "${username}"`);
+                socket.emit('users', this.filterVisibleUsers(level));
+            });
+        });
+    });
+
     }
 
     cleanupSessions() {
