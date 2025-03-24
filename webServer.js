@@ -258,18 +258,19 @@ class WebServer {
         const visibleUsers = {};
         Object.keys(this.users).forEach(roleKey => {
             const role = this.users[roleKey];
-            console.log("--ROLE??--");
+            /*console.log("--ROLE??--");
             console.log(roleKey);
             console.log(role.level);
             console.log("--USER--");
             console.log(level);
-            console.log("==NEXT==");
+            console.log("==NEXT==");*/
             if (role.level < level) {
                 visibleUsers[roleKey] = role;
             }
         });
 
         socket.emit('roles', visibleRoles);
+        console.log(visibleUsers);
         socket.emit('users', visibleUsers);
         socket.on('disconnect', () => {
     console.log(`${username} disconnected.`);
