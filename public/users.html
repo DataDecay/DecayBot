@@ -95,7 +95,14 @@
                       <div id="users" class="col-2 d-flex flex-column gap-1"></div>
                       <div id="edit" class="col d-flex flex-column gap-1">
                         <button style="background-color: red" onclick="deleteuser();" class="btn w-100">Delete User</button>
+                        <div class="row g-0">
+                        <div class="col-6">
                         <button style="background-color: yellow" onclick="changepassword();" class="btn w-100">Change password</button>
+                        </div>
+                          <div class="col-6">
+                        <input id="passwordnew" class="form-control">
+                          </div>
+                        </div>
                         <div class="row g-0">
                         <div class="col-6">
                           <button style="background-color: green" onclick="level();" class="btn w-100">Change Level</button>
@@ -141,9 +148,28 @@
       const socket = io({
         query: { token: token } // Pass token in the query string
       });
+      var current = null;
 function editu(username){
-        err.innerHTML = `<div style="color: black;">edit ${username}</div>`;
+        err.innerHTML = `<div style="color: green;">editing ${username}</div>`;
+        current = username;
       }
+      function deleteUser(){
+        if (current){
+        socket.emit("deleteuser", current);
+          err.innerHTML = `<div style="color: blue;">Deleted user.</div>`;
+        } else {
+          err.innerHTML = `<div style="color: red;">Please select a user.</div>`;
+        }
+      }
+      function changePassword(){
+        if (current){
+        socket.emit("passwordchange", {username: current);
+          err.innerHTML = `<div style="color: blue;">Deleted user.</div>`;
+        } else {
+          err.innerHTML = `<div style="color: red;">Please select a user.</div>`;
+        }
+      }
+          
       const err = document.getElementById('err');
       var roleButtonsContainer = document.getElementById('users');
       socket.on('users', function (roleConfigs) {
