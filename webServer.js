@@ -356,7 +356,7 @@ class WebServer {
         }
 
         // Prevent deleting users of higher or equal level
-        if (this.users[targetUser].level >= level) {
+        if (this.users[targetUser].level >= level || level <= 2) {
             socket.emit('error', 'You do not have permission to delete this user.');
             return;
         }
@@ -409,7 +409,7 @@ class WebServer {
             return;
         }
 
-        if (this.users[targetUser].level >= level) {
+        if (this.users[targetUser].level >= level || level <= 2) {
             socket.emit('error', 'You do not have permission to change password for this user.');
             return;
         }
@@ -466,7 +466,7 @@ class WebServer {
             return;
         }
 
-        if (this.users[targetUser].level >= level) {
+        if (this.users[targetUser].level >= level || level <= 2) {
             socket.emit('error', 'You do not have permission to change this user\'s level.');
             return;
         }
@@ -521,6 +521,17 @@ class WebServer {
             }
         }
     }
+    filterVisibleUsers(level) {
+    const visibleUsers = {};
+    Object.keys(this.users).forEach(userKey => {
+        const user = this.users[userKey];
+        if (user.level < level) {
+            visibleUsers[userKey] = user;
+        }
+    });
+    return visibleUsers;
+}
+
 }
 
 module.exports = WebServer;
