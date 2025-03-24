@@ -194,7 +194,6 @@
       }
 
       socket.on('users', function (roleConfigs) {
-        editu("INIT");
         roleButtonsContainer.innerHTML = ''; // Clear existing buttons
         Object.keys(roleConfigs).forEach(roleKey => {
           const roleConfig = roleConfigs[roleKey];
