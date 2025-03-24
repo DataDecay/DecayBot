@@ -43,32 +43,30 @@
 
   <body>
     <!-- Sidebar -->
-   <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar"></div>
-<script>
-  fetch('/sidebar.html')
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById('sidebar').innerHTML = html;
+    <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar"></div>
+    <script>
+      fetch('/sidebar.html')
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById('sidebar').innerHTML = html;
+          setActiveLink();
+        });
 
-      // After sidebar loads, run this:
-      setActiveLink();
-    });
+      function setActiveLink() {
+        const links = document.querySelectorAll('#sidebar a');
+        const currentPath = window.location.pathname;
 
-  function setActiveLink() {
-    const links = document.querySelectorAll('#sidebar a');
-    const currentPath = window.location.pathname;
-
-    links.forEach(link => {
-      if (link.getAttribute('href') === currentPath) {
-        link.classList.add('active');
+        links.forEach(link => {
+          if (link.getAttribute('href') === currentPath) {
+            link.classList.add('active');
+          }
+        });
       }
-    });
-  }
-</script>
+    </script>
 
     <!-- Main Content -->
     <div class="wrapper d-flex flex-column min-vh-100 bg-light">
-      <!-- Header (No profile!) -->
+      <!-- Header -->
       <header class="header header-sticky mb-4">
         <div class="container-fluid d-flex align-items-center justify-content-between">
           <button class="header-toggler px-md-0 me-md-3" type="button"
@@ -94,25 +92,28 @@
                     <div class="row">
                       <div id="users" class="col-2 d-flex flex-column gap-1"></div>
                       <div id="edit" class="col d-flex flex-column gap-1">
-                        <button style="background-color: red" onclick="deleteUser();" class="btn w-100">Delete User</button>
+                        <button class="btn btn-danger w-100" onclick="deleteUser();">Delete User</button>
+
                         <div class="row g-0">
-                        <div class="col-6">
-                        <button style="background-color: yellow" onclick="changePassword();" class="btn w-100">Change password</button>
-                        </div>
                           <div class="col-6">
-                        <input id="passwordnew" class="form-control">
+                            <button class="btn btn-warning w-100" onclick="changePassword();">Change Password</button>
+                          </div>
+                          <div class="col-6">
+                            <input id="passwordnew" class="form-control" placeholder="New Password">
                           </div>
                         </div>
+
                         <div class="row g-0">
-                        <div class="col-6">
-                          <button style="background-color: green" onclick="level();" class="btn w-100">Change Level</button>
-                        </div>
                           <div class="col-6">
-                        <input id="levelnew" class="form-control">
+                            <button class="btn btn-success w-100" onclick="level();">Change Level</button>
+                          </div>
+                          <div class="col-6">
+                            <input id="levelnew" class="form-control" placeholder="New Level">
                           </div>
                         </div>
                       </div>
                     </div>
+
                     <!-- Output Area -->
                     <div id="err" class="mt-4"></div>
                   </div>
@@ -136,9 +137,10 @@
 
     <!-- Socket Logic -->
     <script>
-      // Ensure token is retrieved from localStorage after login
       const token = localStorage.getItem('token');
-      
+      const err = document.getElementById('err');
+      const roleButtonsContainer = document.getElementById('users');
+      let current = null;
 
       if (!token) {
         alert('You must be logged in to access this page.');
@@ -146,47 +148,64 @@
       }
 
       const socket = io({
-        query: { token: token } // Pass token in the query string
+        query: { token: token }
       });
-      const err = document.getElementById('err');
-      let current = null;
-function editu(username){
-        err.innerHTML = `<div style="color: green;">editing ${username}</div>`;
+
+      function editu(username) {
+        err.innerHTML = `<div style="color: green;">Editing ${username}</div>`;
         current = username;
       }
-      function deleteUser(){
-        if (current){
-        socket.emit("deleteuser", current);
+
+      function deleteUser() {
+        if (current) {
+          socket.emit("deleteuser", current);
           err.innerHTML = `<div style="color: blue;">Deleted user "${current}"</div>`;
         } else {
           err.innerHTML = `<div style="color: red;">Please select a user.</div>`;
         }
       }
-      function changePassword(){
-        if (current){
-        let inputValue = document.getElementByID('myInputName')[0].value;
-        socket.emit("passwordchange", { username: current, password: });
+
+      function changePassword() {
+        if (current) {
+          let inputValue = document.getElementById('passwordnew').value;
+          if (!inputValue) {
+            err.innerHTML = `<div style="color: red;">Please enter a new password.</div>`;
+            return;
+          }
+          socket.emit("passwordchange", { username: current, password: inputValue });
           err.innerHTML = `<div style="color: blue;">Changed password of user "${current}"</div>`;
         } else {
           err.innerHTML = `<div style="color: red;">Please select a user.</div>`;
         }
       }
-          
-      var roleButtonsContainer = document.getElementById('users');
+
+      function level() {
+        if (current) {
+          let levelValue = document.getElementById('levelnew').value;
+          if (!levelValue) {
+            err.innerHTML = `<div style="color: red;">Please enter a new level.</div>`;
+            return;
+          }
+          socket.emit("levelchange", { username: current, level: levelValue });
+          err.innerHTML = `<div style="color: blue;">Changed level of user "${current}" to ${levelValue}</div>`;
+        } else {
+          err.innerHTML = `<div style="color: red;">Please select a user.</div>`;
+        }
+      }
+
       socket.on('users', function (roleConfigs) {
         editu("INIT");
+        roleButtonsContainer.innerHTML = ''; // Clear existing buttons
         Object.keys(roleConfigs).forEach(roleKey => {
           const roleConfig = roleConfigs[roleKey];
           const button = document.createElement('button');
-          button.classList.add('btn', 'w-100');
+          button.classList.add('btn', 'btn-primary', 'w-100', 'mb-1');
           button.textContent = roleKey;
-          button.style.backgroundColor = "blue";
-          button.onclick = () => editu(roleKey);  // Send the role key to backend
+          button.onclick = () => editu(roleKey);
           roleButtonsContainer.appendChild(button);
         });
       });
-      
-      // Handle errors
+
       socket.on('error', function (errorMessage) {
         console.error(errorMessage);
         err.innerHTML = `<div style="color: red;">${errorMessage}</div>`;
