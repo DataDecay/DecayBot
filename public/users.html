@@ -93,7 +93,12 @@
                     <!-- Dynamic Buttons for Roles -->
                     <div class="row">
                       <div id="users" class="col-2"></div>
-                      <div id="edit" class="col"></div>
+                      <div id="edit" class="col">
+                        <button style="background-color: red" onclick="deleteuser();">Delete User</button>
+                        <button style="background-color: yellow" onclick="changepassword();">Change password</button>
+                        <button style="background-color: green" onclick="level();">Change Level</button>
+                        <input id="levelnew">
+                      </div>
                     </div>
                     <!-- Output Area -->
                     <div id="err" class="mt-4"></div>
