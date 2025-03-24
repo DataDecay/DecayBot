@@ -134,6 +134,7 @@ function editu(username){
         err.innerHTML = `<div style="color: black;">edit ${username}</div>`;
       }
       const err = document.getElementById('err');
+      var roleButtonsContainer = document.getElementById('users');
       socket.on('users', function (roleConfigs) {
         editu("INIT");
         Object.keys(roleConfigs).forEach(roleKey => {
