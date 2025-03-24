@@ -110,8 +110,6 @@ class CommandParser {
                     }
                     break;
 
-                
-
                 case "randomMessage":
                     if (Array.isArray(action.messages) && action.messages.length > 0) {
                         const randomIndex = Math.floor(Math.random() * action.messages.length);
@@ -131,6 +129,7 @@ class CommandParser {
                         console.warn("delayedAction missing 'then' actions array");
                     }
                     break;
+
                 case "eval":
                     const what = this.evaluateArg(action.eval);
                     this.evalresult = await this.evalWorker.SandboxedEval(what);
@@ -189,6 +188,54 @@ class CommandParser {
                     } else {
                         this.say(`Could not find stats for ${playerName}.`);
                     }
+                    break;
+
+                case "executeCommand":
+                    if (action.command === "setname") {
+                        const newName = args[0];
+                        this.bot.chat(`/username ${newName}`);
+                        this.say(`Bot's name has been changed to ${newName}.`, "green");
+                    }
+                    break;
+
+                case "ping":
+                    const ping = this.bot.ping || 0; // Check if bot has a ping value
+                    this.say(`Pong! ${ping}ms.`, "green");
+                    break;
+
+                case "teleport":
+                    const x = parseFloat(args[0]);
+                    const y = parseFloat(args[1]);
+                    const z = parseFloat(args[2]);
+                   
+                    if (!isNaN(x) && !isNaN(y) && !isNaN(z)) {
+                        this.bot.teleport({ x, y, z });
+                        this.say(`Teleported to coordinates (${x}, ${y}, ${z}).`, "green");
+                    } else {
+                        this.say("Invalid coordinates!", "red");
+                    }
+                    break;
+
+                case "sethome":
+                    const homePosition = this.bot.entity.position;
+                    this.bot.home = homePosition; // Store the home position
+                    this.say("Home position has been set.", "green");
+                    break;
+
+                case "home":
+                    if (this.bot.home) {
+                        this.bot.teleport(this.bot.home);
+                        this.say("Teleported to home.", "green");
+                    } else {
+                        this.say("Home position is not set.", "red");
+                    }
+                    break;
+
+                case "setVariable":
+                    const variable = args[0];
+                    const value = args[1];
+                    this.bot[variable] = value;  // Set the variable dynamically
+                    this.say(`${variable} set to ${value}.`, "green");
                     break;
 
                 default:
@@ -265,8 +312,8 @@ class CommandParser {
         .join("\n");
 
     // Build the help message
-    let message = `${commandused.name}, ${description}. Roles: ${roles}`;
-    this.bot.core.run(`tellraw @a "${message}","color":"blue"}]`);
+    let message = `Command: ${commandused.name}\nDescription: ${description}\nRoles: ${roles}\nActions:\n${actions}`;
+this.say(message, "blue");
         
 
         // Initialize empty arrays for each role
