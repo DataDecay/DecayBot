@@ -6,7 +6,7 @@ class evalWorker {
 this.context = { };
 vm.createContext(context); // Contextify the object.
 
-let this.code = '';
+this.code = '';
 
   }
 
