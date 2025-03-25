@@ -139,8 +139,11 @@
     <script>
       const token = localStorage.getItem('token');
       const err = document.getElementById('err');
+      const lvl = document.getElementById('lvl');
       const roleButtonsContainer = document.getElementById('users');
+      let roleconfglobal = {};
       let current = null;
+      let currentlvl = null;
 
       if (!token) {
         alert('You must be logged in to access this page.');
@@ -151,9 +154,10 @@
         query: { token: token }
       });
 
-      function editu(username) {
-        err.innerHTML = `<div style="color: green;">Editing ${username}</div>`;
+      function editu(username, level) {
+        err.innerHTML = `<div style="color: green;">Editing ${username}</div><div>Current user level: <span id="lvl">${level}</span></div>`;
         current = username;
+        currentlvl = level;
       }
 
       function deleteUser() {
@@ -194,13 +198,14 @@
       }
 
       socket.on('users', function (roleConfigs) {
-        roleButtonsContainer.innerHTML = ''; // Clear existing buttons
+        roleButtonsContainer.innerHTML = '';
+        roleconfglobal = roleConfigs;
         Object.keys(roleConfigs).forEach(roleKey => {
           const roleConfig = roleConfigs[roleKey];
           const button = document.createElement('button');
           button.classList.add('btn', 'btn-primary', 'w-100', 'mb-1');
           button.textContent = roleKey;
-          button.onclick = () => editu(roleKey);
+          button.onclick = () => editu(roleKey, roleConfig.level);
           roleButtonsContainer.appendChild(button);
         });
       });
