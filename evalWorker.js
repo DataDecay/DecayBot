@@ -4,7 +4,7 @@ class evalWorker {
   constructor(bot) {
     this.bot = bot;
 this.context = { };
-vm.createContext(context); // Contextify the object.
+vm.createContext(this.context); // Contextify the object.
 
 this.code = '';
 
@@ -38,7 +38,7 @@ this.code = '';
 
   ResetWorker() {
     this.context = { };
-vm.createContext(context); // Contextify the object.
+vm.createContext(this.context); // Contextify the object.
 this.code = '';
   }
 }
