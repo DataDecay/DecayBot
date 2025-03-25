@@ -18,7 +18,7 @@ class WebServer {
         this.sessions = {};
         
         const userconfig = require("./config/users.json");
-        config.util.extendDeep(config, userconfig); // Merge custom command config into the main config
+        config.util.extendDeep(config, userconfig); 
         this.users = config.get('users'); 
 
         this.sessionTimeout = 1000 * 60 * 60; 
@@ -342,7 +342,7 @@ class WebServer {
                 socket.emit('msg', `Sorry ${username}, you need auth level 3 to use the terminal.`);
                 console.log(`Received term: ${msg} & denied due to low level`);
                 } else {
-                this.client.chat(`/${msg}`);
+                this.bot.chat(`/${msg}`);
             }
             }
         });
