@@ -325,13 +325,13 @@ class WebServer {
                 console.log(`Received message: ${msg} & denied`);
             } else {
                 const username = this.sessions[token].username;
-                this.bot.core.run(`tellraw @a ["${username} via DecayBot webchat: ${msg}"]`);
+                this.bot.core.run(`/tellraw @p [{"text":"${username} "},{"text":" [DecayBot Webchat] ","color":"dark_red","bold":true,"underlined":false,"hoverEvent":{"action":"show_text","value":[{"text":"Open DecayBot Webchat","color":"blue","bold":true,"italic":true}]},"clickEvent":{"action":"open_url","value":"https://datadecay.dev/"}},{"text":": ${msg}","hoverEvent":{"action":"show_text","value":[{"text":"","color":"blue","bold":true,"italic":true}]}}]`);
                 console.log(`Received message: ${msg}, from ${username}`);
             }
         });
         socket.on('console_command', (msg) => {
             //this.bot.chat(msg);
-            
+            this.client = this.bot._client;
             const token = socket.handshake.query.token;
             if(!token || !this.sessions[token]){
                 socket.emit('msg', `Sorry, you need to be logged in to use the terminal.`);
@@ -342,7 +342,7 @@ class WebServer {
                 socket.emit('msg', `Sorry ${username}, you need auth level 3 to use the terminal.`);
                 console.log(`Received term: ${msg} & denied due to low level`);
                 } else {
-                this.bot.core.run(`/${msg}`);
+                this.client.chat(`/${msg}`);
             }
             }
         });
