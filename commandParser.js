@@ -7,12 +7,11 @@ class CommandParser {
         this.HashUtils = hashUtils;
         this.evalWorker = new evalWorkerLib(this.bot);
         this.loops = [];
-        this.cooldowns = {}; // Store cooldowns for commands
+        this.cooldowns = {};
 
-        // Loading the custom command config from the command JSON
         const commandconfig = require("./config/commands.json");
-        config.util.extendDeep(config, commandconfig); // Merge custom command config into the main config
-        this.commandsConfig = config.get('commands'); // Get all commands
+        config.util.extendDeep(config, commandconfig);
+        this.commandsConfig = config.get('commands');
     }
 
     async handleCommand(command, args) {
@@ -23,7 +22,6 @@ class CommandParser {
             return;
         }
 
-        // Handle cooldown if applicable
         if (cmdConfig.cooldown) {
             const lastUsed = this.cooldowns[command] || 0;
             const now = Date.now();
@@ -102,7 +100,7 @@ class CommandParser {
                     break;
 
                 case "conditional":
-                    const condition = eval(action.condition); // risky, sanitize before prod
+                    const condition = eval(action.condition); // idk how to make this secure lol
                     if (condition && action.then) {
                         this.executeActions(action.then, args);
                     } else if (!condition && action.else) {
@@ -124,7 +122,7 @@ class CommandParser {
                     if (Array.isArray(action.then)) {
                         setTimeout(() => {
                             this.executeActions(action.then, args);
-                        }, action.delayMs || 1000); // Default delay 1 second
+                        }, action.delayMs || 1000);
                     } else {
                         console.warn("delayedAction missing 'then' actions array");
                     }
@@ -166,40 +164,15 @@ class CommandParser {
 
                     break;
 
-                case "mute":
-                    const playerToMute = args[0];
-                    const muteDuration = action.duration || 300000;  // 5 min default
-
-                    this.bot.core.run(`mute ${playerToMute}`);
-                    this.say(`${playerToMute} has been muted for ${muteDuration / 1000} seconds.`);
-
-                    setTimeout(() => {
-                        this.bot.core.run(`unmute ${playerToMute}`);
-                        this.say(`${playerToMute} has been unmuted.`);
-                    }, muteDuration);
-                    break;
-
-                case "userStats":
-                    const playerName = args[0];
-                    const stats = this.bot.core.getUserStats(playerName);  // Example stub method
-
-                    if (stats) {
-                        this.say(`${playerName}'s stats - Health: ${stats.health}, Score: ${stats.score}`);
-                    } else {
-                        this.say(`Could not find stats for ${playerName}.`);
-                    }
-                    break;
-
                 case "executeCommand":
                     if (action.command === "setname") {
                         const newName = args[0];
-                        this.bot.chat(`/username ${newName}`);
-                        this.say(`Bot's name has been changed to ${newName}.`, "green");
+                        this.bot.core.run(`/username ${newName}`);
                     }
                     break;
 
                 case "ping":
-                    const ping = this.bot.player.ping || 0; // Check if bot has a ping value
+                    const ping = this.bot.player.ping || "err"; // Check if bot has a ping value
                     this.say(`Pong! ${ping}ms.`, "green");
                     break;
 
@@ -239,7 +212,7 @@ class CommandParser {
                     break;
 
                 default:
-                    this.say(`Unknown action type: ${action.type}`, "red");
+                    console.error(`Unknown action type: ${action.type}`);
             }
         }
     }
@@ -256,14 +229,12 @@ class CommandParser {
     showHelp(commandName = null) {
         const commands = this.commandsConfig;
         if (!commandName) {
-        // No command name, show general help (list of all commands)
-        const hashLevels = config.get('hashLevels'); // Get hashLevels configuration
+        const hashLevels = config.get('hashLevels');
         const roles = {};
         Object.keys(hashLevels).forEach(level => {
             roles[level] = [];
         });
-    
-        // Populate roles with command names
+
         this.commandsConfig.forEach(cmd => {
             cmd.roles.forEach(role => {
                 if (!roles[role]) roles[role] = [];
@@ -273,10 +244,9 @@ class CommandParser {
 
         const messageParts = [];
 
-        // Iterate over each role to build the message
         Object.keys(roles).forEach(role => {
             const commands = roles[role];
-            const roleMeta = hashLevels[role]; // Fetch the role metadata
+            const roleMeta = hashLevels[role];
 
             if (roleMeta) {
                 if (commands.length > 0) {
@@ -294,7 +264,6 @@ class CommandParser {
         return;
     }
 
-    // Show help for a specific command
     const commandused = commands.find(c => c.name === commandName);
     if (!commandused) {
         this.bot.chat(`Command "${commandName}" not found.`);
@@ -311,12 +280,9 @@ class CommandParser {
         .map(action => `- ${action.type}: ${JSON.stringify(action)}`)
         .join("\n");
 
-    // Build the help message
     let message = `Command: ${commandused.name}\nDescription: ${description}\nRoles: ${roles}\nActions:\n${actions}`;
 this.say(message, "blue");
         
-
-        // Initialize empty arrays for each role
         
     }
 
@@ -327,7 +293,7 @@ this.say(message, "blue");
     validateHash(hash, role) {
         const roleMeta = config.get(`hashLevels.${role}`);
         if (!roleMeta) {
-            console.error(`Role "${role}" not found in hashLevels.`);
+            console.error(`Role "${role}" not found in hashLevels config.`);
             return false;
         }
 
