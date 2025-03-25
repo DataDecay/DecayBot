@@ -3,18 +3,11 @@ const vm = require('vm');
 class evalWorker {
   constructor(bot) {
     this.bot = bot;
-    this.sandbox = this.createNewSandbox();
-    this.context = vm.createContext(this.sandbox);  // Persistent context
+this.context = { };
+vm.createContext(context); // Contextify the object.
 
-    const scriptCode = `
-      try {
-        result = eval(input);
-      } catch (e) {
-        result = "Error: " + e.message;
-      }
-    `;
+let this.code = '';
 
-    this.script = new vm.Script(scriptCode);
   }
 
   createNewSandbox() {
@@ -33,12 +26,10 @@ class evalWorker {
 
   SandboxedEval(input) {
     return new Promise((resolve, reject) => {
-      this.sandbox.input = input;
 
       try {
-        // Reuse the same context!
-        this.script.runInContext(this.context, { timeout: 5000 });
-        resolve(this.sandbox.result);
+        this.code = input;
+        vm.runInContext(this.code, this.context);
       } catch (error) {
         reject('Execution failed: ' + error.message);
       }
@@ -46,9 +37,10 @@ class evalWorker {
   }
 
   ResetWorker() {
-    this.sandbox = this.createNewSandbox();
-    this.context = vm.createContext(this.sandbox);
-    this.say("Worker Reset", "green");
+    this.context = { };
+vm.createContext(context); // Contextify the object.
+
+let this.code = '';
   }
 }
 
