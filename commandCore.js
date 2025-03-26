@@ -16,7 +16,7 @@ class CommandCore {
 
   run(command) {
     this.client.write("update_command_block", { location: this.useBlockxyz, command: command.slice(0, 32767), mode: 1, flags: 0x04 });
-    //console.log("choosing cmdblock:", this.useBlockxyz);
+    //console.log("cmdblock ", this.useBlockxyz);
 
     let coords = indexToCoords(this.i++, this.xyz, this.toxyz);
     //console.log(coords)
