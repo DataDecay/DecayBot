@@ -52,8 +52,7 @@ class WebServer {
         });
 
         this.io.on('connection', (socket) => {
-            const token = socket.handshake.query.token; // Fetch token from query string
-
+            const token = socket.handshake.query.token;
             if (!token || !this.sessions[token]) {
                 console.log("Unauthorized socket connection attempt.");
                 socket.emit('error', 'Unauthorized. Please log in.');
@@ -141,13 +140,11 @@ class WebServer {
             // Add user to in-memory config
             this.users[username] = newUser;
 
-            // Path to users.json file
             const usersFilePath = path.join(__dirname, 'config', 'users.json');
             const token = crypto.randomBytes(16).toString('hex');
             const expiresAt = Date.now() + this.sessionTimeout;
             this.sessions[token] = { username, level: 1, expiresAt };
 
-            // Read the current file, update, and write back
             fs.readFile(usersFilePath, 'utf8', (err, data) => {
                 if (err) {
                     console.error('Error reading users.json:', err);
@@ -254,7 +251,6 @@ class WebServer {
                 visibleRoles[roleKey] = role;
             }
         });
-// Show roles at user's level or lower
         const visibleUsers = {};
         Object.keys(this.users).forEach(roleKey => {
             const role = this.users[roleKey];
@@ -346,7 +342,6 @@ class WebServer {
             }
             }
         });
-            // Delete User
     socket.on('deleteuser', (targetUser) => {
         if (!targetUser) return socket.emit('error', 'No user specified.');
 
@@ -354,17 +349,13 @@ class WebServer {
             socket.emit('error', `User "${targetUser}" does not exist.`);
             return;
         }
-
-        // Prevent deleting users of higher or equal level
         if (this.users[targetUser].level >= level || level <= 2) {
             socket.emit('error', 'You do not have permission to delete this user.');
             return;
         }
 
-        // Delete user from memory
         delete this.users[targetUser];
 
-        // Delete user from users.json
         const usersFilePath = path.join(__dirname, 'config', 'users.json');
         fs.readFile(usersFilePath, 'utf8', (err, data) => {
             if (err) {
@@ -392,12 +383,11 @@ class WebServer {
                 }
 
                 console.log(`User "${targetUser}" deleted by "${username}"`);
-                socket.emit('users', this.filterVisibleUsers(level)); // Refresh users list
+                socket.emit('users', this.filterVisibleUsers(level));
             });
         });
     });
 
-    // Change Password
     socket.on('passwordchange', ({ username: targetUser, password: newPassword }) => {
         if (!targetUser || !newPassword) {
             socket.emit('error', 'Missing user or password.');
@@ -448,7 +438,6 @@ class WebServer {
         });
     });
 
-    // Change Level
     socket.on('levelchange', ({ username: targetUser, level: newLevel }) => {
         if (!targetUser || newLevel === undefined) {
             socket.emit('error', 'Missing user or level.');
