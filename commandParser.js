@@ -280,7 +280,7 @@ class CommandParser {
         .map(action => `- ${action.type}: ${JSON.stringify(action)}`)
         .join("\n");
 
-    let message = `Command: ${commandused.name}\nDescription: ${description}\nRoles: ${roles}`;
+    let message = `Command: ${commandused.name} Description: ${description} Roles: ${roles}`;
 this.bot.core.run(`tellraw @a [{"text":"${message}","color":"blue"}]`)
         
         
