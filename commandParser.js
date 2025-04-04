@@ -280,7 +280,7 @@ class CommandParser {
         .map(action => `- ${action.type}: ${JSON.stringify(action)}`)
         .join("\n");
 
-    let message = `Command: ${commandused.name}\nDescription: ${description}\nRoles: ${roles}\nActions:\n${actions}`;
+    let message = `Command: ${commandused.name}\nDescription: ${description}\nRoles: ${roles}`;
 this.say(message, "blue");
         
         
