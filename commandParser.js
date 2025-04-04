@@ -281,7 +281,7 @@ class CommandParser {
         .join("\n");
 
     let message = `Command: ${commandused.name}\nDescription: ${description}\nRoles: ${roles}`;
-this.say(message, "blue");
+this.bot.core.run(`tellraw @a [{"text":"${message}","color":"blue"}]`)
         
         
     }
