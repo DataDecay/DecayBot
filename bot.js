@@ -22,13 +22,13 @@ class Bot {
             username: config.get("connection.botName"),
             auth: 'offline',
             version: ''
+            port: config.get("connection.port"),
         });
 
         this.client = this.bot._client;
 
         this.bot.on('spawn', () => {
             this.bot.chatAddPattern(/db:(\S+) ?(.+)?/, "command", "Command Sent");
-
             const io = new WebServer(config.get("webServer.port"), this.bot, this.HashUtils);
             io.start();
             this.bot.creative.startFlying();
