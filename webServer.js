@@ -40,7 +40,6 @@ class WebServer {
             console.log("SSL enabled");
             this.server = https.createServer(this.httpOptions, this.handler.bind(this));
         } else {
-            console.log("SSL disabled");
             this.server = http.createServer(this.handler.bind(this));
         }
 
@@ -137,7 +136,6 @@ class WebServer {
         if (!user) {
             const newUser = { password: password, level: 1 };
 
-            // Add user to in-memory config
             this.users[username] = newUser;
 
             const usersFilePath = path.join(__dirname, 'config', 'users.json');
@@ -242,7 +240,6 @@ class WebServer {
 
         const hashLevels = config.get('hashLevels');
 
-        // Show roles at user's level or lower
         const visibleRoles = {};
         Object.keys(hashLevels).forEach(roleKey => {
             const role = hashLevels[roleKey];
@@ -266,7 +263,6 @@ class WebServer {
         });
 
         socket.emit('roles', visibleRoles);
-        console.log(visibleUsers);
         socket.emit('users', visibleUsers);
         socket.on('disconnect', () => {
     console.log(`${username} disconnected.`);
@@ -294,7 +290,6 @@ class WebServer {
                 return;
             }
 
-            // User can generate for their level or lower
             if (level < roleConfig.requiredLevel) {
                 socket.emit('error', `You do not have permission to generate hash for "${roleKey}". Your level: ${level}, required: ${roleConfig.requiredLevel}`);
                 console.warn(`Unauthorized hash attempt by ${username} for ${roleKey}`);
@@ -331,14 +326,18 @@ class WebServer {
             const token = socket.handshake.query.token;
             if(!token || !this.sessions[token]){
                 socket.emit('msg', `Sorry, you need to be logged in to use the terminal.`);
-                console.log(`Received term: ${msg} & denied`);
+                console.log(`Received term: ${msg.command} & denied due to login issue`);
             } else {
                 const {username, level} = this.sessions[token];
                 if (level < 3){
-                socket.emit('msg', `Sorry ${username}, you need auth level 3 to use the terminal.`);
-                console.log(`Received term: ${msg} & denied due to low level`);
+                socket.emit('msg', `Sorry ${username}, your access level, ${level}, is too low to use the terminal. Please ask an admin to grant you a higher trust level to use this if you need to.`);
+                console.log(`Received term: ${msg.command} & denied due to low level`);
                 } else {
-                this.bot.chat(`/${msg}`);
+                    if (msg.chat){
+                this._client.chat(`/${msg.command}`);
+                    } else {
+                        this.bot.core.run(msg.command);
+                    }
             }
             }
         });

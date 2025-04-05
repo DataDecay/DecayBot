@@ -53,7 +53,7 @@
   </head>
 
   <body>
-    <!-- Sidebar -->
+
     <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar"></div>
 <script>
   fetch('/sidebar.html')
@@ -61,7 +61,6 @@
     .then(html => {
       document.getElementById('sidebar').innerHTML = html;
 
-      // After sidebar loads, run this:
       setActiveLink();
     });
 
@@ -77,7 +76,6 @@
   }
 </script>
 
-    <!-- Main Content Wrapper -->
     <div class="wrapper d-flex flex-column min-vh-100 bg-light">
       <header class="header header-sticky mb-4">
         <div
@@ -98,7 +96,6 @@
         </div>
       </header>
 
-      <!-- Body Content -->
       <div class="body flex-grow-1 px-3">
         <div class="container-lg">
           <div class="row">
@@ -115,6 +112,8 @@
                       placeholder="Type a command..."
                     />
                     <button class="btn btn-primary" type="submit">Send</button>
+                    <label for="botchat">Bypass core issues:</label>
+                    <input type="checkbox" id="botchat" />
                   </form>
                 </div>
               </div>
@@ -159,7 +158,7 @@
 
       const terminalElement = document.getElementById('terminal');
       term.open(terminalElement);
-      term.writeln('DecayBot Console Connected');
+      term.writeln('DecayBot Connected');
       term.prompt = () => {
         term.write('\r\n$ ');
       };
@@ -167,30 +166,18 @@
 
       const form = document.getElementById('form');
       const input = document.getElementById('input');
+      const check = document.getElementById('botchat');
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         const command = input.value.trim();
+        const chatyn = check.checked;
         if (command) {
           term.writeln(`\r\n> ${command}`);
-          socket.emit('console_command', command);
+          socket.emit('console_command', {command: command, chat: chatyn});
           input.value = '';
         }
       });
-     /* term.onData(e => {
-    if (e === '\r') { // Enter key
-        handleCommand(command.trim());
-        command = ''; // Reset command buffer
-    } else if (e === '\x7F') { // Backspace key
-        if (command.length > 0) {
-            term.write('\b \b'); // Move cursor back, erase character, move cursor back again
-            command = command.slice(0, -1); // Remove last character from command buffer
-        }
-    } else {
-        term.write(e); // Echo the typed character
-        command += e; // Add typed character to command buffer
-    }
-});*/
 function handleCommand(input) {
     socket.emit('console_command', input);
     }
