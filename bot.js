@@ -26,7 +26,7 @@ class Bot {
             username: config.get("connection.botName"),
             auth: 'offline',
             version: '',
-            port: config.get("connection.port"),
+            port: config.get("connection.port")
         });
 
         this.client = this.bot._client;
