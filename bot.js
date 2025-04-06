@@ -105,7 +105,7 @@ class Bot {
             const currentTime = new Date();
             fs.readFile(this.flagPath, 'utf8', (err, data) => {
                 if (err) {
-                    console.error('Error reading flag.json:', err);
+                    console.error('Error reading flag.json: ', err);
                     return;
                 }
 
@@ -117,7 +117,7 @@ class Bot {
                     }
                 }
             });
-        }, 60 * 1000);
+        }, 60 * 60 * 1000);
     }
 
     say(text, colour = "white") {
