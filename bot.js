@@ -101,15 +101,22 @@ class Bot {
 
     setupAutoRestart() {
         const fiveHoursInMs = 5 * 60 * 60 * 1000;
-        setInterval(() => {
+    
+        if (this.autoRestartInterval) return;
+    
+        this.autoRestartInterval = setInterval(() => {
             const currentTime = new Date();
+    
             fs.readFile(this.flagPath, 'utf8', (err, data) => {
-                if (err) {
-                    console.error('Error reading flag.json: ', err);
+                if (err) return;
+    
+                let flags;
+                try {
+                    flags = JSON.parse(data);
+                } catch (e) {
                     return;
                 }
-
-                const flags = JSON.parse(data);
+    
                 if (flags.last) {
                     const last = new Date(flags.last);
                     if (currentTime - last >= fiveHoursInMs) {
@@ -117,8 +124,9 @@ class Bot {
                     }
                 }
             });
-        }, 60 * 60 * 1000);
+        }, 60 * 1000);
     }
+
 
     say(text, colour = "white") {
         if (this.bot && this.bot.core) {
