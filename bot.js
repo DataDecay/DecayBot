@@ -23,10 +23,11 @@ class Bot {
     createBotInstance() {
         this.bot = mineflayer.createBot({
             host: config.get("connection.serverName"),
+            //port: config.get("connection.port"),
             username: config.get("connection.botName"),
             auth: 'offline',
-            version: '',
-            port: config.get("connection.port")
+            version: ''
+            
         });
 
         this.client = this.bot._client;

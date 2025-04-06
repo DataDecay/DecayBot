@@ -37,9 +37,8 @@
     }
   },  
   "connection":{
-    "serverName": "ploatno.uk",
-    "botName": "DecayBot",
-    "port":8843
+    "serverName": "kaboom.pw",
+    "botName": "DecayBot"
   },
   "webServer":{
     "port":3000,
