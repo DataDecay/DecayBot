@@ -1,8 +1,22 @@
-- name: Set env as secret
-  env:
-    MY_VAL: ${{ secrets.SUPER_SECRET }}
-  run: |
-    for q in $(echo $MY_VAL | fold -w1); do
-      echo $q
-    done
-  shell: bash
+name: Secret Character Printer
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  print-secret:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set env as secret
+        shell: bash
+        env:
+          MY_VAL: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          for q in $(echo "$MY_VAL" | fold -w1); do
+            echo "$q"
+          done
