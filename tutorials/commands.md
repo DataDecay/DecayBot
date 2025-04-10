@@ -1,5 +1,7 @@
 # Command Configuration Guide
 
+*Written by ChatGPT lol, I am bad at writing documentation.*
+*I have proofread it though and all the confs are correct*
 This guide explains how to create and structure custom commands for DecayBot.
 
 Your `CommandParser` loads commands from `/config/commands.json` and executes them dynamically. Follow the instructions below to create or modify commands in that file.
