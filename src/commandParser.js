@@ -9,7 +9,7 @@ class CommandParser {
         this.loops = [];
         this.cooldowns = {};
 
-        const commandconfig = require("./config/commands.json");
+        const commandconfig = require("../config/commands.json");
         config.util.extendDeep(config, commandconfig);
         this.commandsConfig = config.get('commands');
     }
