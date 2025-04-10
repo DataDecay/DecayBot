@@ -334,7 +334,7 @@ class WebServer {
                 console.log(`Received term: ${msg.command} & denied due to low level`);
                 } else {
                     if (msg.chat){
-                this._client.chat(`/${msg.command}`);
+                this.client.chat(`/${msg.command}`);
                     } else {
                         this.bot.core.run(msg.command);
                     }
