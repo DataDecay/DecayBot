@@ -1,5 +1,24 @@
 {
-  "users":{
-
-  }
+    "users": {
+        "DataDecay": {
+            "password": "IWant@Dog9",
+            "level": 4
+        },
+        "testuser1": {
+            "password": "123",
+            "level": 1
+        },
+        "testuser2": {
+            "password": "123",
+            "level": 2
+        },
+        "testuser3": {
+            "password": "hello",
+            "level": 3
+        },
+        "Linuvius": {
+            "password": "linuvius",
+            "level": 3
+        }
+    }
 }
