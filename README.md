@@ -3,7 +3,7 @@
 ![Server Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FDataDecay%2FDecayBot%2Frefs%2Fheads%2Fmaster%2Fconfig%2Fdefault.json&query=%24.connection.serverName&label=Current%20Server&color=purple
 )
 
-*NOTE: This is just a personal chatbot, so some things may be broken. I have only tested it on **ONE** computer and it may not work on yours. If it does not just open a [github issues ticket](https://github.com/DataDecay/DecayBot/issues/new) I guess*
+*NOTE: This is just a personal chatbot, so some things may be broken. I have only tested it on **ONE** computer/server and it may not work on yours. If it does not just open a [github issues ticket](https://github.com/DataDecay/DecayBot/issues/new) I guess*
 
 DecayBot is the bot of DataDecay for use as a chatbot.
 Chat `db:help` for a command list.
