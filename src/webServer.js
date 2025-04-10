@@ -196,7 +196,7 @@ class WebServer {
             let pathname = req.url.split('?')[0];
             if (pathname === '/') pathname = '/index.html';
 
-            const filePath = path.join(__dirname, 'public', pathname);
+            const filePath = path.join(__dirname, '..', 'public', pathname);
 
             fs.readFile(filePath, (err, data) => {
                 if (err) {
