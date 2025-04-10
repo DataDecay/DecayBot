@@ -1,9 +1,9 @@
 const Bot = require('./bot.js');
 const bot = new Bot();
 var argv = require('minimist')(process.argv.slice(2));
-if(argv.v){
+if(argv.verbose){
     global.v = true;
-    console.warn("Verboose enabled - potentially sensitive information in STDOUT!")
+    console.warn("Verbose enabled - potentially sensitive information in STDOUT!")
 } else {
     global.v = false;
 }
