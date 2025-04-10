@@ -89,8 +89,13 @@ class Bot {
                 console.error('Error reading flag.json:', err);
                 return;
             }
-
-            const flags = JSON.parse(data);
+            
+            let flags;
+            try {
+                flags = JSON.parse(data);
+            } catch (e) {
+                return;
+            }
             flags[key] = value;
             flags.last = new Date().toISOString();
             fs.writeFile(this.flagPath, JSON.stringify(flags, null, 2), (err) => {
