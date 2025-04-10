@@ -17,7 +17,7 @@ class WebServer {
         this.isRunning = false;
         this.sessions = {};
         
-        const userconfig = require("./config/users.json");
+        const userconfig = require("../config/users.json");
         config.util.extendDeep(config, userconfig); 
         this.users = config.get('users'); 
 
