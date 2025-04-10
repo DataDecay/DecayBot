@@ -53,7 +53,9 @@ class WebServer {
         this.io.on('connection', (socket) => {
             const token = socket.handshake.query.token;
             if (!token || !this.sessions[token]) {
+                if(global.v){
                 console.log("Unauthorized socket connection attempt.");
+            }
                 socket.emit('error', 'Unauthorized. Please log in.');
                 //socket.disconnect(true);
                 return;
@@ -110,8 +112,9 @@ class WebServer {
                     const expiresAt = Date.now() + this.sessionTimeout;
 
                     this.sessions[token] = { username, level: user.level, expiresAt };
-
+                    if(global.v){
                     console.log(`User "${username}" logged in. Level: ${user.level}`);
+                    }
                     res.writeHead(200, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ token }));
                 } else {
@@ -168,14 +171,17 @@ class WebServer {
                         return res.end(JSON.stringify({ error: 'Internal server error' }));
                     }
 
-
+                    if(global.v){
                     console.log(`New user "${username}" registered.`);
+                    }
                     res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ token }));
                 });
             });
         } else {
+            if (global.v){
             console.log(`Failed signup for user "${username}"`);
+            }
             res.writeHead(401, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'User exists' }));
         }
@@ -185,7 +191,8 @@ class WebServer {
 
             if (token && this.sessions[token]) {
                 delete this.sessions[token];
-                console.log(`User with token "${token}" logged out.`);
+                if (global.v){
+                console.log(`User with token "${token}" logged out.`);}
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ success: true }));
             } else {
@@ -236,8 +243,11 @@ class WebServer {
         }
 
         const { username, level } = session;
+        if (global.v){
+
         console.log(`Socket connection from ${username} (Level ${level})`);
 
+        }
         const hashLevels = config.get('hashLevels');
 
         const visibleRoles = {};
@@ -265,7 +275,10 @@ class WebServer {
         socket.emit('roles', visibleRoles);
         socket.emit('users', visibleUsers);
         socket.on('disconnect', () => {
+            if (global.v){
+
     console.log(`${username} disconnected.`);
+            }
     this.bot.removeListener('message', messageHandler);
 });
 
@@ -313,12 +326,19 @@ class WebServer {
             const token = socket.handshake.query.token;
             if(!token || !this.sessions[token]){
                 socket.emit('msg', `Sorry, you need to be logged in to send messages.`);
-                console.log(`Received message: ${msg} & denied`);
+                if (global.v){
+
+                console.log(`Received message: ${msg}, not logged in`);
+                }
             } else {
                 const username = this.sessions[token].username;
                 this.bot.core.run(`/tellraw @p [{"text":"${username} "},{"text":" [DecayBot Webchat] ","color":"dark_red","bold":true,"underlined":false,"hoverEvent":{"action":"show_text","value":[{"text":"Open DecayBot Webchat","color":"blue","bold":true,"italic":true}]},"clickEvent":{"action":"open_url","value":"https://datadecay.dev/"}},{"text":": ${msg}","hoverEvent":{"action":"show_text","value":[{"text":"","color":"blue","bold":true,"italic":true}]}}]`);
+                if (global.v){
+
                 console.log(`Received message: ${msg}, from ${username}`);
+                }
             }
+            
         });
         socket.on('console_command', (msg) => {
             //this.bot.chat(msg);
@@ -326,12 +346,18 @@ class WebServer {
             const token = socket.handshake.query.token;
             if(!token || !this.sessions[token]){
                 socket.emit('msg', `Sorry, you need to be logged in to use the terminal.`);
+                if (global.v){
+
                 console.log(`Received term: ${msg.command} & denied due to login issue`);
+                }
             } else {
                 const {username, level} = this.sessions[token];
                 if (level < 3){
                 socket.emit('msg', `Sorry ${username}, your access level, ${level}, is too low to use the terminal. Please ask an admin to grant you a higher trust level to use this if you need to.`);
+                if (global.v){
+
                 console.log(`Received term: ${msg.command} & denied due to low level`);
+                }
                 } else {
                     if (msg.chat){
                 this.client.chat(`/${msg.command}`);
@@ -355,7 +381,7 @@ class WebServer {
 
         delete this.users[targetUser];
 
-        const usersFilePath = path.join(__dirname, 'config', 'users.json');
+        const usersFilePath = path.join(__dirname, '..', 'config', 'users.json');
         fs.readFile(usersFilePath, 'utf8', (err, data) => {
             if (err) {
                 console.error('Error reading users.json:', err);
@@ -430,8 +456,10 @@ class WebServer {
                     socket.emit('error', 'Internal server error.');
                     return;
                 }
+                if (global.v){
 
                 console.log(`Password for user "${targetUser}" changed by "${username}"`);
+                }
                 socket.emit('users', this.filterVisibleUsers(level));
             });
         });
@@ -491,8 +519,10 @@ class WebServer {
                     socket.emit('error', 'Internal server error.');
                     return;
                 }
+                if (global.v){
 
                 console.log(`Level for user "${targetUser}" changed to ${newLevel} by "${username}"`);
+                }
                 socket.emit('users', this.filterVisibleUsers(level));
             });
         });
@@ -504,7 +534,10 @@ class WebServer {
         const now = Date.now();
         for (const token in this.sessions) {
             if (this.sessions[token].expiresAt < now) {
+                if (global.v){
+
                 console.log(`Session expired for user ${this.sessions[token].username}`);
+                }
                 delete this.sessions[token];
             }
         }
