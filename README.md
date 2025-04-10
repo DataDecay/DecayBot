@@ -8,7 +8,7 @@
 DecayBot is the bot of DataDecay for use as a chatbot.
 Chat `db:help` for a command list.
 
-To run, install npm and NodeJS. Run `npm install` and then run `npm start`
+To run, install npm and NodeJS. Run `npm install` and then run `npm start` in the project dir
 
 For further configuration, go into the `config` folder. `default.json` should be easy enough to understand, but `commands.json` is a little more complicated. Users is easy, but I am going to modify it and improve the security. [Command Documentation](tutorials/commands.md)
 
