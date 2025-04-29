@@ -255,7 +255,13 @@ class WebServer {
             const role = hashLevels[roleKey];
 
             if (role.visible && role.requiredLevel <= level) {
+                if (role.requiredLevel <= 5) {
+                    if(global.g){
                 visibleRoles[roleKey] = role;
+                    }
+                } else {
+                 visibleRoles[roleKey] = role;
+                }
             }
         });
         const visibleUsers = {};
