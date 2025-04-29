@@ -141,7 +141,7 @@ class WebServer {
 
             this.users[username] = newUser;
 
-            const usersFilePath = path.join(__dirname, 'config', 'users.json');
+            const usersFilePath = path.join(__dirname, '..', 'config', 'users.json');
             const token = crypto.randomBytes(16).toString('hex');
             const expiresAt = Date.now() + this.sessionTimeout;
             this.sessions[token] = { username, level: 1, expiresAt };
