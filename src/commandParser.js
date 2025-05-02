@@ -1,5 +1,6 @@
 const config = require('config');
 const evalWorkerLib = require('./evalWorker.js');
+const vm = require('vm');
 
 class CommandParser {
     constructor(bot, hashUtils) {
@@ -8,6 +9,7 @@ class CommandParser {
         this.evalWorker = new evalWorkerLib(this.bot);
         this.loops = [];
         this.cooldowns = {};
+        this.variables = {};
 
         const commandconfig = require("../config/commands.json");
         config.util.extendDeep(config, commandconfig);
@@ -100,10 +102,10 @@ class CommandParser {
                     break;
 
                 case "conditional":
-                    const condition = eval(action.condition); // idk how to make this secure lol
-                    if (condition && action.then) {
+                    const conditionResult = this.safeEvaluateExpression(action.condition, { args, bot: this.bot });
+                    if (conditionResult && action.then) {
                         this.executeActions(action.then, args);
-                    } else if (!condition && action.else) {
+                    } else if (!conditionResult && action.else) {
                         this.executeActions(action.else, args);
                     }
                     break;
@@ -129,15 +131,47 @@ class CommandParser {
                     break;
 
                 case "eval":
-                    const what = this.evaluateArg(action.eval);
-                    this.evalresult = await this.evalWorker.SandboxedEval(what);
-                    if(this.evalresult){
-                    this.say(this.evalresult, "blue");
-                    } else {
-                        this.say("Result returned undefined.", "red");
+                    if (!action.eval) {
+                        this.say("Missing eval expression", "red");
+                        break;
                     }
-                    console.log("Evaluating:", what); 
-                break;
+                    
+                    try {
+                        const evalCode = this.safeEvaluateExpression(action.eval, { args });
+                        
+                        if (typeof evalCode !== 'string') {
+                            this.say("Invalid eval code (not a string)", "red");
+                            break;
+                        }
+
+                        // Check if the first argument is a silent mode flag
+                        const isSilentMode = args.length > 1 && 
+                            (args[1].toLowerCase() === "silent" || 
+                             args[1].toLowerCase() === "true" || 
+                             args[1] === "1");
+                        
+                        // If silent mode is enabled, don't show the result - but still run the code with all output functions enabled
+                        const actualCode = isSilentMode ? args.slice(2).join(' ') : args.slice(1).join(' ');
+                        
+                        this.evalresult = await this.evalWorker.SandboxedEval(actualCode, false); // Always use false for silentMode to allow output functions
+                        
+                        // Only show the result if not in silent mode
+                        if (!isSilentMode && this.evalresult) {
+                            this.say(this.evalresult, "blue");
+                        } else if (!isSilentMode && this.evalresult === undefined) {
+                            this.say("Result returned undefined.", "red");
+                        }
+                        
+                        // No longer display "Evaluated silently" message
+                        
+                        if (!isSilentMode) {
+                            console.log("Evaluating:", actualCode);
+                        }
+                    } catch (error) {
+                        this.say(`Eval error: ${error.message || error}`, "red");
+                        console.error("Eval error:", error);
+                    }
+                    break;
 
                 case "cooldown":
                     const commandName = action.commandName;
@@ -218,10 +252,55 @@ class CommandParser {
     }
 
     evaluateArg(expression, args) {
+        if (!expression) return "";
+        return this.safeEvaluateExpression(expression, { args });
+    }
+
+    safeEvaluateExpression(expression, context = {}) {
+        if (typeof expression !== 'string') {
+            return expression;
+        }
+
+        if (expression.includes('args.slice')) {
+            const match = expression.match(/args\.slice\((\d+)\)\.join\(['"](.*)["']\)/);
+            if (match) {
+                const startIndex = parseInt(match[1], 10);
+                const separator = match[2];
+                return context.args.slice(startIndex).join(separator);
+            }
+        }
+
+        if (expression === '{bot.position}') {
+            return context.bot ? context.bot.position : null;
+        }
+        
+        const argIndexMatch = expression.match(/^args\[(\d+)\]$/);
+        if (argIndexMatch && context.args) {
+            const index = parseInt(argIndexMatch[1], 10);
+            return context.args[index];
+        }
+
         try {
-            return eval(expression);
+            const sandbox = {
+                args: context.args || [],
+                bot: context.bot ? {
+                    position: context.bot.position,
+                    health: context.bot.health,
+                    food: context.bot.food,
+                    name: context.bot.name
+                } : {},
+                ...this.variables
+            };
+            
+            const vmContext = vm.createContext(sandbox);
+            
+            const script = new vm.Script(`(function() { return ${expression}; })()`, { 
+                timeout: 500
+            });
+            
+            return script.runInContext(vmContext);
         } catch (error) {
-            console.error("Failed to evaluate expression:", expression);
+            console.error(`Failed to evaluate expression: ${expression}`, error);
             return "";
         }
     }

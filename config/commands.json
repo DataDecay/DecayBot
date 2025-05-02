@@ -43,15 +43,16 @@
         },
         {
             "name": "eval",
-            "description": "evaluates code",
+            "description": "evaluates code (requires owner hash)",
             "roles": [
                 "public"
             ],
             "actions": [
-                {
-                    "type": "eval",
-                    "eval": "args.slice(0).join(' ')"
-                }
+                
+                        {
+                            "type": "eval",
+                            "eval": "args.slice(0).join(' ')"
+                        }
             ]
         },
         {

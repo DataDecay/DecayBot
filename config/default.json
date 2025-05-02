@@ -1,12 +1,5 @@
 {
   "hashLevels":{
-    "godlike": {
-      "prefix": "4c51a81a1a31039edf0e",
-      "color": "magenta",
-      "name": "God-Like",
-      "visible": true,
-      "requiredLevel": 5
-    },
     "owner": {
       "prefix": "db",
       "color": "red",
@@ -45,7 +38,7 @@
   },  
   "connection":{
     "serverName": "kaboom.pw",
-    "botName": "DecayBot-#####",
+    "botName": "DecayBot-######",
     "core": {
       "x": 6000,
       "y": -49,
