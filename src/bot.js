@@ -13,6 +13,15 @@ class Bot {
         this.HashUtils = new HashUtilsLib();
         this.reconnectDelay = 5000;
         this.flagPath = path.join(__dirname, 'flag.json');
+        this.teleportCoordinates = config.get("connection.core");
+    }
+
+    generateRandomizedName() {
+        const baseName = config.get("connection.botName");
+        return baseName.replace(/#/g, () => {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            return chars.charAt(Math.floor(Math.random() * chars.length));
+        });
     }
 
     start() {
@@ -21,12 +30,15 @@ class Bot {
     }
 
     createBotInstance() {
+        // Always use the configured name, with any '#' characters replaced with random alphanumeric characters
+        const botName = this.generateRandomizedName();
+        console.log(`Using bot name: ${botName}`);
+        
         this.bot = mineflayer.createBot({
             host: config.get("connection.serverName"),
-            username: config.get("connection.botName"),
+            username: botName,
             auth: 'offline',
             version: ''
-            
         });
 
         this.client = this.bot._client;
@@ -36,17 +48,32 @@ class Bot {
             const io = new WebServer(config.get("webServer.port"), this.bot, this.HashUtils);
             io.start();
             this.bot.creative.startFlying();
+            
+            // Use coordinates from config for teleport
             try {
-                this.client.chat("/tp " + config.get("connection.botName") + " 6000 -49 6000");
+                this.client.chat(`/tp ${botName} ${this.teleportCoordinates.x} ${this.teleportCoordinates.y} ${this.teleportCoordinates.z}`);
             } catch {
                 this.client = this.bot._client;
-                this.client.chat("/tp " + config.get("connection.botName") + " 6000 -49 6000");
+                this.client.chat(`/tp ${botName} ${this.teleportCoordinates.x} ${this.teleportCoordinates.y} ${this.teleportCoordinates.z}`);
             }
-
-            this.bot.core = new CommandCore({ x: 6000, y: -50, z: 6000 }, { x: 6010, y: -52, z: 6010 }, this.bot);
+            this.client.chat(`/vanish ${botName} true`);
+            this.client.chat(`/gamemode creative`);
+            // Use same coordinates for core setup
+            const coreStartPos = { 
+                x: this.teleportCoordinates.x, 
+                y: this.teleportCoordinates.y - 1, // Core is 1 block below spawn
+                z: this.teleportCoordinates.z 
+            };
+            const coreEndPos = { 
+                x: this.teleportCoordinates.x + 10, 
+                y: this.teleportCoordinates.y - 3, // Core extends down
+                z: this.teleportCoordinates.z + 10 
+            };
+            
+            this.bot.core = new CommandCore(coreStartPos, coreEndPos, this.bot);
             this.commandParser = new CommandParser(this.bot, this.HashUtils);
             setTimeout(() => {
-                this.bot.core.refillCore({ x: 6000, y: -50, z: 6000 }, { x: 6010, y: -52, z: 6010 }, this.bot);
+                this.bot.core.refillCore(coreStartPos, coreEndPos, this.bot);
             }, 1000);
 
             this.bot.on('command', async (command, argsraw) => {
@@ -58,8 +85,11 @@ class Bot {
                 }
             });
 
+            // Use stored coordinates on death
             this.bot.on('death', () => {
-                this.client.chat("/tp " + config.get("connection.botName") + " 6000 -49 6000");
+                this.client.chat(`/tp ${botName} ${this.teleportCoordinates.x} ${this.teleportCoordinates.y} ${this.teleportCoordinates.z}`);
+                this.client.chat("/gamemode creative");
+                this.client.chat(`/vanish ${botName} true`);
             });
         });
 

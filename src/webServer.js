@@ -107,16 +107,47 @@ class WebServer {
 
                 const user = this.users[username];
 
-                if (user && user.password === password) {
-                    const token = crypto.randomBytes(16).toString('hex');
-                    const expiresAt = Date.now() + this.sessionTimeout;
-
-                    this.sessions[token] = { username, level: user.level, expiresAt };
-                    if(global.v){
-                    console.log(`User "${username}" logged in. Level: ${user.level}`);
+                if (user) {
+                    let authenticated = false;
+                    
+                    if (user.hash && user.salt) {
+                        // Verify with hash and salt
+                        authenticated = this.HashUtils.verifyPassword(password, user.hash, user.salt);
+                    } else if (user.password) {
+                        // Legacy password check (plain text)
+                        authenticated = user.password === password;
+                        
+                        // Upgrade to hashed password if using legacy
+                        if (authenticated) {
+                            const hashedData = this.HashUtils.hashPassword(password);
+                            user.hash = hashedData.hash;
+                            user.salt = hashedData.salt;
+                            delete user.password; // Remove plaintext password
+                            
+                            // Save the updated user data
+                            this.saveUsers();
+                            
+                            if (global.v) {
+                                console.log(`Upgraded password for user "${username}" to bcrypt hash`);
+                            }
+                        }
                     }
-                    res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ token }));
+
+                    if (authenticated) {
+                        const token = crypto.randomBytes(16).toString('hex');
+                        const expiresAt = Date.now() + this.sessionTimeout;
+
+                        this.sessions[token] = { username, level: user.level, expiresAt };
+                        if(global.v){
+                            console.log(`User "${username}" logged in. Level: ${user.level}`);
+                        }
+                        res.writeHead(200, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ token }));
+                    } else {
+                        console.log(`Failed login for user "${username}"`);
+                        res.writeHead(401, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ error: 'Invalid credentials' }));
+                    }
                 } else {
                     console.log(`Failed login for user "${username}"`);
                     res.writeHead(401, { 'Content-Type': 'application/json' });
@@ -137,7 +168,14 @@ class WebServer {
         const user = this.users[username];
 
         if (!user) {
-            const newUser = { password: password, level: 1 };
+            // Hash the password with bcrypt
+            const hashedData = this.HashUtils.hashPassword(password);
+            
+            const newUser = { 
+                level: 1,
+                hash: hashedData.hash,
+                salt: hashedData.salt
+            };
 
             this.users[username] = newUser;
 
@@ -172,15 +210,15 @@ class WebServer {
                     }
 
                     if(global.v){
-                    console.log(`New user "${username}" registered.`);
+                        console.log(`New user "${username}" registered with bcrypt hash.`);
                     }
                     res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ token }));
+                    res.end(JSON.stringify({ token }));
                 });
             });
         } else {
             if (global.v){
-            console.log(`Failed signup for user "${username}"`);
+                console.log(`Failed signup for user "${username}"`);
             }
             res.writeHead(401, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'User exists' }));
@@ -255,13 +293,13 @@ class WebServer {
             const role = hashLevels[roleKey];
 
             if (role.visible && role.requiredLevel <= level) {
-                if (role.requiredLevel <= 5) {
+                /*if (role.requiredLevel <= 5) {
                     if(global.g){
                 visibleRoles[roleKey] = role;
                     }
-                } else {
+                } else {*/
                  visibleRoles[roleKey] = role;
-                }
+                //}
             }
         });
         const visibleUsers = {};
@@ -435,40 +473,27 @@ class WebServer {
             return;
         }
 
-        this.users[targetUser].password = newPassword;
+        // Hash the new password with bcrypt
+        const hashedData = this.HashUtils.hashPassword(newPassword);
+        
+        // Update user with hashed password
+        this.users[targetUser].hash = hashedData.hash;
+        this.users[targetUser].salt = hashedData.salt;
+        
+        // Remove plaintext password if it exists
+        if (this.users[targetUser].password) {
+            delete this.users[targetUser].password;
+        }
 
-        const usersFilePath = path.join(__dirname, 'config', 'users.json');
-        fs.readFile(usersFilePath, 'utf8', (err, data) => {
-            if (err) {
-                console.error('Error reading users.json:', err);
-                socket.emit('error', 'Internal server error.');
-                return;
+        // Save the updated user data
+        if (this.saveUsers()) {
+            if (global.v) {
+                console.log(`Password for user "${targetUser}" changed by "${username}" (using bcrypt)`);
             }
-
-            let usersObj;
-            try {
-                usersObj = JSON.parse(data);
-            } catch (parseErr) {
-                console.error('Error parsing users.json:', parseErr);
-                socket.emit('error', 'Internal server error.');
-                return;
-            }
-
-            usersObj.users[targetUser].password = newPassword;
-
-            fs.writeFile(usersFilePath, JSON.stringify(usersObj, null, 4), 'utf8', (writeErr) => {
-                if (writeErr) {
-                    console.error('Error writing users.json:', writeErr);
-                    socket.emit('error', 'Internal server error.');
-                    return;
-                }
-                if (global.v){
-
-                console.log(`Password for user "${targetUser}" changed by "${username}"`);
-                }
-                socket.emit('users', this.filterVisibleUsers(level));
-            });
-        });
+            socket.emit('users', this.filterVisibleUsers(level));
+        } else {
+            socket.emit('error', 'Error saving password changes.');
+        }
     });
 
     socket.on('levelchange', ({ username: targetUser, level: newLevel }) => {
@@ -500,38 +525,15 @@ class WebServer {
 
         this.users[targetUser].level = newLevel;
 
-        const usersFilePath = path.join(__dirname, 'config', 'users.json');
-        fs.readFile(usersFilePath, 'utf8', (err, data) => {
-            if (err) {
-                console.error('Error reading users.json:', err);
-                socket.emit('error', 'Internal server error.');
-                return;
-            }
-
-            let usersObj;
-            try {
-                usersObj = JSON.parse(data);
-            } catch (parseErr) {
-                console.error('Error parsing users.json:', parseErr);
-                socket.emit('error', 'Internal server error.');
-                return;
-            }
-
-            usersObj.users[targetUser].level = newLevel;
-
-            fs.writeFile(usersFilePath, JSON.stringify(usersObj, null, 4), 'utf8', (writeErr) => {
-                if (writeErr) {
-                    console.error('Error writing users.json:', writeErr);
-                    socket.emit('error', 'Internal server error.');
-                    return;
-                }
-                if (global.v){
-
+        // Save changes using the saveUsers method
+        if (this.saveUsers()) {
+            if (global.v) {
                 console.log(`Level for user "${targetUser}" changed to ${newLevel} by "${username}"`);
-                }
-                socket.emit('users', this.filterVisibleUsers(level));
-            });
-        });
+            }
+            socket.emit('users', this.filterVisibleUsers(level));
+        } else {
+            socket.emit('error', 'Error saving level changes.');
+        }
     });
 
     }
@@ -559,6 +561,17 @@ class WebServer {
     return visibleUsers;
 }
 
+    saveUsers() {
+        const usersFilePath = path.join(__dirname, '..', 'config', 'users.json');
+        try {
+            const usersObj = { users: this.users };
+            fs.writeFileSync(usersFilePath, JSON.stringify(usersObj, null, 4), 'utf8');
+            return true;
+        } catch (err) {
+            console.error('Error saving users.json:', err);
+            return false;
+        }
+    }
 }
 
 module.exports = WebServer;

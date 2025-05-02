@@ -45,9 +45,14 @@
   },  
   "connection":{
     "serverName": "kaboom.pw",
-    "botName": "DecayBot"
+    "botName": "DecayBot-#####",
+    "core": {
+      "x": 6000,
+      "y": -49,
+      "z": 6000
+    }
   },
-  "webServer":{
+  "webServer":{ 
     "port":3000,
     "ssl":false
   }

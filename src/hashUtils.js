@@ -1,4 +1,5 @@
 const { createHash, randomInt } = require('crypto');
+const bcrypt = require('bcrypt');
 
 class HashUtils {
     static hash_counter = 0;
@@ -42,6 +43,17 @@ class HashUtils {
         let hash = createHash('sha256');
         hash.update(prefix + this.constructor.hash_counter.toString());
         return hash.digest('hex').substring(0, 5);
+    }
+
+    // Password hashing functions using bcrypt
+    hashPassword(password) {
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(password, salt);
+        return { hash, salt };
+    }
+
+    verifyPassword(password, storedHash, storedSalt) {
+        return bcrypt.compareSync(password, storedHash);
     }
 }
 
